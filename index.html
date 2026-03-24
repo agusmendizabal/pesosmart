@@ -7,1161 +7,315 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --negro: #0a0a0a;
-    --blanco: #f2f0ea;
-    --verde: #00e676;
-    --rojo: #ff3d3d;
-    --amarillo: #ffe600;
-    --gris: #1a1a1a;
-    --gris2: #2a2a2a;
-    --gris-texto: #888;
-  }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--negro);
-    color: var(--blanco);
-    font-family: 'DM Sans', sans-serif;
-    overflow-x: hidden;
-    cursor: crosshair;
-  }
-
-  /* NOISE OVERLAY */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 9999;
-    opacity: 0.4;
-  }
+  :root { --negro:#0a0a0a; --blanco:#f2f0ea; --verde:#00e676; --rojo:#ff3d3d; --amarillo:#ffe600; --gris:#1a1a1a; --gris-texto:#888; }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--negro);color:var(--blanco);font-family:'DM Sans',sans-serif;overflow-x:hidden;cursor:crosshair}
+  body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.4}
 
   /* NAV */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.2rem 2.5rem;
-    border-bottom: 1px solid rgba(255,255,255,0.07);
-    backdrop-filter: blur(12px);
-    background: rgba(10,10,10,0.85);
-  }
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1.2rem 2.5rem;border-bottom:1px solid rgba(255,255,255,0.07);backdrop-filter:blur(12px);background:rgba(10,10,10,0.85)}
+  .nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:0.05em;color:var(--verde)}
+  .nav-logo span{color:var(--blanco)}
+  .nav-links{display:flex;gap:2rem;list-style:none}
+  .nav-links a{font-family:'Space Mono',monospace;font-size:0.72rem;text-decoration:none;color:var(--gris-texto);letter-spacing:0.1em;text-transform:uppercase;transition:color 0.2s}
+  .nav-links a:hover{color:var(--verde)}
+  .nav-cta{font-family:'Space Mono',monospace;font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;background:var(--verde);color:var(--negro);padding:0.55rem 1.2rem;border:none;cursor:pointer;font-weight:700;transition:transform 0.15s,background 0.15s;text-decoration:none;display:inline-block}
+  .nav-cta:hover{background:var(--amarillo);transform:translateY(-1px)}
 
-  .nav-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.8rem;
-    letter-spacing: 0.05em;
-    color: var(--verde);
-  }
-
-  .nav-logo span { color: var(--blanco); }
-
-  .nav-links {
-    display: flex;
-    gap: 2rem;
-    list-style: none;
-  }
-
-  .nav-links a {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.72rem;
-    text-decoration: none;
-    color: var(--gris-texto);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    transition: color 0.2s;
-  }
-
-  .nav-links a:hover { color: var(--verde); }
-
-  .nav-cta {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.72rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    background: var(--verde);
-    color: var(--negro);
-    padding: 0.55rem 1.2rem;
-    border: none;
-    cursor: pointer;
-    font-weight: 700;
-    transition: transform 0.15s, background 0.15s;
-  }
-
-  .nav-cta:hover { background: var(--amarillo); transform: translateY(-1px); }
+  /* TICKER */
+  .ticker-bar{position:absolute;top:80px;left:0;right:0;background:var(--verde);padding:0.45rem 0;overflow:hidden;white-space:nowrap}
+  .ticker-inner{display:inline-block;animation:ticker 28s linear infinite;font-family:'Space Mono',monospace;font-size:0.7rem;font-weight:700;color:var(--negro);letter-spacing:0.05em}
+  @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
   /* HERO */
-  .hero {
-    min-height: 100vh;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-    padding: 8rem 2.5rem 4rem;
-    gap: 4rem;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .hero::after {
-    content: '';
-    position: absolute;
-    top: -200px; right: -200px;
-    width: 700px; height: 700px;
-    background: radial-gradient(circle, rgba(0,230,118,0.08) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  .ticker-bar {
-    position: absolute;
-    top: 80px; left: 0; right: 0;
-    background: var(--verde);
-    padding: 0.45rem 0;
-    overflow: hidden;
-    white-space: nowrap;
-  }
-
-  .ticker-inner {
-    display: inline-block;
-    animation: ticker 28s linear infinite;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.7rem;
-    font-weight: 700;
-    color: var(--negro);
-    letter-spacing: 0.05em;
-  }
-
-  @keyframes ticker {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-  }
-
-  .hero-left { padding-top: 2rem; }
-
-  .hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--verde);
-    border: 1px solid rgba(0,230,118,0.3);
-    padding: 0.4rem 0.9rem;
-    margin-bottom: 1.5rem;
-    animation: fadeUp 0.6s ease both;
-  }
-
-  .hero-badge::before {
-    content: '';
-    width: 6px; height: 6px;
-    background: var(--verde);
-    border-radius: 50%;
-    animation: pulse 1.5s infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.4; transform: scale(0.7); }
-  }
-
-  .hero-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(4rem, 8vw, 7rem);
-    line-height: 0.92;
-    letter-spacing: 0.02em;
-    animation: fadeUp 0.6s 0.1s ease both;
-  }
-
-  .hero-title .accent { color: var(--verde); }
-  .hero-title .red { color: var(--rojo); }
-
-  .hero-sub {
-    margin-top: 1.8rem;
-    font-size: 1.05rem;
-    color: #aaa;
-    line-height: 1.65;
-    max-width: 440px;
-    font-weight: 300;
-    animation: fadeUp 0.6s 0.2s ease both;
-  }
-
-  .hero-sub strong { color: var(--blanco); font-weight: 500; }
-
-  .hero-actions {
-    margin-top: 2.5rem;
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    animation: fadeUp 0.6s 0.3s ease both;
-  }
-
-  .btn-primary {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    background: var(--verde);
-    color: var(--negro);
-    padding: 1rem 2rem;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .btn-primary::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--amarillo);
-    transform: translateX(-100%);
-    transition: transform 0.3s;
-    z-index: 0;
-  }
-
-  .btn-primary:hover::after { transform: translateX(0); }
-  .btn-primary span { position: relative; z-index: 1; }
-
-  .btn-secondary {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    background: transparent;
-    color: var(--blanco);
-    padding: 1rem 2rem;
-    border: 1px solid rgba(255,255,255,0.2);
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .btn-secondary:hover { border-color: var(--verde); color: var(--verde); }
-
-  .hero-stats {
-    display: flex;
-    gap: 2.5rem;
-    margin-top: 3.5rem;
-    padding-top: 2rem;
-    border-top: 1px solid rgba(255,255,255,0.08);
-    animation: fadeUp 0.6s 0.4s ease both;
-  }
-
-  .stat-item {}
-  .stat-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2.2rem;
-    color: var(--verde);
-    line-height: 1;
-  }
-  .stat-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.62rem;
-    color: var(--gris-texto);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-top: 0.2rem;
-  }
-
-  /* CHAT MOCKUP */
-  .hero-right {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    animation: fadeUp 0.7s 0.2s ease both;
-  }
-
-  .chat-mockup {
-    background: var(--gris);
-    border: 1px solid rgba(255,255,255,0.08);
-    width: 100%;
-    max-width: 420px;
-    padding: 1.5rem;
-    position: relative;
-  }
-
-  .chat-header {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(255,255,255,0.07);
-    margin-bottom: 1.2rem;
-  }
-
-  .chat-avatar {
-    width: 36px; height: 36px;
-    background: var(--verde);
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1rem;
-    color: var(--negro);
-    flex-shrink: 0;
-  }
-
-  .chat-name {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.72rem;
-    font-weight: 700;
-    color: var(--blanco);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .chat-status {
-    font-size: 0.65rem;
-    color: var(--verde);
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
-  }
-
-  .chat-status::before {
-    content: '';
-    width: 5px; height: 5px;
-    border-radius: 50%;
-    background: var(--verde);
-  }
-
-  .chat-messages { display: flex; flex-direction: column; gap: 0.9rem; }
-
-  .msg {
-    max-width: 85%;
-    font-size: 0.82rem;
-    line-height: 1.5;
-    padding: 0.75rem 1rem;
-  }
-
-  .msg.user {
-    background: rgba(255,255,255,0.06);
-    align-self: flex-end;
-    color: #ccc;
-    border-left: 2px solid rgba(255,255,255,0.15);
-  }
-
-  .msg.bot {
-    background: rgba(0,230,118,0.08);
-    align-self: flex-start;
-    color: var(--blanco);
-    border-left: 2px solid var(--verde);
-  }
-
-  .msg.bot .tag {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.6rem;
-    text-transform: uppercase;
-    color: var(--verde);
-    letter-spacing: 0.1em;
-    display: block;
-    margin-bottom: 0.3rem;
-  }
-
-  .msg.alert {
-    background: rgba(255,61,61,0.1);
-    border-left: 2px solid var(--rojo);
-    align-self: flex-start;
-    max-width: 100%;
-  }
-
-  .msg.alert .tag { color: var(--rojo); }
-
-  .chat-input-row {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 1.2rem;
-    padding-top: 1rem;
-    border-top: 1px solid rgba(255,255,255,0.07);
-  }
-
-  .chat-input {
-    flex: 1;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.1);
-    color: #888;
-    padding: 0.6rem 0.8rem;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.78rem;
-    outline: none;
-  }
-
-  .chat-send {
-    background: var(--verde);
-    color: var(--negro);
-    border: none;
-    padding: 0.6rem 1rem;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.7rem;
-    font-weight: 700;
-    cursor: pointer;
-    text-transform: uppercase;
-  }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* PAIN SECTION */
-  .pain-section {
-    padding: 6rem 2.5rem;
-    background: var(--gris);
-    border-top: 1px solid rgba(255,255,255,0.06);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .pain-section::before {
-    content: 'INFLACIÓN';
-    position: absolute;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 20vw;
-    color: rgba(255,61,61,0.04);
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-    letter-spacing: 0.05em;
-    white-space: nowrap;
-  }
-
-  .section-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.65rem;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--rojo);
-    margin-bottom: 1rem;
-  }
-
-  .section-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(2.5rem, 5vw, 4.5rem);
-    line-height: 0.95;
-    margin-bottom: 3rem;
-  }
-
-  .pain-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0;
-    border: 1px solid rgba(255,255,255,0.08);
-  }
-
-  .pain-card {
-    padding: 2.5rem;
-    border-right: 1px solid rgba(255,255,255,0.08);
-    position: relative;
-    transition: background 0.3s;
-  }
-
-  .pain-card:last-child { border-right: none; }
-  .pain-card:hover { background: rgba(255,61,61,0.04); }
-
-  .pain-icon {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    display: block;
-  }
-
-  .pain-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 3.5rem;
-    color: var(--rojo);
-    line-height: 1;
-    display: block;
-  }
-
-  .pain-desc {
-    font-size: 0.88rem;
-    color: #999;
-    line-height: 1.6;
-    margin-top: 0.5rem;
-  }
-
-  /* FEATURES */
-  .features-section {
-    padding: 7rem 2.5rem;
-  }
-
-  .features-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1px;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.06);
-    margin-top: 4rem;
-  }
-
-  .feature-card {
-    background: var(--negro);
-    padding: 3rem;
-    position: relative;
-    overflow: hidden;
-    transition: background 0.3s;
-  }
-
-  .feature-card:hover { background: var(--gris); }
-
-  .feature-card::before {
-    content: attr(data-num);
-    position: absolute;
-    top: 1.5rem; right: 2rem;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 5rem;
-    color: rgba(255,255,255,0.03);
-    line-height: 1;
-  }
-
-  .feature-tag {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.6rem;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--verde);
-    background: rgba(0,230,118,0.08);
-    padding: 0.3rem 0.7rem;
-    display: inline-block;
-    margin-bottom: 1.5rem;
-  }
-
-  .feature-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.9rem;
-    letter-spacing: 0.03em;
-    margin-bottom: 0.8rem;
-    line-height: 1.1;
-  }
-
-  .feature-desc {
-    font-size: 0.88rem;
-    color: #888;
-    line-height: 1.7;
-  }
-
-  .feature-list {
-    margin-top: 1.5rem;
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .feature-list li {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.72rem;
-    color: #999;
-    display: flex;
-    align-items: flex-start;
-    gap: 0.6rem;
-    line-height: 1.5;
-  }
-
-  .feature-list li::before {
-    content: '→';
-    color: var(--verde);
-    flex-shrink: 0;
-  }
-
-  /* PRICING */
-  .pricing-section {
-    padding: 7rem 2.5rem;
-    background: var(--gris);
-    border-top: 1px solid rgba(255,255,255,0.06);
-  }
-
-  .pricing-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1px;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.06);
-    margin-top: 4rem;
-  }
-
-  .pricing-card {
-    background: var(--negro);
-    padding: 2.5rem;
-    display: flex;
-    flex-direction: column;
-    transition: background 0.3s;
-    position: relative;
-  }
-
-  .pricing-card.featured {
-    background: var(--verde);
-  }
-
-  .pricing-card.featured * { color: var(--negro) !important; }
-
-  .pricing-card.featured .price-amount { color: var(--negro) !important; }
-  .pricing-card.featured .price-feat::before { color: var(--negro) !important; }
-
-  .pricing-badge {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.6rem;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    background: var(--negro);
-    color: var(--verde);
-    padding: 0.3rem 0.7rem;
-    display: inline-block;
-    width: fit-content;
-    margin-bottom: 1.5rem;
-  }
-
-  .pricing-card.featured .pricing-badge {
-    background: var(--negro);
-    color: var(--verde);
-  }
-
-  .price-name {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.5rem;
-    color: var(--blanco);
-    letter-spacing: 0.05em;
-  }
-
-  .price-amount {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 4rem;
-    color: var(--verde);
-    line-height: 1;
-    margin: 1rem 0 0.3rem;
-  }
-
-  .price-period {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.65rem;
-    color: var(--gris-texto);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-bottom: 2rem;
-  }
-
-  .price-feats {
-    list-style: none;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-    margin-bottom: 2rem;
-  }
-
-  .price-feat {
-    font-size: 0.83rem;
-    color: #999;
-    display: flex;
-    align-items: flex-start;
-    gap: 0.6rem;
-    line-height: 1.5;
-  }
-
-  .price-feat::before {
-    content: '✓';
-    color: var(--verde);
-    font-weight: 700;
-    flex-shrink: 0;
-  }
-
-  .price-feat.disabled { opacity: 0.35; }
-  .price-feat.disabled::before { content: '×'; color: var(--gris-texto); }
-
-  .price-btn {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 0.85rem 1.5rem;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s;
-    background: rgba(255,255,255,0.08);
-    color: var(--blanco);
-  }
-
-  .price-btn:hover { background: rgba(255,255,255,0.14); }
-
-  .pricing-card.featured .price-btn {
-    background: var(--negro);
-    color: var(--verde);
-  }
-
-  /* VIRAL SECTION */
-  .viral-section {
-    padding: 8rem 2.5rem;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .viral-section::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse at center, rgba(0,230,118,0.06) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  .viral-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(3rem, 7vw, 6rem);
-    line-height: 0.95;
-    max-width: 900px;
-    margin: 0 auto 1.5rem;
-  }
-
-  .viral-title .verde { color: var(--verde); }
-  .viral-title .rojo { color: var(--rojo); }
-
-  .viral-sub {
-    font-size: 1rem;
-    color: #888;
-    max-width: 480px;
-    margin: 0 auto 3rem;
-    line-height: 1.7;
-  }
-
-  .viral-input-group {
-    display: flex;
-    gap: 0;
-    max-width: 480px;
-    margin: 0 auto;
-    border: 1px solid rgba(255,255,255,0.12);
-  }
-
-  .viral-email {
-    flex: 1;
-    background: rgba(255,255,255,0.04);
-    border: none;
-    padding: 1rem 1.2rem;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.9rem;
-    color: var(--blanco);
-    outline: none;
-  }
-
-  .viral-email::placeholder { color: #555; }
-
-  .viral-submit {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    background: var(--verde);
-    color: var(--negro);
-    border: none;
-    padding: 1rem 1.8rem;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: background 0.2s;
-  }
-
-  .viral-submit:hover { background: var(--amarillo); }
-
-  .viral-fine {
-    margin-top: 1rem;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.62rem;
-    color: #444;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-
-  /* MARQUEE STRIP */
-  .marquee-strip {
-    padding: 1.2rem 0;
-    background: var(--rojo);
-    overflow: hidden;
-    white-space: nowrap;
-    border-top: 2px solid rgba(255,255,255,0.1);
-    border-bottom: 2px solid rgba(255,255,255,0.1);
-  }
-
-  .marquee-inner {
-    display: inline-block;
-    animation: ticker 20s linear infinite;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.1rem;
-    letter-spacing: 0.1em;
-    color: var(--blanco);
-  }
-
-  .marquee-sep {
-    display: inline-block;
-    margin: 0 2rem;
-    opacity: 0.5;
-  }
-
-  /* FOOTER */
-  footer {
-    padding: 3rem 2.5rem;
-    border-top: 1px solid rgba(255,255,255,0.07);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-
-  .footer-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.5rem;
-    color: var(--verde);
-  }
-
-  .footer-logo span { color: var(--blanco); }
-
-  .footer-links {
-    display: flex;
-    gap: 2rem;
-    list-style: none;
-  }
-
-  .footer-links a {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.62rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: #555;
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-
-  .footer-links a:hover { color: var(--verde); }
-
-  .footer-copy {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.62rem;
-    color: #333;
-    letter-spacing: 0.05em;
-  }
-
-  /* RESPONSIVE */
-  @media (max-width: 900px) {
-    .hero { grid-template-columns: 1fr; padding-top: 10rem; }
-    .hero-right { display: none; }
-    .pain-grid { grid-template-columns: 1fr; }
-    .pain-card { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
-    .features-grid { grid-template-columns: 1fr; }
-    .pricing-grid { grid-template-columns: 1fr; }
-    .nav-links { display: none; }
-    .hero-stats { gap: 1.5rem; }
-  }
-
-  /* SCROLL FADE */
-  .reveal {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-  }
-
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  .hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:8rem 2.5rem 4rem;gap:4rem;position:relative;overflow:hidden}
+  .hero::after{content:'';position:absolute;top:-200px;right:-200px;width:700px;height:700px;background:radial-gradient(circle,rgba(0,230,118,0.08) 0%,transparent 70%);pointer-events:none}
+  .hero-left{padding-top:2rem}
+  .hero-badge{display:inline-flex;align-items:center;gap:0.5rem;font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--verde);border:1px solid rgba(0,230,118,0.3);padding:0.4rem 0.9rem;margin-bottom:1.5rem;animation:fadeUp 0.6s ease both}
+  .hero-badge::before{content:'';width:6px;height:6px;background:var(--verde);border-radius:50%;animation:pulse 1.5s infinite}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
+  .hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,8vw,7rem);line-height:0.92;letter-spacing:0.02em;animation:fadeUp 0.6s 0.1s ease both}
+  .hero-title .accent{color:var(--verde)}
+  .hero-title .red{color:var(--rojo)}
+  .hero-sub{margin-top:1.8rem;font-size:1.05rem;color:#aaa;line-height:1.65;max-width:440px;font-weight:300;animation:fadeUp 0.6s 0.2s ease both}
+  .hero-sub strong{color:var(--blanco);font-weight:500}
+  .hero-actions{margin-top:2.5rem;display:flex;gap:1rem;flex-wrap:wrap;animation:fadeUp 0.6s 0.3s ease both}
+  .btn-primary{font-family:'Space Mono',monospace;font-size:0.78rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;background:var(--verde);color:var(--negro);padding:1rem 2rem;border:none;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;text-decoration:none;display:inline-block}
+  .btn-primary::after{content:'';position:absolute;inset:0;background:var(--amarillo);transform:translateX(-100%);transition:transform 0.3s;z-index:0}
+  .btn-primary:hover::after{transform:translateX(0)}
+  .btn-primary span{position:relative;z-index:1}
+  .btn-secondary{font-family:'Space Mono',monospace;font-size:0.78rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;background:transparent;color:var(--blanco);padding:1rem 2rem;border:1px solid rgba(255,255,255,0.2);cursor:pointer;transition:all 0.2s;text-decoration:none;display:inline-block}
+  .btn-secondary:hover{border-color:var(--verde);color:var(--verde)}
+  .hero-stats{display:flex;gap:2.5rem;margin-top:3.5rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.08);animation:fadeUp 0.6s 0.4s ease both}
+  .stat-num{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:var(--verde);line-height:1}
+  .stat-label{font-family:'Space Mono',monospace;font-size:0.62rem;color:var(--gris-texto);text-transform:uppercase;letter-spacing:0.08em;margin-top:0.2rem}
+  .hero-right{display:flex;justify-content:center;align-items:center;animation:fadeUp 0.7s 0.2s ease both}
+  .chat-mockup{background:var(--gris);border:1px solid rgba(255,255,255,0.08);width:100%;max-width:420px;padding:1.5rem}
+  .chat-header{display:flex;align-items:center;gap:0.75rem;padding-bottom:1rem;border-bottom:1px solid rgba(255,255,255,0.07);margin-bottom:1.2rem}
+  .chat-avatar{width:36px;height:36px;background:var(--verde);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1rem;color:var(--negro);flex-shrink:0}
+  .chat-name{font-family:'Space Mono',monospace;font-size:0.72rem;font-weight:700;color:var(--blanco);text-transform:uppercase;letter-spacing:0.05em}
+  .chat-status{font-size:0.65rem;color:var(--verde);display:flex;align-items:center;gap:0.3rem}
+  .chat-status::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--verde)}
+  .chat-messages{display:flex;flex-direction:column;gap:0.9rem}
+  .msg{max-width:85%;font-size:0.82rem;line-height:1.5;padding:0.75rem 1rem}
+  .msg.user{background:rgba(255,255,255,0.06);align-self:flex-end;color:#ccc;border-left:2px solid rgba(255,255,255,0.15)}
+  .msg.bot{background:rgba(0,230,118,0.08);align-self:flex-start;color:var(--blanco);border-left:2px solid var(--verde)}
+  .msg.bot .tag{font-family:'Space Mono',monospace;font-size:0.6rem;text-transform:uppercase;color:var(--verde);letter-spacing:0.1em;display:block;margin-bottom:0.3rem}
+  .msg.alert{background:rgba(255,61,61,0.1);border-left:2px solid var(--rojo);align-self:flex-start;max-width:100%}
+  .msg.alert .tag{color:var(--rojo)}
+  .chat-input-row{display:flex;gap:0.5rem;margin-top:1.2rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,0.07)}
+  .chat-input{flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#888;padding:0.6rem 0.8rem;font-family:'DM Sans',sans-serif;font-size:0.78rem;outline:none}
+  .chat-send{background:var(--verde);color:var(--negro);border:none;padding:0.6rem 1rem;font-family:'Space Mono',monospace;font-size:0.7rem;font-weight:700;cursor:pointer;text-transform:uppercase}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+  /* MARQUEE */
+  .marquee-strip{padding:1.2rem 0;background:var(--rojo);overflow:hidden;white-space:nowrap;border-top:2px solid rgba(255,255,255,0.1);border-bottom:2px solid rgba(255,255,255,0.1)}
+  .marquee-inner{display:inline-block;animation:ticker 20s linear infinite;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:0.1em;color:var(--blanco)}
+  .marquee-sep{display:inline-block;margin:0 2rem;opacity:0.5}
+
+  /* SECTIONS BASE */
+  .section-label{font-family:'Space Mono',monospace;font-size:0.65rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--rojo);margin-bottom:1rem}
+  .section-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,5vw,4.5rem);line-height:0.95;margin-bottom:3rem}
+
+  /* HERRAMIENTAS */
+  .herramientas-section{padding:7rem 2.5rem;background:var(--gris);border-top:1px solid rgba(255,255,255,0.06)}
+  .herramientas-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+  .herra-card{display:grid;grid-template-columns:1fr 1fr;border:1px solid rgba(255,255,255,0.08);text-decoration:none;color:inherit;transition:border-color 0.3s,transform 0.3s,box-shadow 0.3s;background:var(--negro);overflow:hidden}
+  .herra-card:hover{transform:translateY(-4px)}
+  .herra-chat:hover{border-color:rgba(0,230,118,0.4);box-shadow:0 16px 40px rgba(0,230,118,0.07)}
+  .herra-gastos:hover{border-color:rgba(255,230,0,0.4);box-shadow:0 16px 40px rgba(255,230,0,0.06)}
+  .herra-content{padding:2.5rem;display:flex;flex-direction:column;gap:0.8rem}
+  .herra-icon{font-size:2rem;margin-bottom:0.5rem}
+  .herra-tag{font-family:'Space Mono',monospace;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--verde);border:1px solid rgba(0,230,118,0.2);padding:0.2rem 0.6rem;display:inline-block;width:fit-content}
+  .herra-gastos .herra-tag{color:var(--amarillo);border-color:rgba(255,230,0,0.2)}
+  .herra-title{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:0.03em;line-height:1.1;color:var(--blanco)}
+  .herra-desc{font-size:0.85rem;color:#888;line-height:1.7;flex:1}
+  .herra-cta{font-family:'Space Mono',monospace;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--verde);margin-top:0.5rem;transition:letter-spacing 0.2s}
+  .herra-gastos .herra-cta{color:var(--amarillo)}
+  .herra-card:hover .herra-cta{letter-spacing:0.14em}
+  .herra-preview{background:rgba(255,255,255,0.02);border-left:1px solid rgba(255,255,255,0.06);padding:2rem 1.5rem;display:flex;flex-direction:column;gap:0.7rem;justify-content:center}
+  .hprev-msg{font-size:0.78rem;line-height:1.5;padding:0.55rem 0.8rem;max-width:92%}
+  .hprev-msg.bot{background:rgba(0,230,118,0.07);border-left:2px solid var(--verde);color:#ccc;align-self:flex-start}
+  .hprev-msg.user{background:rgba(255,255,255,0.05);border-left:2px solid rgba(255,255,255,0.12);color:#777;align-self:flex-end}
+  .hprev-gasto{display:flex;align-items:center;gap:0.6rem;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+  .hprev-gasto:last-of-type{border-bottom:none}
+  .hprev-icon{font-size:0.9rem;flex-shrink:0}
+  .hprev-desc{flex:1;font-size:0.75rem;color:#777;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .hprev-monto{font-family:'Bebas Neue',sans-serif;font-size:0.95rem;color:var(--rojo);flex-shrink:0}
+  .hprev-total{font-family:'Space Mono',monospace;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.06em;color:#444;padding-top:0.5rem;margin-top:0.3rem;border-top:1px solid rgba(255,255,255,0.06)}
+  .hprev-total strong{color:var(--rojo);font-family:'Bebas Neue',sans-serif;font-size:1rem}
 
   /* CALCULADORA */
-  .calc-section {
-    padding: 7rem 2.5rem;
-    background: var(--negro);
-    border-top: 1px solid rgba(255,255,255,0.06);
-  }
-  .calc-inner {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 5rem;
-    align-items: center;
-  }
-  .calc-box {
-    background: var(--gris);
-    border: 1px solid rgba(255,255,255,0.08);
-    padding: 2.5rem;
-  }
-  .calc-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--gris-texto);
-    display: block;
-    margin-bottom: 1rem;
-  }
-  .calc-input-row {
-    display: flex;
-    align-items: center;
-    border: 1px solid rgba(255,255,255,0.15);
-    margin-bottom: 2rem;
-    transition: border-color 0.2s;
-  }
-  .calc-input-row:focus-within { border-color: var(--verde); }
-  .calc-peso {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.8rem;
-    color: var(--gris-texto);
-    padding: 0.6rem 1rem;
-    background: rgba(255,255,255,0.04);
-    border-right: 1px solid rgba(255,255,255,0.1);
-  }
-  .calc-input {
-    flex: 1;
-    background: transparent;
-    border: none;
-    outline: none;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.8rem;
-    color: var(--blanco);
-    padding: 0.6rem 1rem;
-    letter-spacing: 0.03em;
-  }
-  .calc-input::placeholder { color: #333; }
-  .calc-results { display: flex; flex-direction: column; gap: 0; }
-  .calc-result-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.9rem 0;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-  }
-  .calc-result-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.68rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #666;
-  }
-  .calc-result-val {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.5rem;
-    letter-spacing: 0.03em;
-  }
-  .calc-result-val.red { color: var(--rojo); }
-  .calc-result-val.green { color: var(--verde); }
-  .calc-result-divider { height: 1px; background: rgba(255,255,255,0.06); margin: 0.5rem 0; }
-  .calc-share {
-    margin-top: 1.5rem;
-    padding: 1.2rem;
-    background: rgba(255,230,0,0.06);
-    border: 1px solid rgba(255,230,0,0.2);
-  }
-  .calc-share-text {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.72rem;
-    color: var(--amarillo);
-    line-height: 1.6;
-    margin-bottom: 1rem;
-  }
-  .calc-share-btn {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    background: var(--amarillo);
-    color: var(--negro);
-    border: none;
-    padding: 0.7rem 1.2rem;
-    cursor: pointer;
-    width: 100%;
-    transition: opacity 0.2s;
-  }
-  .calc-share-btn:hover { opacity: 0.85; }
+  .calc-section{padding:7rem 2.5rem;background:var(--negro);border-top:1px solid rgba(255,255,255,0.06)}
+  .calc-inner{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+  .calc-box{background:var(--gris);border:1px solid rgba(255,255,255,0.08);padding:2.5rem}
+  .calc-label{font-family:'Space Mono',monospace;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--gris-texto);display:block;margin-bottom:1rem}
+  .calc-input-row{display:flex;align-items:center;border:1px solid rgba(255,255,255,0.15);margin-bottom:2rem;transition:border-color 0.2s}
+  .calc-input-row:focus-within{border-color:var(--verde)}
+  .calc-peso{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--gris-texto);padding:0.6rem 1rem;background:rgba(255,255,255,0.04);border-right:1px solid rgba(255,255,255,0.1)}
+  .calc-input{flex:1;background:transparent;border:none;outline:none;font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--blanco);padding:0.6rem 1rem;letter-spacing:0.03em}
+  .calc-input::placeholder{color:#333}
+  .calc-results{display:flex;flex-direction:column}
+  .calc-result-item{display:flex;justify-content:space-between;align-items:center;padding:0.9rem 0;border-bottom:1px solid rgba(255,255,255,0.05)}
+  .calc-result-item:last-child{border-bottom:none}
+  .calc-result-label{font-family:'Space Mono',monospace;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;color:#666}
+  .calc-result-val{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:0.03em}
+  .calc-result-val.red{color:var(--rojo)}
+  .calc-result-val.green{color:var(--verde)}
+  .calc-result-divider{height:1px;background:rgba(255,255,255,0.06);margin:0.5rem 0}
+  .calc-share{margin-top:1.5rem;padding:1.2rem;background:rgba(255,230,0,0.06);border:1px solid rgba(255,230,0,0.2);display:none}
+  .calc-share-text{font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--amarillo);line-height:1.6;margin-bottom:1rem}
+  .calc-share-btn{font-family:'Space Mono',monospace;font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;background:var(--amarillo);color:var(--negro);border:none;padding:0.7rem 1.2rem;cursor:pointer;width:100%;transition:opacity 0.2s}
+  .calc-share-btn:hover{opacity:0.85}
 
-  /* CÓMO FUNCIONA */
-  .how-section {
-    padding: 7rem 2.5rem;
-    background: var(--gris);
-    border-top: 1px solid rgba(255,255,255,0.06);
-  }
-  .how-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0;
-    margin-top: 4rem;
-    border: 1px solid rgba(255,255,255,0.08);
-  }
-  .how-step {
-    padding: 3rem 2.5rem;
-    border-right: 1px solid rgba(255,255,255,0.08);
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    transition: background 0.3s;
-  }
-  .how-step:last-child { border-right: none; }
-  .how-step:hover { background: rgba(0,230,118,0.03); }
-  .how-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 4rem;
-    color: rgba(0,230,118,0.15);
-    line-height: 1;
-  }
-  .how-content { flex: 1; }
-  .how-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.5rem;
-    letter-spacing: 0.03em;
-    margin-bottom: 0.7rem;
-    color: var(--blanco);
-  }
-  .how-desc { font-size: 0.87rem; color: #888; line-height: 1.7; }
-  .how-arrow {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2rem;
-    color: var(--verde);
-    position: absolute;
-    right: -1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 2;
-    background: var(--gris);
-    padding: 0 0.3rem;
-  }
+  /* PAIN */
+  .pain-section{padding:6rem 2.5rem;background:var(--gris);border-top:1px solid rgba(255,255,255,0.06);position:relative;overflow:hidden}
+  .pain-section::before{content:'INFLACIÓN';position:absolute;font-family:'Bebas Neue',sans-serif;font-size:20vw;color:rgba(255,61,61,0.04);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;letter-spacing:0.05em;white-space:nowrap}
+  .pain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid rgba(255,255,255,0.08)}
+  .pain-card{padding:2.5rem;border-right:1px solid rgba(255,255,255,0.08);transition:background 0.3s}
+  .pain-card:last-child{border-right:none}
+  .pain-card:hover{background:rgba(255,61,61,0.04)}
+  .pain-icon{font-size:2rem;margin-bottom:1rem;display:block}
+  .pain-num{font-family:'Bebas Neue',sans-serif;font-size:3.5rem;color:var(--rojo);line-height:1;display:block}
+  .pain-desc{font-size:0.88rem;color:#999;line-height:1.6;margin-top:0.5rem}
+
+  /* FEATURES */
+  .features-section{padding:7rem 2.5rem}
+  .features-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.06);margin-top:4rem}
+  .feature-card{background:var(--negro);padding:3rem;position:relative;overflow:hidden;transition:background 0.3s}
+  .feature-card:hover{background:var(--gris)}
+  .feature-card::before{content:attr(data-num);position:absolute;top:1.5rem;right:2rem;font-family:'Bebas Neue',sans-serif;font-size:5rem;color:rgba(255,255,255,0.03);line-height:1}
+  .feature-tag{font-family:'Space Mono',monospace;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--verde);background:rgba(0,230,118,0.08);padding:0.3rem 0.7rem;display:inline-block;margin-bottom:1.5rem}
+  .feature-title{font-family:'Bebas Neue',sans-serif;font-size:1.9rem;letter-spacing:0.03em;margin-bottom:0.8rem;line-height:1.1}
+  .feature-desc{font-size:0.88rem;color:#888;line-height:1.7}
+  .feature-list{margin-top:1.5rem;list-style:none;display:flex;flex-direction:column;gap:0.5rem}
+  .feature-list li{font-family:'Space Mono',monospace;font-size:0.72rem;color:#999;display:flex;align-items:flex-start;gap:0.6rem;line-height:1.5}
+  .feature-list li::before{content:'→';color:var(--verde);flex-shrink:0}
+
+  /* HOW */
+  .how-section{padding:7rem 2.5rem;background:var(--gris);border-top:1px solid rgba(255,255,255,0.06)}
+  .how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:4rem;border:1px solid rgba(255,255,255,0.08)}
+  .how-step{padding:3rem 2.5rem;border-right:1px solid rgba(255,255,255,0.08);position:relative;display:flex;flex-direction:column;gap:1.5rem;transition:background 0.3s}
+  .how-step:last-child{border-right:none}
+  .how-step:hover{background:rgba(0,230,118,0.03)}
+  .how-num{font-family:'Bebas Neue',sans-serif;font-size:4rem;color:rgba(0,230,118,0.15);line-height:1}
+  .how-title{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:0.03em;margin-bottom:0.7rem;color:var(--blanco)}
+  .how-desc{font-size:0.87rem;color:#888;line-height:1.7}
+  .how-arrow{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--verde);position:absolute;right:-1rem;top:50%;transform:translateY(-50%);z-index:2;background:var(--gris);padding:0 0.3rem}
+
+  /* COMPARATIVA */
+  .comp-section{padding:7rem 2.5rem;background:var(--negro);border-top:1px solid rgba(255,255,255,0.06)}
+  .comp-table{border:1px solid rgba(255,255,255,0.08);overflow-x:auto;margin-top:1rem}
+  .comp-header{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.08)}
+  .comp-row{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;border-bottom:1px solid rgba(255,255,255,0.05);transition:background 0.2s}
+  .comp-row:last-child{border-bottom:none}
+  .comp-row:hover{background:rgba(255,255,255,0.02)}
+  .comp-cell{padding:1.1rem 1.2rem;font-size:0.85rem;color:#999;border-right:1px solid rgba(255,255,255,0.05);display:flex;align-items:center}
+  .comp-cell:last-child{border-right:none}
+  .comp-header .comp-cell{font-family:'Space Mono',monospace;font-size:0.65rem;text-transform:uppercase;letter-spacing:0.08em;color:#666;padding:0.9rem 1.2rem}
+  .comp-label-cell{font-family:'Space Mono',monospace;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;color:#555}
+  .comp-bad{color:var(--rojo)!important}
+  .comp-mid{color:var(--amarillo)!important}
+  .comp-good{color:var(--verde)!important}
+  .comp-highlight-header{background:rgba(0,230,118,0.06);color:var(--verde)!important;font-weight:700}
+  .comp-highlight-col{background:rgba(0,230,118,0.04);border-left:2px solid rgba(0,230,118,0.3)!important}
 
   /* QUOTES */
-  .quotes-section {
-    padding: 7rem 2.5rem;
-    background: var(--negro);
-    border-top: 1px solid rgba(255,255,255,0.06);
-  }
-  .quotes-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1px;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.06);
-    margin-top: 4rem;
-  }
-  .quote-card {
-    background: var(--negro);
-    padding: 2.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    transition: background 0.3s;
-  }
-  .quote-card:hover { background: var(--gris); }
-  .quote-text {
-    font-size: 0.95rem;
-    color: #ccc;
-    line-height: 1.75;
-    font-style: italic;
-    flex: 1;
-  }
-  .quote-text::before { content: '"'; color: var(--amarillo); font-size: 3rem; font-family: 'Bebas Neue', sans-serif; line-height: 0; vertical-align: -0.6rem; margin-right: 0.2rem; }
-  .quote-author { display: flex; align-items: center; gap: 0.9rem; }
-  .quote-avatar {
-    width: 40px; height: 40px;
-    border-radius: 0;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.65rem;
-    font-weight: 700;
-    color: var(--blanco);
-    flex-shrink: 0;
-  }
-  .quote-name {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.7rem;
-    font-weight: 700;
-    color: var(--blanco);
-    letter-spacing: 0.05em;
-  }
-  .quote-role { font-size: 0.72rem; color: #555; margin-top: 0.15rem; }
+  .quotes-section{padding:7rem 2.5rem;background:var(--gris);border-top:1px solid rgba(255,255,255,0.06)}
+  .quotes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.06);margin-top:4rem}
+  .quote-card{background:var(--gris);padding:2.5rem;display:flex;flex-direction:column;gap:2rem;transition:background 0.3s}
+  .quote-card:hover{background:#222}
+  .quote-text{font-size:0.95rem;color:#ccc;line-height:1.75;font-style:italic;flex:1}
+  .quote-text::before{content:'"';color:var(--amarillo);font-size:3rem;font-family:'Bebas Neue',sans-serif;line-height:0;vertical-align:-0.6rem;margin-right:0.2rem}
+  .quote-author{display:flex;align-items:center;gap:0.9rem}
+  .quote-avatar{width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:0.65rem;font-weight:700;color:var(--blanco);flex-shrink:0}
+  .quote-name{font-family:'Space Mono',monospace;font-size:0.7rem;font-weight:700;color:var(--blanco);letter-spacing:0.05em}
+  .quote-role{font-size:0.72rem;color:#555;margin-top:0.15rem}
 
-  /* WAITLIST COUNTER */
-  .waitlist-counter {
-    max-width: 480px;
-    margin: 0 auto 2rem;
-  }
-  .waitlist-bar-wrap {
-    height: 4px;
-    background: rgba(255,255,255,0.08);
-    margin-bottom: 0.6rem;
-    overflow: hidden;
-  }
-  .waitlist-bar {
-    height: 100%;
-    background: var(--verde);
-    width: 0%;
-    transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .waitlist-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.68rem;
-    color: var(--gris-texto);
-    text-align: center;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-  .waitlist-label span { color: var(--amarillo); font-weight: 700; }
+  /* PRICING */
+  .pricing-section{padding:7rem 2.5rem;background:var(--negro);border-top:1px solid rgba(255,255,255,0.06)}
+  .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.06);margin-top:4rem}
+  .pricing-card{background:var(--negro);padding:2.5rem;display:flex;flex-direction:column}
+  .pricing-card.featured{background:var(--verde)}
+  .pricing-card.featured *{color:var(--negro)!important}
+  .pricing-badge{font-family:'Space Mono',monospace;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.12em;background:var(--negro);color:var(--verde);padding:0.3rem 0.7rem;display:inline-block;width:fit-content;margin-bottom:1.5rem}
+  .price-name{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--blanco);letter-spacing:0.05em}
+  .price-amount{font-family:'Bebas Neue',sans-serif;font-size:4rem;color:var(--verde);line-height:1;margin:1rem 0 0.3rem}
+  .price-period{font-family:'Space Mono',monospace;font-size:0.65rem;color:var(--gris-texto);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:2rem}
+  .price-feats{list-style:none;flex:1;display:flex;flex-direction:column;gap:0.6rem;margin-bottom:2rem}
+  .price-feat{font-size:0.83rem;color:#999;display:flex;align-items:flex-start;gap:0.6rem;line-height:1.5}
+  .price-feat::before{content:'✓';color:var(--verde);font-weight:700;flex-shrink:0}
+  .price-feat.disabled{opacity:0.35}
+  .price-feat.disabled::before{content:'×';color:var(--gris-texto)}
+  .price-btn{font-family:'Space Mono',monospace;font-size:0.72rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:0.85rem 1.5rem;border:none;cursor:pointer;transition:all 0.2s;background:rgba(255,255,255,0.08);color:var(--blanco)}
+  .price-btn:hover{background:rgba(255,255,255,0.14)}
+  .pricing-card.featured .price-btn{background:var(--negro);color:var(--verde)}
 
-  @media (max-width: 900px) {
-    .calc-inner { grid-template-columns: 1fr; gap: 2rem; }
-    .how-grid { grid-template-columns: 1fr; }
-    .how-step { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
-    .how-arrow { display: none; }
-    .quotes-grid { grid-template-columns: 1fr; }
-  }
+  /* FAQ */
+  .faq-section{padding:7rem 2.5rem;background:var(--gris);border-top:1px solid rgba(255,255,255,0.06)}
+  .faq-list{margin-top:4rem;border:1px solid rgba(255,255,255,0.07)}
+  .faq-item{border-bottom:1px solid rgba(255,255,255,0.07)}
+  .faq-item:last-child{border-bottom:none}
+  .faq-q{width:100%;background:none;border:none;color:var(--blanco);font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:500;text-align:left;padding:1.5rem 2rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:1rem;transition:background 0.2s,color 0.2s}
+  .faq-q:hover{background:rgba(255,255,255,0.03);color:var(--verde)}
+  .faq-q.active{color:var(--verde)}
+  .faq-icon{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--verde);transition:transform 0.3s;flex-shrink:0;line-height:1}
+  .faq-q.active .faq-icon{transform:rotate(45deg)}
+  .faq-a{font-size:0.9rem;color:#888;line-height:1.75;padding:0 2rem 1.5rem;display:none;border-left:2px solid var(--verde);margin:0 2rem 1.5rem}
+  .faq-a.open{display:block;animation:fadeUp 0.25s ease both}
 
+  /* WAITLIST */
+  .viral-section{padding:8rem 2.5rem;text-align:center;position:relative;overflow:hidden}
+  .viral-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(0,230,118,0.06) 0%,transparent 70%);pointer-events:none}
+  .viral-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,7vw,6rem);line-height:0.95;max-width:900px;margin:0 auto 1.5rem}
+  .viral-title .verde{color:var(--verde)}
+  .viral-title .rojo{color:var(--rojo)}
+  .viral-sub{font-size:1rem;color:#888;max-width:480px;margin:0 auto 2rem;line-height:1.7}
+  .waitlist-counter{max-width:480px;margin:0 auto 2rem}
+  .waitlist-bar-wrap{height:4px;background:rgba(255,255,255,0.08);margin-bottom:0.6rem;overflow:hidden}
+  .waitlist-bar{height:100%;background:var(--verde);width:0%;transition:width 1.5s cubic-bezier(0.4,0,0.2,1)}
+  .waitlist-label{font-family:'Space Mono',monospace;font-size:0.68rem;color:var(--gris-texto);text-align:center;text-transform:uppercase;letter-spacing:0.08em}
+  .waitlist-label span{color:var(--amarillo);font-weight:700}
+  .viral-input-group{display:flex;max-width:480px;margin:0 auto;border:1px solid rgba(255,255,255,0.12)}
+  .viral-email{flex:1;background:rgba(255,255,255,0.04);border:none;padding:1rem 1.2rem;font-family:'DM Sans',sans-serif;font-size:0.9rem;color:var(--blanco);outline:none}
+  .viral-email::placeholder{color:#555}
+  .viral-submit{font-family:'Space Mono',monospace;font-size:0.72rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;background:var(--verde);color:var(--negro);border:none;padding:1rem 1.8rem;cursor:pointer;white-space:nowrap;transition:background 0.2s}
+  .viral-submit:hover{background:var(--amarillo)}
+  .viral-fine{margin-top:1rem;font-family:'Space Mono',monospace;font-size:0.62rem;color:#444;text-transform:uppercase;letter-spacing:0.08em}
+
+  /* CHAT WIDGET */
+  .chat-widget-btn{position:fixed;bottom:2rem;right:2rem;z-index:1000;background:var(--verde);color:var(--negro);border:none;width:60px;height:60px;cursor:pointer;font-size:1.5rem;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(0,230,118,0.35);transition:transform 0.2s,background 0.2s}
+  .chat-widget-btn:hover{transform:scale(1.08);background:var(--amarillo)}
+  .chat-btn-label{position:absolute;right:70px;background:var(--negro);border:1px solid rgba(0,230,118,0.3);color:var(--verde);font-family:'Space Mono',monospace;font-size:0.62rem;text-transform:uppercase;letter-spacing:0.08em;padding:0.4rem 0.8rem;white-space:nowrap;pointer-events:none;opacity:0;transform:translateX(8px);transition:opacity 0.2s,transform 0.2s}
+  .chat-widget-btn:hover .chat-btn-label{opacity:1;transform:translateX(0)}
+
+  /* FOOTER */
+  footer{padding:3rem 2.5rem;border-top:1px solid rgba(255,255,255,0.07);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+  .footer-logo{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--verde)}
+  .footer-logo span{color:var(--blanco)}
+  .footer-links{display:flex;gap:2rem;list-style:none}
+  .footer-links a{font-family:'Space Mono',monospace;font-size:0.62rem;text-transform:uppercase;letter-spacing:0.1em;color:#555;text-decoration:none;transition:color 0.2s}
+  .footer-links a:hover{color:var(--verde)}
+  .footer-copy{font-family:'Space Mono',monospace;font-size:0.62rem;color:#333;letter-spacing:0.05em}
+
+  /* REVEAL */
+  .reveal{opacity:0;transform:translateY(30px);transition:opacity 0.6s ease,transform 0.6s ease}
+  .reveal.visible{opacity:1;transform:translateY(0)}
+
+  /* RESPONSIVE */
+  @media(max-width:900px){
+    .hero{grid-template-columns:1fr;padding-top:10rem}
+    .hero-right{display:none}
+    .pain-grid,.how-grid{grid-template-columns:1fr}
+    .pain-card{border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
+    .how-step{border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
+    .how-arrow{display:none}
+    .features-grid,.pricing-grid,.quotes-grid{grid-template-columns:1fr}
+    .herramientas-grid{grid-template-columns:1fr}
+    .herra-card{grid-template-columns:1fr}
+    .herra-preview{border-left:none;border-top:1px solid rgba(255,255,255,0.06)}
+    .calc-inner{grid-template-columns:1fr;gap:2rem}
+    .comp-header,.comp-row{grid-template-columns:1.2fr 0.8fr 0.8fr 0.9fr}
+    .comp-cell{padding:0.8rem;font-size:0.78rem}
+    .nav-links{display:none}
+    .hero-stats{gap:1.5rem}
+  }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <div class="nav-logo">Peso<span>Smart</span></div>
   <ul class="nav-links">
-    <li><a href="#features">Features</a></li>
-    <li><a href="#pricing">Precios</a></li>
-    <li><a href="#cta">Early Access</a></li>
+    <li><a href="asesor.html">Asesor IA</a></li>
+    <li><a href="gastos.html">Mis Gastos</a></li>
+    <li><a href="#faq">FAQ</a></li>
   </ul>
-  <button class="nav-cta">Empezar gratis →</button>
+  <a href="asesor.html" class="nav-cta">Consultá gratis →</a>
 </nav>
 
-<!-- TICKER -->
 <div class="ticker-bar">
-  <span class="ticker-inner">
-    🇦🇷 DÓLAR BLUE: $1,280 &nbsp;|&nbsp; MEP: $1,261 &nbsp;|&nbsp; INFLACIÓN MENSUAL: 3.7% &nbsp;|&nbsp; PLAZO FIJO: 37% TNA &nbsp;|&nbsp; MERVAL: +2.1% &nbsp;|&nbsp; COBERTURA: ON &nbsp;|&nbsp; DÓLAR BLUE: $1,280 &nbsp;|&nbsp; MEP: $1,261 &nbsp;|&nbsp; INFLACIÓN MENSUAL: 3.7% &nbsp;|&nbsp; PLAZO FIJO: 37% TNA &nbsp;|&nbsp; MERVAL: +2.1% &nbsp;|&nbsp; COBERTURA: ON &nbsp;|&nbsp;
-  </span>
+  <span class="ticker-inner">🇦🇷 DÓLAR BLUE: $1,280 &nbsp;|&nbsp; MEP: $1,261 &nbsp;|&nbsp; INFLACIÓN MENSUAL: 2.9% &nbsp;|&nbsp; PLAZO FIJO: 37% TNA &nbsp;|&nbsp; MERVAL: +2.1% &nbsp;|&nbsp; COBERTURA: ON &nbsp;|&nbsp; DÓLAR BLUE: $1,280 &nbsp;|&nbsp; MEP: $1,261 &nbsp;|&nbsp; INFLACIÓN MENSUAL: 2.9% &nbsp;|&nbsp; PLAZO FIJO: 37% TNA &nbsp;|&nbsp; MERVAL: +2.1% &nbsp;|&nbsp; COBERTURA: ON &nbsp;|&nbsp;</span>
 </div>
 
-<!-- HERO -->
 <section class="hero">
   <div class="hero-left">
-    <div class="hero-badge">Argentina mode ON — Beta abierta</div>
-    <h1 class="hero-title">
-      TU PLATA<br>
-      <span class="accent">TRABAJA</span><br>
-      O SE <span class="red">DERRITE</span>
-    </h1>
-    <p class="hero-sub">
-      El primer asesor financiero con IA <strong>diseñado para Argentina</strong>. Inflación real, dólar blue, MEP, gastos y hábitos. Todo en uno, sin vueltas.
-    </p>
+    <div class="hero-badge">🇦🇷 Diseñado para Argentina — Beta gratuita</div>
+    <h1 class="hero-title">TU PLATA<br><span class="accent">CRECE</span><br>O SE <span class="red">DERRITE</span></h1>
+    <p class="hero-sub">La IA que te explica qué hacer con tu plata <strong>en argentino, sin tecnicismos</strong>. Para los que nunca invirtieron y quieren empezar hoy.</p>
     <div class="hero-actions">
-      <button class="btn-primary"><span>Probarlo gratis →</span></button>
-      <button class="btn-secondary">Ver demo</button>
+      <a href="asesor.html"><button class="btn-primary"><span>Hablar con el asesor →</span></button></a>
+      <a href="gastos.html"><button class="btn-secondary">Ver mis gastos</button></a>
     </div>
     <div class="hero-stats">
       <div class="stat-item">
         <div class="stat-num">2.9%</div>
-        <div class="stat-label">inflación mensual enero 2026 (INDEC) — tu plata pierde eso cada 30 días</div>
+        <div class="stat-label">perdés por mes aunque no gastes nada</div>
       </div>
       <div class="stat-item">
         <div class="stat-num">33%</div>
-        <div class="stat-label">poder adquisitivo perdido en el último año</div>
+        <div class="stat-label">poder adquisitivo perdido el último año</div>
       </div>
       <div class="stat-item">
         <div class="stat-num">$0</div>
@@ -1169,296 +323,179 @@
       </div>
     </div>
   </div>
-
   <div class="hero-right">
     <div class="chat-mockup">
       <div class="chat-header">
         <div class="chat-avatar">PS</div>
-        <div>
-          <div class="chat-name">PesoSmart AI</div>
-          <div class="chat-status">activo ahora</div>
-        </div>
+        <div><div class="chat-name">PesoSmart IA</div><div class="chat-status">activo ahora</div></div>
       </div>
       <div class="chat-messages">
-        <div class="msg alert">
-          <span class="tag">⚠ Alerta</span>
-          Tus pesos perdieron 2.9% de poder adquisitivo este mes (dato INDEC enero 2026). Con $500k parados, perdiste $14.500. Te conviene mover parte a MEP esta semana.
-        </div>
-        <div class="msg user">¿Me conviene comprar dólares hoy?</div>
-        <div class="msg bot">
-          <span class="tag">💡 Análisis</span>
-          Con el spread actual MEP/Blue en $19, el MEP es mejor opción hoy. Tu perfil tiene margen para hasta $300k sin efecto CEPO. ¿Querés que arme la operación?
-        </div>
+        <div class="msg alert"><span class="tag">⚠ Alerta</span>Tus pesos perdieron 2.9% de poder adquisitivo este mes. Con $500k parados, perdiste $14.500.</div>
         <div class="msg user">¿Cómo ahorro 200k por mes?</div>
-        <div class="msg bot">
-          <span class="tag">📊 Plan personalizado</span>
-          Detecté que gastas $85k en delivery (40% arriba de tu promedio). Reduciendo eso a $50k y moviendo la diferencia a un FCI CER cubrís inflación y llegás a los 200k.
-        </div>
+        <div class="msg bot"><span class="tag">📊 Plan personalizado</span>Gastás $85k en delivery. Bajando a $50k y metiéndolo en un FCI CER cubrís inflación y llegás a los 200k.</div>
       </div>
       <div class="chat-input-row">
-        <input class="chat-input" placeholder="Preguntale algo a tu asesor…" readonly>
+        <input class="chat-input" placeholder="Preguntale algo…" readonly>
         <button class="chat-send">→</button>
       </div>
     </div>
   </div>
 </section>
 
-<!-- MARQUEE -->
 <div class="marquee-strip">
-  <span class="marquee-inner">
-    LA INFLACIÓN NO ESPERA <span class="marquee-sep">✦</span>
-    TUS PESOS SE DEVALÚAN MIENTRAS DORMÍS <span class="marquee-sep">✦</span>
-    TOMÁ DECISIONES CON DATOS REALES <span class="marquee-sep">✦</span>
-    DISEÑADO PARA ARGENTINA <span class="marquee-sep">✦</span>
-    LA INFLACIÓN NO ESPERA <span class="marquee-sep">✦</span>
-    TUS PESOS SE DEVALÚAN MIENTRAS DORMÍS <span class="marquee-sep">✦</span>
-    TOMÁ DECISIONES CON DATOS REALES <span class="marquee-sep">✦</span>
-    DISEÑADO PARA ARGENTINA <span class="marquee-sep">✦</span>
-  </span>
+  <span class="marquee-inner">LA INFLACIÓN NO ESPERA <span class="marquee-sep">✦</span> TUS PESOS SE DEVALÚAN MIENTRAS DORMÍS <span class="marquee-sep">✦</span> TOMÁ DECISIONES CON DATOS REALES <span class="marquee-sep">✦</span> DISEÑADO PARA ARGENTINA <span class="marquee-sep">✦</span> LA INFLACIÓN NO ESPERA <span class="marquee-sep">✦</span> TUS PESOS SE DEVALÚAN MIENTRAS DORMÍS <span class="marquee-sep">✦</span> TOMÁ DECISIONES CON DATOS REALES <span class="marquee-sep">✦</span> DISEÑADO PARA ARGENTINA <span class="marquee-sep">✦</span></span>
 </div>
 
-<!-- PAIN -->
+<section class="herramientas-section reveal">
+  <p class="section-label">Empezá ahora — es gratis</p>
+  <h2 class="section-title">DOS HERRAMIENTAS<br><span style="color:var(--verde)">CON IA REAL</span></h2>
+  <div class="herramientas-grid">
+    <a href="asesor.html" class="herra-card herra-chat">
+      <div class="herra-content">
+        <div class="herra-icon">🧠</div>
+        <div class="herra-tag">Asesor IA</div>
+        <h3 class="herra-title">Preguntale a la IA</h3>
+        <p class="herra-desc">¿Qué hago con mis pesos? ¿Conviene el plazo fijo? ¿Cómo compro dólares? Te responde en argentino, sin vueltas, sin hacerte sentir tonto.</p>
+        <div class="herra-cta">Hablar con el asesor →</div>
+      </div>
+      <div class="herra-preview">
+        <div class="hprev-msg bot">¡Hola! ¿Qué querés saber sobre tu plata?</div>
+        <div class="hprev-msg user">¿Qué hago con $500k?</div>
+        <div class="hprev-msg bot">Con $500k lo mejor es dividirlo: parte en FCI CER para cubrirte de la inflación y parte en MEP si querés dólares...</div>
+      </div>
+    </a>
+    <a href="gastos.html" class="herra-card herra-gastos">
+      <div class="herra-content">
+        <div class="herra-icon">💸</div>
+        <div class="herra-tag">Mis Gastos</div>
+        <h3 class="herra-title">Analizá tus gastos</h3>
+        <p class="herra-desc">Cargá un gasto o subí una foto de tu ticket y la IA te dice qué podrías hacer con esa plata. Ve el resumen completo del mes agrupado por día.</p>
+        <div class="herra-cta">Ver mis gastos →</div>
+      </div>
+      <div class="herra-preview">
+        <div class="hprev-gasto"><span class="hprev-icon">☕</span><span class="hprev-desc">Café en el trabajo</span><span class="hprev-monto">$6.000</span></div>
+        <div class="hprev-gasto"><span class="hprev-icon">🍔</span><span class="hprev-desc">Delivery almuerzo</span><span class="hprev-monto">$18.500</span></div>
+        <div class="hprev-gasto"><span class="hprev-icon">🚗</span><span class="hprev-desc">Uber al trabajo</span><span class="hprev-monto">$9.200</span></div>
+        <div class="hprev-total">Total del mes: <strong>$247.800</strong></div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<section class="calc-section reveal" id="calculadora">
+  <div class="calc-inner">
+    <div>
+      <p class="section-label" style="color:var(--amarillo)">Calculadora — gratis</p>
+      <h2 class="section-title">¿CUÁNTO<br>PERDÉS<br><span style="color:var(--rojo)">HOY?</span></h2>
+      <p style="color:#888;font-size:0.9rem;line-height:1.7;margin-top:1rem;max-width:340px;">Ingresá tus ahorros y mirá exactamente cuánto poder adquisitivo perdés cada mes por la inflación.</p>
+      <p style="color:#444;font-family:'Space Mono',monospace;font-size:0.62rem;text-transform:uppercase;letter-spacing:0.08em;margin-top:1.5rem;">Dato INDEC oficial — Inflación enero 2026: 2.9% mensual</p>
+    </div>
+    <div class="calc-box">
+      <label class="calc-label">Tus ahorros en pesos</label>
+      <div class="calc-input-row">
+        <span class="calc-peso">$</span>
+        <input class="calc-input" id="calcInput" type="number" placeholder="500000" min="0" inputmode="numeric">
+      </div>
+      <div class="calc-results">
+        <div class="calc-result-item"><span class="calc-result-label">Perdés por mes</span><span class="calc-result-val red" id="resMes">—</span></div>
+        <div class="calc-result-item"><span class="calc-result-label">Perdés por año</span><span class="calc-result-val red" id="resAnio">—</span></div>
+        <div class="calc-result-item"><span class="calc-result-label">En 2 años perdés</span><span class="calc-result-val red" id="res2Anios">—</span></div>
+        <div class="calc-result-divider"></div>
+        <div class="calc-result-item"><span class="calc-result-label">Equivale en dólares MEP</span><span class="calc-result-val green" id="resDolar">—</span></div>
+      </div>
+      <div class="calc-share" id="calcShare">
+        <p class="calc-share-text" id="calcShareText"></p>
+        <button class="calc-share-btn" id="calcShareBtn">📲 Compartir resultado</button>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="pain-section reveal">
-  <p class="section-label">El problema real</p>
-  <h2 class="section-title">LA REALIDAD<br>ARGENTINA</h2>
+  <p class="section-label">El problema que nadie te explica</p>
+  <h2 class="section-title">TU PLATA SE<br>DERRITE SOLA</h2>
   <div class="pain-grid">
-    <div class="pain-card">
-      <span class="pain-icon">📉</span>
-      <span class="pain-num">2.9%</span>
-      <p class="pain-desc">Inflación de enero 2026 (INDEC). Si tenés $1.000.000 parado en la cuenta, perdiste $29.000 este mes sin gastar un solo peso.</p>
-    </div>
-    <div class="pain-card">
-      <span class="pain-icon">🗓️</span>
-      <span class="pain-num">33%</span>
-      <p class="pain-desc">Poder adquisitivo perdido en el último año. Lo que antes costaba $100 hoy cuesta $133. Tus ahorros en pesos no escaparon de eso.</p>
-    </div>
-    <div class="pain-card">
-      <span class="pain-icon">🤷</span>
-      <span class="pain-num">0</span>
-      <p class="pain-desc">Apps financieras que realmente entiendan el contexto argentino: dólar blue, MEP, brecha cambiaria y cómo cubrirte en el día a día.</p>
-    </div>
+    <div class="pain-card"><span class="pain-icon">📉</span><span class="pain-num">2.9%</span><p class="pain-desc">Inflación de enero 2026 (INDEC). Si tenés $1.000.000 parado en la cuenta, perdiste $29.000 este mes sin gastar un solo peso.</p></div>
+    <div class="pain-card"><span class="pain-icon">🗓️</span><span class="pain-num">33%</span><p class="pain-desc">Poder adquisitivo perdido en el último año. Lo que antes costaba $100 hoy cuesta $133. Tus ahorros en pesos no escaparon de eso.</p></div>
+    <div class="pain-card"><span class="pain-icon">🤷</span><span class="pain-num">0</span><p class="pain-desc">Apps financieras que realmente entiendan el contexto argentino: dólar blue, MEP, brecha cambiaria y cómo cubrirte en el día a día.</p></div>
   </div>
 </section>
 
-<!-- FEATURES -->
 <section class="features-section reveal" id="features">
-  <p class="section-label">Qué hace</p>
-  <h2 class="section-title">TODO LO QUE<br><span style="color:var(--verde)">NECESITÁS</span></h2>
+  <p class="section-label">Cómo te ayuda</p>
+  <h2 class="section-title">SIMPLE.<br><span style="color:var(--verde)">CONCRETO.</span></h2>
   <div class="features-grid">
-    <div class="feature-card" data-num="01">
-      <span class="feature-tag">📊 Análisis</span>
-      <h3 class="feature-title">Gastos en tiempo real</h3>
-      <p class="feature-desc">Conectá tu cuenta o cargá gastos. La IA detecta patrones y te dice exactamente dónde está tu plata.</p>
-      <ul class="feature-list">
-        <li>Categorización automática de gastos</li>
-        <li>Comparativa mes a mes ajustada por inflación</li>
-        <li>Detecta gastos que crecieron más que la inflación</li>
-        <li>"Gastás demasiado en delivery" (con datos)</li>
-      </ul>
-    </div>
-    <div class="feature-card" data-num="02">
-      <span class="feature-tag">💡 Recomendaciones</span>
-      <h3 class="feature-title">Decisiones inteligentes</h3>
-      <p class="feature-desc">No consejos genéricos. Recomendaciones basadas en tu situación, el mercado argentino y el contexto del día.</p>
-      <ul class="feature-list">
-        <li>¿Pesos o dólares esta semana?</li>
-        <li>FCI, plazo fijo o MEP según tu perfil</li>
-        <li>Cobertura CER vs dólar linked</li>
-        <li>Timing óptimo para operar</li>
-      </ul>
-    </div>
-    <div class="feature-card" data-num="03">
-      <span class="feature-tag">🔔 Alertas</span>
-      <h3 class="feature-title">Siempre un paso adelante</h3>
-      <p class="feature-desc">Alertas que realmente importan. Nada de ruido: solo lo que te afecta a vos.</p>
-      <ul class="feature-list">
-        <li>"Tu plata perdió 8% este mes"</li>
-        <li>"Este gasto subió 40% vs el mes pasado"</li>
-        <li>"Si seguís así no llegás a fin de mes"</li>
-        <li>Oportunidades en el mercado de cambios</li>
-      </ul>
-    </div>
-    <div class="feature-card" data-num="04">
-      <span class="feature-tag">🧠 Chat IA</span>
-      <h3 class="feature-title">Tu asesor de guardia 24/7</h3>
-      <p class="feature-desc">Preguntale lo que quieras. Habla argentino, entiende el contexto local y responde con datos reales.</p>
-      <ul class="feature-list">
-        <li>"¿Qué hago con 1 millón de pesos?"</li>
-        <li>"¿Conviene el plazo fijo o el FCI?"</li>
-        <li>"Explicame el dólar MEP en simple"</li>
-        <li>Historial y seguimiento de consejos</li>
-      </ul>
-    </div>
+    <div class="feature-card" data-num="01"><span class="feature-tag">📊 Gastos</span><h3 class="feature-title">Analizá tus gastos</h3><p class="feature-desc">Subí una foto del ticket y la IA lo lee. Ve el resumen por día y categoría, con recomendaciones concretas por cada gasto.</p><ul class="feature-list"><li>Subí foto del ticket — la IA lo carga solo</li><li>Resumen del mes agrupado por día</li><li>Detecta en qué gastás de más</li><li>Recomendación IA por cada gasto</li></ul></div>
+    <div class="feature-card" data-num="02"><span class="feature-tag">💡 Asesor</span><h3 class="feature-title">Decisiones inteligentes</h3><p class="feature-desc">No consejos genéricos. Recomendaciones basadas en tu situación y el contexto argentino del día.</p><ul class="feature-list"><li>¿Pesos o dólares esta semana?</li><li>FCI, plazo fijo o MEP según tu perfil</li><li>Explicado simple, sin tecnicismos</li><li>Siempre con datos reales de mercado</li></ul></div>
+    <div class="feature-card" data-num="03"><span class="feature-tag">🔔 Alertas</span><h3 class="feature-title">Siempre un paso adelante</h3><p class="feature-desc">Alertas que realmente importan. Solo lo que te afecta a vos, cuando importa.</p><ul class="feature-list"><li>"Tu plata perdió X% este mes"</li><li>"Este gasto subió 40% vs el mes pasado"</li><li>"Si seguís así no llegás a fin de mes"</li><li>Oportunidades en el mercado de cambios</li></ul></div>
+    <div class="feature-card" data-num="04"><span class="feature-tag">🧠 Chat IA</span><h3 class="feature-title">Tu asesor 24/7</h3><p class="feature-desc">Preguntale lo que quieras. Habla argentino, entiende el contexto local, nunca te hace sentir tonto.</p><ul class="feature-list"><li>"¿Qué hago con 1 millón de pesos?"</li><li>"¿Qué es un FCI y cómo entro?"</li><li>"Explicame el dólar MEP simple"</li><li>Sin tecnicismos, sin letra chica</li></ul></div>
   </div>
 </section>
 
-<!-- PRICING -->
+<section class="how-section reveal">
+  <p class="section-label">Cómo funciona</p>
+  <h2 class="section-title">EMPEZÁS EN<br><span style="color:var(--verde)">5 MINUTOS.</span></h2>
+  <div class="how-grid">
+    <div class="how-step"><div class="how-num">01</div><div><h3 class="how-title">Contás tu situación</h3><p class="how-desc">Nada de conectar tu banco. Solo te preguntamos cuánto ahorrás, cuánto ganás y qué te preocupa.</p></div><div class="how-arrow">→</div></div>
+    <div class="how-step"><div class="how-num">02</div><div><h3 class="how-title">La IA analiza</h3><p class="how-desc">PesoSmart cruza tu perfil con el contexto argentino real: inflación, tipo de cambio, tasas y tu capacidad de ahorro.</p></div><div class="how-arrow">→</div></div>
+    <div class="how-step"><div class="how-num">03</div><div><h3 class="how-title">Sabés exactamente qué hacer</h3><p class="how-desc">Te decimos puntualmente qué hacer con tu plata esta semana, explicado como si tuvieras un amigo que sabe de finanzas.</p></div><div class="how-arrow" style="opacity:0">→</div></div>
+  </div>
+</section>
+
+<section class="comp-section reveal">
+  <p class="section-label">La comparativa que nadie hace</p>
+  <h2 class="section-title">¿QUÉ PASA SI<br><span style="color:var(--rojo)">NO HACÉS NADA?</span></h2>
+  <p style="color:#888;font-size:0.9rem;margin-top:1rem;max-width:520px;">Con $1.000.000 de pesos ahorrados, esto es lo que pasa en 12 meses:</p>
+  <div class="comp-table">
+    <div class="comp-header"><div class="comp-cell comp-label-cell"></div><div class="comp-cell">Caja de ahorro</div><div class="comp-cell">Plazo fijo</div><div class="comp-cell comp-highlight-header">PesoSmart</div></div>
+    <div class="comp-row"><div class="comp-cell comp-label-cell">Rendimiento anual</div><div class="comp-cell comp-bad">0%</div><div class="comp-cell comp-mid">~35% TNA</div><div class="comp-cell comp-good comp-highlight-col">Según tu perfil</div></div>
+    <div class="comp-row"><div class="comp-cell comp-label-cell">Le ganás a la inflación</div><div class="comp-cell comp-bad">❌ No</div><div class="comp-cell comp-mid">⚠️ Apenas</div><div class="comp-cell comp-good comp-highlight-col">✅ Sí</div></div>
+    <div class="comp-row"><div class="comp-cell comp-label-cell">Necesitás saber de finanzas</div><div class="comp-cell comp-good">No</div><div class="comp-cell comp-mid">Un poco</div><div class="comp-cell comp-good comp-highlight-col">✅ Para nada</div></div>
+    <div class="comp-row"><div class="comp-cell comp-label-cell">Te explica qué hacer</div><div class="comp-cell comp-bad">❌</div><div class="comp-cell comp-bad">❌</div><div class="comp-cell comp-good comp-highlight-col">✅ Siempre</div></div>
+    <div class="comp-row"><div class="comp-cell comp-label-cell">Tu plata en 12 meses</div><div class="comp-cell comp-bad">~$670.000<br><small style="font-size:0.65rem;opacity:0.7">(-33% poder adquisitivo)</small></div><div class="comp-cell comp-mid">~$990.000<br><small style="font-size:0.65rem;opacity:0.7">(casi empata)</small></div><div class="comp-cell comp-good comp-highlight-col">Mejor que la inflación<br><small style="font-size:0.65rem;opacity:0.7">(con estrategia)</small></div></div>
+  </div>
+</section>
+
+<section class="quotes-section reveal">
+  <p class="section-label">¿Te suena familiar?</p>
+  <h2 class="section-title">TE PASA A<br><span style="color:var(--amarillo)">VOS TAMBIÉN</span></h2>
+  <div class="quotes-grid">
+    <div class="quote-card"><p class="quote-text">Laburé todo el mes, guardé plata, y a fin de mes tenía menos poder de compra que al principio. Sin hacer nada mal.</p><div class="quote-author"><div class="quote-avatar" style="background:#e74c3c">MG</div><div><div class="quote-name">Martín G.</div><div class="quote-role">Empleado — CABA</div></div></div></div>
+    <div class="quote-card"><p class="quote-text">Tenía 2 millones en la caja de ahorro. Un año después perdí el equivalente a 3 sueldos. Nadie me avisó.</p><div class="quote-author"><div class="quote-avatar" style="background:#8e44ad">LC</div><div><div class="quote-name">Laura C.</div><div class="quote-role">Freelancer — Rosario</div></div></div></div>
+    <div class="quote-card"><p class="quote-text">Plazo fijo, MEP, FCI, Lecap... No entiendo nada. Y mientras tanto mi plata se derrite. Necesito que me lo expliquen en argentino.</p><div class="quote-author"><div class="quote-avatar" style="background:#27ae60">PR</div><div><div class="quote-name">Pablo R.</div><div class="quote-role">Comerciante — Córdoba</div></div></div></div>
+  </div>
+  <p style="font-family:'Space Mono',monospace;font-size:0.6rem;color:#333;text-align:center;margin-top:2rem;text-transform:uppercase;letter-spacing:0.08em;">Testimonios ilustrativos que reflejan experiencias reales de argentinos con la inflación.</p>
+</section>
+
 <section class="pricing-section reveal" id="pricing">
   <p class="section-label">Planes</p>
   <h2 class="section-title">SIMPLE.<br><span style="color:var(--verde)">SIN LETRA CHICA.</span></h2>
   <div class="pricing-grid">
-    <div class="pricing-card">
-      <span class="pricing-badge">Gratis</span>
-      <div class="price-name">Básico</div>
-      <div class="price-amount">$0</div>
-      <div class="price-period">para siempre</div>
-      <ul class="price-feats">
-        <li class="price-feat">Análisis de gastos básico</li>
-        <li class="price-feat">Chat con IA (10 consultas/mes)</li>
-        <li class="price-feat">Cotizaciones en tiempo real</li>
-        <li class="price-feat disabled">Alertas personalizadas</li>
-        <li class="price-feat disabled">Recomendaciones avanzadas</li>
-        <li class="price-feat disabled">Historial completo</li>
-      </ul>
-      <button class="price-btn">Empezar gratis</button>
-    </div>
-    <div class="pricing-card featured">
-      <span class="pricing-badge">⭐ Más popular</span>
-      <div class="price-name">Pro</div>
-      <div class="price-amount">$5</div>
-      <div class="price-period">USD / mes — pagás en pesos al MEP</div>
-      <ul class="price-feats">
-        <li class="price-feat">Todo lo del plan Básico</li>
-        <li class="price-feat">Chat ilimitado con IA</li>
-        <li class="price-feat">Alertas personalizadas</li>
-        <li class="price-feat">Recomendaciones avanzadas</li>
-        <li class="price-feat">Análisis de portafolio</li>
-        <li class="price-feat">Historial y reportes completos</li>
-      </ul>
-      <button class="price-btn">Empezar ahora</button>
-    </div>
-    <div class="pricing-card">
-      <span class="pricing-badge">Para equipos</span>
-      <div class="price-name">Business</div>
-      <div class="price-amount">Custom</div>
-      <div class="price-period">para fintechs y empresas</div>
-      <ul class="price-feats">
-        <li class="price-feat">API completa</li>
-        <li class="price-feat">White label disponible</li>
-        <li class="price-feat">Integraciones bancarias</li>
-        <li class="price-feat">SLA garantizado</li>
-        <li class="price-feat">Soporte dedicado</li>
-        <li class="price-feat">Dashboard para equipos</li>
-      </ul>
-      <button class="price-btn">Hablar con ventas</button>
-    </div>
+    <div class="pricing-card"><span class="pricing-badge">Gratis</span><div class="price-name">Básico</div><div class="price-amount">$0</div><div class="price-period">para siempre</div><ul class="price-feats"><li class="price-feat">Calculadora de inflación</li><li class="price-feat">Chat IA (10 consultas/mes)</li><li class="price-feat">Carga manual de gastos</li><li class="price-feat disabled">Foto de tickets con IA</li><li class="price-feat disabled">Alertas personalizadas</li><li class="price-feat disabled">Análisis avanzado</li></ul><button class="price-btn">Empezar gratis</button></div>
+    <div class="pricing-card featured"><span class="pricing-badge">⭐ Más popular</span><div class="price-name">Pro</div><div class="price-amount">$5</div><div class="price-period">USD / mes — pagás en pesos al MEP</div><ul class="price-feats"><li class="price-feat">Todo lo del plan Básico</li><li class="price-feat">Chat ilimitado con IA</li><li class="price-feat">Foto de tickets con IA</li><li class="price-feat">Alertas personalizadas</li><li class="price-feat">Análisis completo del mes</li><li class="price-feat">Recomendaciones avanzadas</li></ul><button class="price-btn">Empezar ahora</button></div>
+    <div class="pricing-card"><span class="pricing-badge">Para equipos</span><div class="price-name">Business</div><div class="price-amount">Custom</div><div class="price-period">para fintechs y empresas</div><ul class="price-feats"><li class="price-feat">API completa</li><li class="price-feat">White label disponible</li><li class="price-feat">Integraciones bancarias</li><li class="price-feat">SLA garantizado</li><li class="price-feat">Soporte dedicado</li><li class="price-feat">Dashboard para equipos</li></ul><button class="price-btn">Hablar con ventas</button></div>
   </div>
 </section>
 
-
-<!-- CALCULADORA VIRAL -->
-<section class="calc-section reveal" id="calculadora">
-  <div class="calc-inner">
-    <div class="calc-left">
-      <p class="section-label" style="color:var(--amarillo)">Calculadora viral</p>
-      <h2 class="section-title">CUÁNTO<br>PERDÉS<br><span style="color:var(--rojo)">HOY</span></h2>
-      <p style="color:#888; font-size:0.9rem; line-height:1.7; margin-top:1rem; max-width:340px;">Ingresá tus ahorros en pesos y te decimos exactamente cuánto poder adquisitivo estás perdiendo. En tiempo real.</p>
-      <p style="color:#444; font-family:'Space Mono',monospace; font-size:0.62rem; text-transform:uppercase; letter-spacing:0.08em; margin-top:1.5rem;">Basado en datos oficiales INDEC — Inflación ene 2026: 2.9% mensual</p>
-    </div>
-    <div class="calc-right">
-      <div class="calc-box">
-        <label class="calc-label">Tus ahorros en pesos</label>
-        <div class="calc-input-row">
-          <span class="calc-peso">$</span>
-          <input class="calc-input" id="calcInput" type="number" placeholder="500000" min="0">
-        </div>
-        <div class="calc-results" id="calcResults">
-          <div class="calc-result-item">
-            <span class="calc-result-label">Perdés por mes</span>
-            <span class="calc-result-val red" id="resMes">—</span>
-          </div>
-          <div class="calc-result-item">
-            <span class="calc-result-label">Perdés por año</span>
-            <span class="calc-result-val red" id="resAnio">—</span>
-          </div>
-          <div class="calc-result-item">
-            <span class="calc-result-label">En 2 años perdés</span>
-            <span class="calc-result-val red" id="res2Anios">—</span>
-          </div>
-          <div class="calc-result-divider"></div>
-          <div class="calc-result-item">
-            <span class="calc-result-label">Equivale en dólares (MEP)</span>
-            <span class="calc-result-val green" id="resDolar">—</span>
-          </div>
-        </div>
-        <div class="calc-share" id="calcShare" style="display:none">
-          <p class="calc-share-text" id="calcShareText"></p>
-          <button class="calc-share-btn" id="calcShareBtn">Compartir resultado</button>
-        </div>
-      </div>
-    </div>
+<section class="faq-section reveal" id="faq">
+  <p class="section-label">Preguntas frecuentes</p>
+  <h2 class="section-title">LO QUE<br><span style="color:var(--verde)">TODOS PREGUNTAN</span></h2>
+  <div class="faq-list">
+    <div class="faq-item"><button class="faq-q">¿Necesito saber de finanzas para usar PesoSmart? <span class="faq-icon">+</span></button><div class="faq-a">Para nada. Está hecho exactamente para personas que nunca invirtieron. Te explicamos todo desde cero, sin darte por sentado que sabés algo. Si no entendés algo, preguntale al chat y te lo explica con palabras de todos los días.</div></div>
+    <div class="faq-item"><button class="faq-q">¿Es gratis? ¿Hay letra chica? <span class="faq-icon">+</span></button><div class="faq-a">Sí, es gratis para empezar. Los primeros 500 usuarios en anotarse tienen acceso completo por 3 meses sin pagar nada y sin poner tarjeta. Después habrá un plan pago opcional de $5 USD/mes, pero la versión básica siempre va a ser gratuita.</div></div>
+    <div class="faq-item"><button class="faq-q">¿Tengo que conectar mi banco o dar datos sensibles? <span class="faq-icon">+</span></button><div class="faq-a">No. Nunca te vamos a pedir acceso a tu banco, contraseñas ni datos financieros privados. Vos elegís qué información compartir. Con lo básico que nos contás ya podemos darte orientación concreta.</div></div>
+    <div class="faq-item"><button class="faq-q">¿Para qué monto sirve? ¿Necesito tener mucha plata? <span class="faq-icon">+</span></button><div class="faq-a">Sirve desde $50.000 hasta lo que tengas. No necesitás tener millones para que valga la pena cuidar tu plata. De hecho, cuanto antes empezás, más diferencia hace con el tiempo.</div></div>
+    <div class="faq-item"><button class="faq-q">¿Cuándo lanza? ¿Cómo me avisan? <span class="faq-icon">+</span></button><div class="faq-a">Estamos en beta cerrada. Apenas te anotás te mandamos un mail cuando abrimos el acceso. Los primeros 500 entran primero y con 3 meses gratis.</div></div>
   </div>
 </section>
 
-<!-- CÓMO FUNCIONA -->
-<section class="how-section reveal">
-  <p class="section-label">El camino</p>
-  <h2 class="section-title">3 PASOS.<br><span style="color:var(--verde)">SIN VUELTAS.</span></h2>
-  <div class="how-grid">
-    <div class="how-step">
-      <div class="how-num">01</div>
-      <div class="how-content">
-        <h3 class="how-title">Cargás tus datos</h3>
-        <p class="how-desc">Ingresás tus ahorros, ingresos y gastos principales. Sin conectar banco, sin datos bancarios. Vos controlás qué compartís.</p>
-      </div>
-      <div class="how-arrow">→</div>
-    </div>
-    <div class="how-step">
-      <div class="how-num">02</div>
-      <div class="how-content">
-        <h3 class="how-title">La IA analiza tu situación</h3>
-        <p class="how-desc">PesoSmart cruza tu perfil con el contexto argentino real: inflación, tipo de cambio, tasas disponibles y tu capacidad de ahorro.</p>
-      </div>
-      <div class="how-arrow">→</div>
-    </div>
-    <div class="how-step">
-      <div class="how-num">03</div>
-      <div class="how-content">
-        <h3 class="how-title">Recibís un plan concreto</h3>
-        <p class="how-desc">No consejos genéricos. Te dice exactamente qué hacer con tu plata esta semana: dónde moverla, cuánto guardar y cómo cubrirte de la inflación.</p>
-      </div>
-      <div class="how-arrow" style="opacity:0">→</div>
-    </div>
+<section class="viral-section reveal" id="cta">
+  <h2 class="viral-title">DEJÁ DE<br><span class="rojo">PERDER</span> PLATA<br>SIN <span class="verde">SABERLO</span></h2>
+  <p class="viral-sub">Sumate gratis. Los primeros <strong style="color:var(--amarillo)">500 usuarios</strong> tienen acceso completo por 3 meses, sin tarjeta, sin compromiso.</p>
+  <div class="waitlist-counter">
+    <div class="waitlist-bar-wrap"><div class="waitlist-bar" id="waitlistBar"></div></div>
+    <div class="waitlist-label"><span id="waitlistCount">0</span> / 500 lugares tomados</div>
   </div>
-</section>
-
-<!-- FRASES -->
-<section class="quotes-section reveal">
-  <p class="section-label">Lo que piensa la gente</p>
-  <h2 class="section-title">EL DOLOR<br><span style="color:var(--amarillo)">ES REAL</span></h2>
-  <div class="quotes-grid">
-    <div class="quote-card">
-      <p class="quote-text">Laburé todo el mes, guardé plata, y a fin de mes tenía menos poder de compra que al principio. Sin hacer nada mal.</p>
-      <div class="quote-author">
-        <div class="quote-avatar" style="background:#e74c3c">MG</div>
-        <div><div class="quote-name">Martín G.</div><div class="quote-role">Empleado en relación de dependencia — CABA</div></div>
-      </div>
-    </div>
-    <div class="quote-card">
-      <p class="quote-text">Tenía 2 millones en la caja de ahorro. Un año después me doy cuenta que perdí el equivalente a 3 sueldos. Nadie me avisó.</p>
-      <div class="quote-author">
-        <div class="quote-avatar" style="background:#8e44ad">LC</div>
-        <div><div class="quote-name">Laura C.</div><div class="quote-role">Freelancer — Rosario</div></div>
-      </div>
-    </div>
-    <div class="quote-card">
-      <p class="quote-text">Plazo fijo, MEP, FCI, Lecap... No entiendo nada. Y mientras tanto mi plata se derrite. Necesito que alguien me lo explique en argentino.</p>
-      <div class="quote-author">
-        <div class="quote-avatar" style="background:#27ae60">PR</div>
-        <div><div class="quote-name">Pablo R.</div><div class="quote-role">Comerciante — Córdoba</div></div>
-      </div>
-    </div>
-  </div>
-  <p style="font-family:'Space Mono',monospace; font-size:0.6rem; color:#333; text-align:center; margin-top:2rem; text-transform:uppercase; letter-spacing:0.08em;">Testimonios ilustrativos que reflejan experiencias reales de argentinos con la inflación.</p>
-</section>
-
-
-  <h2 class="viral-title">
-    ESTA IA TE DICE<br>
-    <span class="verde">CUÁNTO</span> TE ROBA<br>
-    LA <span class="rojo">INFLACIÓN</span>
-  </h2>
-  <p class="viral-sub">Sumate a la lista de espera. Primeros 500 usuarios entran gratis por 3 meses.</p>
   <div class="viral-input-group">
     <input class="viral-email" type="email" placeholder="tu@email.com">
     <button class="viral-submit">Quiero entrar →</button>
@@ -1466,50 +503,82 @@
   <p class="viral-fine">Sin spam. Sin letra chica. Cancelás cuando querés.</p>
 </section>
 
-<!-- FOOTER MARQUEE -->
-<div class="marquee-strip" style="background: var(--gris); border-top: 1px solid rgba(255,255,255,0.06);">
-  <span class="marquee-inner" style="color: rgba(255,255,255,0.15);">
-    PESOSMART &nbsp;✦&nbsp; PESOSMART &nbsp;✦&nbsp; PESOSMART &nbsp;✦&nbsp; PESOSMART &nbsp;✦&nbsp; PESOSMART &nbsp;✦&nbsp; PESOSMART &nbsp;✦&nbsp; PESOSMART &nbsp;✦&nbsp; PESOSMART &nbsp;✦&nbsp; PESOSMART &nbsp;✦&nbsp; PESOSMART &nbsp;✦&nbsp;
-  </span>
+<div class="marquee-strip" style="background:var(--gris);border-top:1px solid rgba(255,255,255,0.06);">
+  <span class="marquee-inner" style="color:rgba(255,255,255,0.15);">PESOSMART &nbsp;✦&nbsp; PESOSMART &nbsp;✦&nbsp; PESOSMART &nbsp;✦&nbsp; PESOSMART &nbsp;✦&nbsp; PESOSMART &nbsp;✦&nbsp; PESOSMART &nbsp;✦&nbsp; PESOSMART &nbsp;✦&nbsp; PESOSMART &nbsp;✦&nbsp; PESOSMART &nbsp;✦&nbsp; PESOSMART &nbsp;✦&nbsp;</span>
 </div>
 
-<!-- FOOTER -->
 <footer>
   <div class="footer-logo">Peso<span>Smart</span></div>
   <ul class="footer-links">
     <li><a href="#">Términos</a></li>
     <li><a href="#">Privacidad</a></li>
-    <li><a href="#">Contacto</a></li>
-    <li><a href="#">Twitter / X</a></li>
+    <li><a href="asesor.html">Asesor IA</a></li>
+    <li><a href="gastos.html">Mis Gastos</a></li>
   </ul>
   <div class="footer-copy">© 2026 PesoSmart. Hecho en 🇦🇷</div>
 </footer>
 
+<a href="asesor.html" style="text-decoration:none">
+  <button class="chat-widget-btn" aria-label="Asesor IA">
+    💬
+    <span class="chat-btn-label">Consultá al asesor</span>
+  </button>
+</a>
+
 <script>
-  // Scroll reveal
-  const reveals = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('visible'); }
-    });
+  // Reveal
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.1 });
-  reveals.forEach(el => observer.observe(el));
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-  // Live ticker simulation
-  const rates = {
-    blue: 1280,
-    mep: 1261,
-    inf: 3.7
-  };
-
+  // Ticker
+  const rates = { blue: 1280, mep: 1261 };
   setInterval(() => {
     rates.blue += Math.floor(Math.random() * 3) - 1;
     rates.mep += Math.floor(Math.random() * 3) - 1;
-    const tickerText = `🇦🇷 DÓLAR BLUE: $${rates.blue.toLocaleString('es-AR')} &nbsp;|&nbsp; MEP: $${rates.mep.toLocaleString('es-AR')} &nbsp;|&nbsp; INFLACIÓN MENSUAL: ${rates.inf}% &nbsp;|&nbsp; PLAZO FIJO: 37% TNA &nbsp;|&nbsp; MERVAL: +2.1% &nbsp;|&nbsp; COBERTURA: ON &nbsp;|&nbsp; `.repeat(2);
-    document.querySelector('.ticker-inner').innerHTML = tickerText;
+    const t = `🇦🇷 DÓLAR BLUE: $${rates.blue.toLocaleString('es-AR')} &nbsp;|&nbsp; MEP: $${rates.mep.toLocaleString('es-AR')} &nbsp;|&nbsp; INFLACIÓN MENSUAL: 2.9% &nbsp;|&nbsp; PLAZO FIJO: 37% TNA &nbsp;|&nbsp; MERVAL: +2.1% &nbsp;|&nbsp; COBERTURA: ON &nbsp;|&nbsp; `.repeat(2);
+    document.querySelector('.ticker-inner').innerHTML = t;
   }, 4000);
 
-  // CTA button
+  // Calculadora — limpia, un solo listener
+  const INF = 0.029;
+  const MEP = 1261;
+  const fmt = n => '$' + Math.round(n).toLocaleString('es-AR');
+
+  document.getElementById('calcInput').addEventListener('input', function() {
+    const v = parseFloat(this.value);
+    if (!v || v <= 0) {
+      ['resMes','resAnio','res2Anios','resDolar'].forEach(id => document.getElementById(id).textContent = '—');
+      document.getElementById('calcShare').style.display = 'none';
+      return;
+    }
+    const mes    = v * INF;
+    const anio   = v * (Math.pow(1 + INF, 12) - 1);
+    const dos    = v * (Math.pow(1 + INF, 24) - 1);
+    const usd    = anio / MEP;
+    document.getElementById('resMes').textContent    = fmt(mes);
+    document.getElementById('resAnio').textContent   = fmt(anio);
+    document.getElementById('res2Anios').textContent = fmt(dos);
+    document.getElementById('resDolar').textContent  = 'USD ' + Math.round(usd).toLocaleString('es-AR');
+    document.getElementById('calcShareText').textContent =
+      `Tengo ${fmt(v)} ahorrados en pesos. La inflación me come ${fmt(mes)} por mes y ${fmt(anio)} por año. Equivale a perder USD ${Math.round(usd).toLocaleString('es-AR')} al año. — PesoSmart`;
+    document.getElementById('calcShare').style.display = 'block';
+  });
+
+  document.getElementById('calcShareBtn').addEventListener('click', function() {
+    const text = document.getElementById('calcShareText').textContent;
+    if (navigator.share) {
+      navigator.share({ title: 'PesoSmart', text });
+    } else {
+      navigator.clipboard.writeText(text).then(() => {
+        this.textContent = '✓ Copiado';
+        setTimeout(() => this.textContent = '📲 Compartir resultado', 2000);
+      });
+    }
+  });
+
+  // Waitlist
   document.querySelector('.viral-submit').addEventListener('click', function() {
     const input = document.querySelector('.viral-email');
     if (input.value && input.value.includes('@')) {
@@ -1520,62 +589,28 @@
     }
   });
 
-  // Calculadora de inflación
-  const INF_MENSUAL = 0.029;
-  const MEP = 1261;
-  const fmt = n => '$' + Math.round(n).toLocaleString('es-AR');
-
-  document.getElementById('calcInput').addEventListener('input', function() {
-    const val = parseFloat(this.value);
-    if (!val || val <= 0) {
-      ['resMes','resAnio','res2Anios','resDolar'].forEach(id => {
-        document.getElementById(id).textContent = '—';
-      });
-      document.getElementById('calcShare').style.display = 'none';
-      return;
-    }
-    const perMes = val * INF_MENSUAL;
-    const perAnio = val * (Math.pow(1 + INF_MENSUAL, 12) - 1);
-    const per2Anios = val * (Math.pow(1 + INF_MENSUAL, 24) - 1);
-    const enDolares = perAnio / MEP;
-
-    document.getElementById('resMes').textContent = fmt(perMes);
-    document.getElementById('resAnio').textContent = fmt(perAnio);
-    document.getElementById('res2Anios').textContent = fmt(per2Anios);
-    document.getElementById('resDolar').textContent = 'USD ' + Math.round(enDolares).toLocaleString('es-AR');
-
-    const shareText = document.getElementById('calcShareText');
-    shareText.textContent = `Tengo ${fmt(val)} ahorrados en pesos. La inflación me come ${fmt(perMes)} por mes y ${fmt(perAnio)} por año. Equivale a perder USD ${Math.round(enDolares).toLocaleString('es-AR')} al año. PesoSmart me lo dice en tiempo real.`;
-    document.getElementById('calcShare').style.display = 'block';
-  });
-
-  document.getElementById('calcShareBtn').addEventListener('click', function() {
-    const text = document.getElementById('calcShareText').textContent;
-    if (navigator.share) {
-      navigator.share({ title: 'PesoSmart — Calculadora de inflación', text });
-    } else {
-      navigator.clipboard.writeText(text).then(() => {
-        this.textContent = 'Copiado al portapapeles!';
-        setTimeout(() => this.textContent = 'Compartir resultado', 2000);
-      });
-    }
-  });
-
-  // Waitlist counter animation
-  const bar = document.getElementById('waitlistBar');
-  const countEl = document.getElementById('waitlistCount');
-  let current = 0;
+  // Waitlist counter
+  let cur = 0;
   const target = 347;
-  const pct = (target / 500) * 100;
   setTimeout(() => {
-    bar.style.width = pct + '%';
-    const interval = setInterval(() => {
-      current += Math.ceil(target / 60);
-      if (current >= target) { current = target; clearInterval(interval); }
-      countEl.textContent = current;
+    document.getElementById('waitlistBar').style.width = (target / 500 * 100) + '%';
+    const iv = setInterval(() => {
+      cur += Math.ceil(target / 60);
+      if (cur >= target) { cur = target; clearInterval(iv); }
+      document.getElementById('waitlistCount').textContent = cur;
     }, 25);
   }, 600);
 
+  // FAQ
+  document.querySelectorAll('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const ans = btn.nextElementSibling;
+      const open = ans.classList.contains('open');
+      document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open'));
+      document.querySelectorAll('.faq-q').forEach(b => b.classList.remove('active'));
+      if (!open) { ans.classList.add('open'); btn.classList.add('active'); }
+    });
+  });
 </script>
 </body>
 </html>
