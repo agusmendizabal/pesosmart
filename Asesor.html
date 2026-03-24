@@ -7,158 +7,293 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root{--negro:#0a0a0a;--blanco:#f2f0ea;--verde:#00e676;--rojo:#ff3d3d;--amarillo:#ffe600;--gris:#1a1a1a}
+  :root{--negro:#0a0a0a;--blanco:#f2f0ea;--verde:#00e676;--rojo:#ff3d3d;--amarillo:#ffe600;--gris:#1a1a1a;--gris2:#0d0d0d}
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%;overflow:hidden}
   body{background:var(--negro);color:var(--blanco);font-family:'DM Sans',sans-serif;display:flex;flex-direction:column}
-  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
   @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
+  @keyframes blink{0%,80%,100%{opacity:0.15}40%{opacity:1}}
 
   /* TOPBAR */
-  .topbar{display:flex;align-items:center;gap:1rem;padding:0.9rem 1.5rem;background:#0d0d0d;border-bottom:1px solid rgba(255,255,255,0.07);flex-shrink:0}
-  .topbar-back{font-family:'Space Mono',monospace;font-size:0.65rem;text-transform:uppercase;letter-spacing:0.08em;color:#555;text-decoration:none;display:flex;align-items:center;gap:0.4rem;transition:color 0.2s}
+  .topbar{display:flex;align-items:center;gap:0.8rem;padding:0.85rem 1.5rem;background:var(--gris2);border-bottom:1px solid rgba(255,255,255,0.07);flex-shrink:0}
+  .topbar-back{font-family:'Space Mono',monospace;font-size:0.62rem;text-transform:uppercase;letter-spacing:0.08em;color:#444;text-decoration:none;display:flex;align-items:center;gap:0.3rem;transition:color 0.2s;white-space:nowrap}
   .topbar-back:hover{color:var(--verde)}
-  .topbar-divider{width:1px;height:20px;background:rgba(255,255,255,0.08)}
-  .topbar-avatar{width:32px;height:32px;background:var(--verde);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:0.85rem;color:var(--negro);flex-shrink:0}
-  .topbar-name{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:0.05em;color:var(--blanco);line-height:1}
-  .topbar-status{font-family:'Space Mono',monospace;font-size:0.58rem;color:var(--verde);display:flex;align-items:center;gap:0.3rem;margin-top:0.1rem}
-  .topbar-status::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--verde);animation:pulse 1.5s infinite}
-  .topbar-gastos{margin-left:auto;font-family:'Space Mono',monospace;font-size:0.62rem;text-transform:uppercase;letter-spacing:0.08em;color:#555;text-decoration:none;transition:color 0.2s}
+  .topbar-divider{width:1px;height:18px;background:rgba(255,255,255,0.07);flex-shrink:0}
+  .topbar-avatar{width:30px;height:30px;background:var(--verde);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:0.8rem;color:var(--negro);flex-shrink:0}
+  .topbar-name{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.05em;color:var(--blanco);line-height:1}
+  .topbar-status{font-family:'Space Mono',monospace;font-size:0.55rem;color:var(--verde);display:flex;align-items:center;gap:0.3rem;margin-top:0.1rem}
+  .topbar-status::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--verde);animation:pulse 1.8s infinite;flex-shrink:0}
+  .topbar-right{margin-left:auto;display:flex;align-items:center;gap:0.8rem}
+  .topbar-clear{font-family:'Space Mono',monospace;font-size:0.58rem;text-transform:uppercase;letter-spacing:0.06em;color:#2a2a2a;background:none;border:none;cursor:pointer;transition:color 0.2s}
+  .topbar-clear:hover{color:var(--rojo)}
+  .topbar-gastos{font-family:'Space Mono',monospace;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.07em;color:#333;text-decoration:none;transition:color 0.2s;white-space:nowrap}
   .topbar-gastos:hover{color:var(--amarillo)}
 
   /* CHAT */
-  .chat-area{flex:1;overflow-y:auto;padding:1.5rem;display:flex;flex-direction:column;gap:1rem;scroll-behavior:smooth}
-  .chat-area::-webkit-scrollbar{width:4px}
-  .chat-area::-webkit-scrollbar-thumb{background:#2a2a2a}
-  .date-stamp{text-align:center;font-family:'Space Mono',monospace;font-size:0.58rem;text-transform:uppercase;letter-spacing:0.1em;color:#333;padding:0.5rem 0}
-  .msg{max-width:75%;font-size:0.9rem;line-height:1.65;padding:0.9rem 1.1rem;animation:fadeUp 0.25s ease both}
+  .chat-area{flex:1;overflow-y:auto;padding:1.2rem 1.5rem 0.5rem;display:flex;flex-direction:column;gap:0.8rem;scroll-behavior:smooth}
+  .chat-area::-webkit-scrollbar{width:3px}
+  .chat-area::-webkit-scrollbar-thumb{background:#1e1e1e}
+  .date-stamp{text-align:center;font-family:'Space Mono',monospace;font-size:0.54rem;text-transform:uppercase;letter-spacing:0.12em;color:#242424;padding:0.2rem 0}
+  .msg{max-width:76%;font-size:0.9rem;line-height:1.7;padding:0.85rem 1.1rem;animation:fadeUp 0.2s ease both;word-break:break-word}
   .msg.bot{background:var(--gris);border-left:3px solid var(--verde);color:var(--blanco);align-self:flex-start}
-  .msg.user{background:rgba(0,230,118,0.08);border-right:3px solid var(--verde);color:#ddd;align-self:flex-end;text-align:right}
-  .msg.typing{background:var(--gris);border-left:3px solid var(--verde);align-self:flex-start;font-family:'Space Mono',monospace;font-size:0.68rem;color:var(--verde);animation:pulse 1.2s infinite}
+  .msg.user{background:rgba(0,230,118,0.06);border-right:3px solid rgba(0,230,118,0.35);color:#bbb;align-self:flex-end;text-align:right}
+  .msg.error{background:rgba(255,61,61,0.06);border-left:3px solid var(--rojo);color:#b06060;align-self:flex-start;font-family:'Space Mono',monospace;font-size:0.74rem;line-height:1.6}
+
+  /* typing */
+  .typing-bubble{background:var(--gris);border-left:3px solid var(--verde);align-self:flex-start;padding:1rem 1.2rem;display:flex;gap:5px;align-items:center;animation:fadeUp 0.2s ease both}
+  .td{width:6px;height:6px;border-radius:50%;background:var(--verde);animation:blink 1.4s infinite both}
+  .td:nth-child(2){animation-delay:.2s}
+  .td:nth-child(3){animation-delay:.4s}
 
   /* SUGGESTIONS */
-  .suggs-row{display:flex;flex-wrap:wrap;gap:0.5rem;padding:0 1.5rem 0.5rem;flex-shrink:0}
-  .sugg-btn{font-family:'Space Mono',monospace;font-size:0.62rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--verde);border:1px solid rgba(0,230,118,0.2);background:transparent;padding:0.4rem 0.85rem;cursor:pointer;transition:all 0.15s;white-space:nowrap}
-  .sugg-btn:hover{background:rgba(0,230,118,0.08);border-color:var(--verde)}
+  .suggs-wrap{padding:0.4rem 1.5rem 0.2rem;flex-shrink:0}
+  .suggs-row{display:flex;flex-wrap:wrap;gap:0.4rem}
+  .sugg-btn{font-family:'Space Mono',monospace;font-size:0.57rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--verde);border:1px solid rgba(0,230,118,0.16);background:transparent;padding:0.32rem 0.75rem;cursor:pointer;transition:all 0.15s;white-space:nowrap}
+  .sugg-btn:hover{background:rgba(0,230,118,0.07);border-color:rgba(0,230,118,0.4)}
 
   /* INPUT */
-  .input-bar{display:flex;border-top:1px solid rgba(255,255,255,0.07);background:#0d0d0d;flex-shrink:0}
-  .chat-input{flex:1;background:transparent;border:none;outline:none;color:var(--blanco);font-family:'DM Sans',sans-serif;font-size:0.95rem;padding:1.1rem 1.5rem}
-  .chat-input::placeholder{color:#333}
-  .send-btn{background:var(--verde);color:var(--negro);border:none;padding:1.1rem 1.8rem;font-family:'Space Mono',monospace;font-size:0.78rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;transition:background 0.15s;flex-shrink:0}
-  .send-btn:hover{background:var(--amarillo)}
-  .send-btn:disabled{opacity:0.4;cursor:not-allowed}
-  .disclaimer{padding:0.5rem 1.5rem;font-family:'Space Mono',monospace;font-size:0.55rem;text-transform:uppercase;letter-spacing:0.07em;color:#2a2a2a;background:#0d0d0d;flex-shrink:0}
+  .input-bar{display:flex;border-top:1px solid rgba(255,255,255,0.06);background:var(--gris2);flex-shrink:0}
+  .chat-input{flex:1;background:transparent;border:none;outline:none;color:var(--blanco);font-family:'DM Sans',sans-serif;font-size:0.95rem;padding:1rem 1.5rem}
+  .chat-input::placeholder{color:#242424}
+  .send-btn{background:var(--verde);color:var(--negro);border:none;padding:1rem 1.6rem;font-family:'Space Mono',monospace;font-size:0.7rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;transition:background 0.15s;flex-shrink:0}
+  .send-btn:hover:not(:disabled){background:var(--amarillo)}
+  .send-btn:disabled{opacity:0.3;cursor:not-allowed}
+  .disclaimer{padding:0.4rem 1.5rem;font-family:'Space Mono',monospace;font-size:0.5rem;text-transform:uppercase;letter-spacing:0.06em;color:#1a1a1a;background:var(--gris2);flex-shrink:0}
 
-  @media(max-width:600px){.msg{max-width:90%}}
+  @media(max-width:600px){
+    .msg{max-width:93%}
+    .topbar-gastos{display:none}
+  }
 </style>
 </head>
 <body>
 
+<!-- TOPBAR -->
 <div class="topbar">
   <a class="topbar-back" href="/">← Inicio</a>
   <div class="topbar-divider"></div>
   <div class="topbar-avatar">PS</div>
   <div>
     <div class="topbar-name">PesoSmart IA</div>
-    <div class="topbar-status">asesor activo ahora</div>
+    <div class="topbar-status">asesor activo</div>
   </div>
-  <a href="gastos.html" class="topbar-gastos">💸 Mis Gastos →</a>
+  <div class="topbar-right">
+    <button class="topbar-clear" id="clearBtn">🗑 limpiar</button>
+    <div class="topbar-divider"></div>
+    <a href="gastos.html" class="topbar-gastos">💸 Gastos →</a>
+  </div>
 </div>
 
-<div class="chat-area" id="chatArea">
-  <div class="date-stamp">Hoy</div>
-  <div class="msg bot">¡Hola! 👋 Soy tu asesor financiero argentino. No importa si nunca invertiste nada — acá no hablamos en difícil. Preguntame lo que quieras sobre tu plata y te lo explico como si fuera un amigo.</div>
+<!-- CHAT -->
+<div class="chat-area" id="chatArea"></div>
+
+<!-- SUGGESTIONS -->
+<div class="suggs-wrap" id="suggsWrap">
+  <div class="suggs-row">
+    <button class="sugg-btn">¿Por dónde empiezo si nunca invertí?</button>
+    <button class="sugg-btn">¿Qué hago con $500k parados?</button>
+    <button class="sugg-btn">¿El plazo fijo le gana a la inflación?</button>
+    <button class="sugg-btn">¿Cómo compro dólares legalmente?</button>
+    <button class="sugg-btn">¿Qué es un FCI?</button>
+    <button class="sugg-btn">¿Cómo me cubro de la inflación?</button>
+  </div>
 </div>
 
-<div class="suggs-row" id="suggsRow">
-  <button class="sugg-btn">No sé nada, ¿por dónde empiezo?</button>
-  <button class="sugg-btn">¿Qué hago con $500k parados?</button>
-  <button class="sugg-btn">¿El plazo fijo le gana a la inflación?</button>
-  <button class="sugg-btn">¿Cómo compro dólares legalmente?</button>
-  <button class="sugg-btn">¿Qué es un FCI?</button>
-</div>
-
+<!-- INPUT BAR -->
 <div class="input-bar">
-  <input class="chat-input" id="chatInput" placeholder="Escribí tu pregunta…" autocomplete="off" maxlength="500">
+  <input class="chat-input" id="chatInput" placeholder="Escribí tu pregunta…" autocomplete="off" maxlength="600">
   <button class="send-btn" id="sendBtn">Enviar →</button>
 </div>
-<div class="disclaimer">Solo orientación general · No reemplaza asesoría profesional certificada</div>
+<div class="disclaimer">Solo orientación general · No reemplaza asesoría financiera profesional · Powered by Groq</div>
 
 <script>
 const SYSTEM = `Sos PesoSmart, un amigo argentino que sabe mucho de finanzas y le explica todo a alguien que recién empieza o que nunca invirtió en su vida. Tu objetivo es que la persona entienda todo sin sentirse tonta.
 
-CONTEXTO ACTUAL:
+CONTEXTO ACTUAL (Argentina, marzo 2026):
 - Inflación enero 2026: 2.9% mensual (INDEC oficial)
 - Inflación acumulada último año: ~33%
-- Dólar Blue: ~$1.280
-- Dólar MEP: ~$1.261 (legal, desde el banco)
-- Plazo fijo: ~2.6% mensual (no le gana a la inflación)
-- Fondo Money Market: liquidez inmediata, ~2.5% mensual
-- Fondo CER: protege de inflación, para 3+ meses, ~3.4% mensual
+- Dólar Blue: ~$1.280 | Dólar MEP: ~$1.261 (legal, desde el broker)
+- Plazo fijo: ~2.6% mensual — NO le gana a la inflación
+- Fondo Money Market: ~2.5% mensual, liquidez inmediata
+- Fondo CER: ~3.4% mensual, protege de inflación, ideal para 3+ meses
 - Lecap: rinde por encima de inflación a corto plazo
 
 CÓMO HABLÁS:
-- Como un amigo, no como un banco. Cero tecnicismos innecesarios.
-- Si usás una palabra difícil, la explicás en la misma oración.
-- Máximo 4 oraciones por respuesta. Todo en texto corrido, sin listas ni bullets.
-- Vocabulario: "plata", "guita", "laburo", "sin vueltas".
-- Si alguien menciona un monto concreto, hacés el cálculo exacto.
-- Siempre terminás con una pregunta o próximo paso concreto.
+- Como un amigo, nunca como un banco. Cero tecnicismos sin explicar.
+- Si usás una palabra difícil, la explicás entre guiones en la misma oración.
+- Máximo 4 oraciones por respuesta. Texto corrido, SIN listas ni bullets.
+- Vocabulario: "plata", "guita", "laburo", "sin vueltas", "te conviene".
+- Con montos concretos hacés el cálculo exacto.
+- Siempre terminás con una pregunta o próximo paso.
 - Si alguien tiene miedo de invertir, lo tranquilizás primero.
-- Usás analogías: "el plazo fijo es como una alcancía con agujero", "comprar dólares es como una caja fuerte que no se derrite".
-- Al final recordás brevemente que es orientación general.`;
+- Aclarás brevemente al final que es orientación general, no asesoría oficial.`;
 
-let history = [], loading = false;
-const chatArea = document.getElementById('chatArea');
-const chatInput = document.getElementById('chatInput');
-const sendBtn = document.getElementById('sendBtn');
-const suggsRow = document.getElementById('suggsRow');
+const API_URL = '/.netlify/functions/chat';
+const MODEL   = 'llama-3.3-70b-versatile';
 
-function addMsg(text, role) {
+const LS_HIST = 'ps_chat_history';
+const LS_MSGS = 'ps_chat_messages';
+
+let history = [];
+let loading  = false;
+
+try { history = JSON.parse(localStorage.getItem(LS_HIST) || '[]'); } catch(e) {}
+
+const $ = id => document.getElementById(id);
+const chatArea  = $('chatArea');
+const chatInput = $('chatInput');
+const sendBtn   = $('sendBtn');
+const suggsWrap = $('suggsWrap');
+
+// ── DOM HELPERS ───────────────────────────────────────
+function mkEl(cls, text) {
   const d = document.createElement('div');
-  d.className = 'msg ' + role;
-  d.textContent = text;
-  chatArea.appendChild(d);
-  chatArea.scrollTop = chatArea.scrollHeight;
+  d.className = cls;
+  if (text !== undefined) d.textContent = text;
   return d;
 }
+function addMsg(text, role) {
+  const d = mkEl('msg ' + role, text);
+  chatArea.appendChild(d);
+  scrollDown();
+  persistMessages();
+  return d;
+}
+function addTyping() {
+  const d = document.createElement('div');
+  d.className = 'typing-bubble';
+  d.id = '_typing';
+  d.innerHTML = '<div class="td"></div><div class="td"></div><div class="td"></div>';
+  chatArea.appendChild(d);
+  scrollDown();
+}
+function removeTyping() {
+  const t = document.getElementById('_typing');
+  if (t) t.remove();
+}
+function addStamp(text) {
+  chatArea.appendChild(mkEl('date-stamp', text));
+}
+function scrollDown() { chatArea.scrollTop = chatArea.scrollHeight; }
 
+function showWelcome() {
+  addStamp('Hoy');
+  addMsg('¡Hola! 👋 Soy tu asesor financiero argentino. No importa si nunca invertiste nada — acá no hablamos en difícil. Preguntame lo que quieras sobre tu plata.', 'bot');
+}
+
+// ── PERSIST ───────────────────────────────────────────
+function persistMessages() {
+  const items = [...chatArea.childNodes].map(n => {
+    if (!n.className) return null;
+    if (n.className.includes('typing')) return null;
+    if (n.className.includes('msg'))        return { k: 'msg',   cls: n.className, t: n.textContent };
+    if (n.className.includes('date-stamp')) return { k: 'stamp', t: n.textContent };
+    return null;
+  }).filter(Boolean);
+  try { localStorage.setItem(LS_MSGS, JSON.stringify(items)); } catch(e) {}
+}
+function restoreMessages() {
+  let items = [];
+  try { items = JSON.parse(localStorage.getItem(LS_MSGS) || '[]'); } catch(e) {}
+  if (!items.length) return false;
+  items.forEach(item => {
+    if (item.k === 'stamp') addStamp(item.t);
+    else chatArea.appendChild(mkEl(item.cls, item.t));
+  });
+  scrollDown();
+  return true;
+}
+
+// ── CLEAR ─────────────────────────────────────────────
+$('clearBtn').addEventListener('click', () => {
+  if (!confirm('¿Borrás toda la conversación?')) return;
+  chatArea.innerHTML = '';
+  history = [];
+  try { localStorage.removeItem(LS_HIST); localStorage.removeItem(LS_MSGS); } catch(e) {}
+  suggsWrap.style.display = '';
+  showWelcome();
+});
+
+// ── SEND ──────────────────────────────────────────────
 async function send() {
   const text = chatInput.value.trim();
   if (!text || loading) return;
-  suggsRow.style.display = 'none';
+
+  suggsWrap.style.display = 'none';
   chatInput.value = '';
   loading = true;
   sendBtn.disabled = true;
+
   addMsg(text, 'user');
   history.push({ role: 'user', content: text });
-  const typing = addMsg('Analizando…', 'typing');
+  try { localStorage.setItem(LS_HIST, JSON.stringify(history)); } catch(e) {}
+
+  addTyping();
+
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, system: SYSTEM, messages: history })
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: 500,
+        temperature: 0.7,
+        messages: [
+          { role: 'system', content: SYSTEM },
+          ...history
+        ],
+      }),
     });
-    const data = await res.json();
-    typing.remove();
-    const reply = data?.content?.[0]?.text || 'Hubo un problema. Intentá de nuevo.';
+
+    removeTyping();
+
+    if (res.status === 429) {
+      history.pop();
+      addMsg('Demasiadas consultas seguidas — esperá unos segundos e intentá de nuevo.', 'error');
+      loading = false; sendBtn.disabled = false; chatInput.focus();
+      return;
+    }
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err?.error?.message || `Error ${res.status}`);
+    }
+
+    const data  = await res.json();
+    const reply = data?.choices?.[0]?.message?.content || 'No pude procesar la respuesta, intentá de nuevo.';
     history.push({ role: 'assistant', content: reply });
+    try { localStorage.setItem(LS_HIST, JSON.stringify(history)); } catch(e) {}
     addMsg(reply, 'bot');
-  } catch(e) {
-    typing.remove();
-    addMsg('La IA todavía no está conectada (falta configurar la API key). Próximamente disponible — mientras tanto anotate en la lista de espera en la página principal.', 'bot');
+
+  } catch(err) {
+    removeTyping();
+    history.pop();
+    addMsg(
+      err instanceof TypeError
+        ? 'Sin conexión — revisá tu red e intentá de nuevo.'
+        : `Hubo un problema: ${err.message}`,
+      'error'
+    );
   }
+
   loading = false;
   sendBtn.disabled = false;
   chatInput.focus();
 }
 
 sendBtn.addEventListener('click', send);
-chatInput.addEventListener('keydown', e => { if (e.key === 'Enter') send(); });
-suggsRow.querySelectorAll('.sugg-btn').forEach(b => {
+chatInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) send(); });
+document.querySelectorAll('.sugg-btn').forEach(b => {
   b.addEventListener('click', () => { chatInput.value = b.textContent; send(); });
 });
+
+// ── INIT ──────────────────────────────────────────────
+const restored = restoreMessages();
+if (!restored) showWelcome();
+if (history.length > 0) suggsWrap.style.display = 'none';
+chatInput.focus();
 </script>
 </body>
 </html>
