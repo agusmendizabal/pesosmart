@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mis Gastos — PesoSmart</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--negro:#0a0a0a;--blanco:#f2f0ea;--verde:#00e676;--rojo:#ff3d3d;--amarillo:#ffe600;--gris:#1a1a1a}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:var(--negro);color:var(--blanco);font-family:'DM Sans',sans-serif;overflow:hidden}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  .app{display:flex;flex-direction:column;height:100%}
+
+  /* TOPBAR */
+  .topbar{display:flex;align-items:center;gap:1rem;padding:0.9rem 1.5rem;background:#0d0d0d;border-bottom:1px solid rgba(255,255,255,0.07);flex-shrink:0}
+  .topbar-back{font-family:'Space Mono',monospace;font-size:0.65rem;text-transform:uppercase;letter-spacing:0.08em;color:#555;text-decoration:none;display:flex;align-items:center;gap:0.4rem;transition:color 0.2s}
+  .topbar-back:hover{color:var(--verde)}
+  .topbar-divider{width:1px;height:20px;background:rgba(255,255,255,0.08)}
+  .topbar-title{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:0.05em;color:var(--blanco)}
+  .topbar-asesor{font-family:'Space Mono',monospace;font-size:0.62rem;text-transform:uppercase;letter-spacing:0.08em;color:#555;text-decoration:none;transition:color 0.2s}
+  .topbar-asesor:hover{color:var(--verde)}
+
+  /* TABS */
+  .tabs{display:flex;border-bottom:1px solid rgba(255,255,255,0.07);background:#0d0d0d;flex-shrink:0}
+  .tab{flex:1;font-family:'Space Mono',monospace;font-size:0.65rem;text-transform:uppercase;letter-spacing:0.08em;background:transparent;color:#555;border:none;border-bottom:2px solid transparent;padding:0.85rem 1rem;cursor:pointer;transition:all 0.2s}
+  .tab:hover{color:var(--blanco)}
+  .tab.active{color:var(--verde);border-bottom-color:var(--verde)}
+
+  /* PANES */
+  .main{flex:1;overflow:hidden;display:flex}
+  .pane{flex:1;overflow-y:auto;display:none;flex-direction:column}
+  .pane.active{display:flex}
+  .pane::-webkit-scrollbar{width:4px}
+  .pane::-webkit-scrollbar-thumb{background:#2a2a2a}
+
+  /* CARGAR PANE */
+  .cargar-pane{padding:1.5rem;gap:1rem}
+
+  /* Upload */
+  .upload-zone{border:2px dashed rgba(255,255,255,0.1);padding:2rem 1.5rem;text-align:center;cursor:pointer;transition:all 0.2s;position:relative;background:rgba(255,255,255,0.02)}
+  .upload-zone:hover,.upload-zone.drag{border-color:var(--verde);background:rgba(0,230,118,0.04)}
+  .upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+  .upload-icon{font-size:2rem;margin-bottom:0.5rem}
+  .upload-title{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:0.05em;color:var(--blanco)}
+  .upload-sub{font-family:'Space Mono',monospace;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:#555;margin-top:0.3rem}
+  .upload-preview{width:100%;max-height:180px;object-fit:cover;display:none;margin-top:0.8rem}
+  .scan-overlay{display:none;align-items:center;justify-content:center;flex-direction:column;gap:0.8rem;padding:1.5rem;background:rgba(0,230,118,0.05);border:1px solid rgba(0,230,118,0.15)}
+  .scan-overlay.visible{display:flex;animation:fadeUp 0.2s ease both}
+  .scan-spinner{width:24px;height:24px;border:2px solid rgba(0,230,118,0.2);border-top-color:var(--verde);border-radius:50%;animation:spin 0.8s linear infinite}
+  .scan-text{font-family:'Space Mono',monospace;font-size:0.65rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--verde)}
+
+  /* Extracted */
+  .extracted-header{font-family:'Space Mono',monospace;font-size:0.62rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--verde);margin-bottom:0.5rem;display:flex;align-items:center;gap:0.5rem}
+  .extracted-add-all{font-family:'Space Mono',monospace;font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;background:var(--verde);color:var(--negro);border:none;padding:0.4rem 0.9rem;cursor:pointer;margin-left:auto;transition:background 0.15s}
+  .extracted-add-all:hover{background:var(--amarillo)}
+  .extracted-list{display:flex;flex-direction:column;gap:0.4rem}
+  .extracted-item{display:flex;align-items:center;gap:0.8rem;background:rgba(0,230,118,0.05);border:1px solid rgba(0,230,118,0.15);padding:0.7rem 1rem;cursor:pointer;transition:background 0.2s;animation:fadeUp 0.25s ease both}
+  .extracted-item:hover{background:rgba(0,230,118,0.1)}
+  .ei-icon{font-size:1.1rem;flex-shrink:0}
+  .ei-info{flex:1}
+  .ei-desc{font-size:0.85rem;color:var(--blanco)}
+  .ei-cat{font-family:'Space Mono',monospace;font-size:0.58rem;text-transform:uppercase;color:#555;margin-top:0.1rem}
+  .ei-monto{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--verde);flex-shrink:0}
+  .ei-add{font-family:'Space Mono',monospace;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--verde);border:1px solid rgba(0,230,118,0.3);padding:0.25rem 0.6rem;flex-shrink:0;background:none;cursor:pointer}
+
+  /* Divider */
+  .form-divider{display:flex;align-items:center;gap:1rem;font-family:'Space Mono',monospace;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.1em;color:#333}
+  .form-divider::before,.form-divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.07)}
+
+  /* Form */
+  .form-box{display:flex;flex-direction:column;gap:0.8rem}
+  .field-label{font-family:'Space Mono',monospace;font-size:0.62rem;text-transform:uppercase;letter-spacing:0.08em;color:#555;display:block;margin-bottom:0.3rem}
+  .field-input,.field-select{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:var(--blanco);font-family:'DM Sans',sans-serif;font-size:0.9rem;padding:0.7rem 0.9rem;outline:none;transition:border-color 0.2s;appearance:none}
+  .field-input:focus,.field-select:focus{border-color:var(--verde)}
+  .field-input::placeholder{color:#2a2a2a}
+  .field-select option{background:#1a1a1a}
+  .date-row{display:flex;gap:0.8rem}
+  .date-row>*{flex:1}
+  .monto-row{display:flex;align-items:center;border:1px solid rgba(255,255,255,0.1);transition:border-color 0.2s}
+  .monto-row:focus-within{border-color:var(--verde)}
+  .monto-sign{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:#444;padding:0.45rem 0.9rem;background:rgba(255,255,255,0.03);border-right:1px solid rgba(255,255,255,0.08);flex-shrink:0}
+  .monto-input{flex:1;background:transparent;border:none;outline:none;font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--blanco);padding:0.4rem 0.9rem}
+  .monto-input::placeholder{color:#1a1a1a}
+  .submit-btn{width:100%;font-family:'Space Mono',monospace;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;background:var(--verde);color:var(--negro);border:none;padding:1rem;cursor:pointer;transition:background 0.2s}
+  .submit-btn:hover{background:var(--amarillo)}
+  .submit-btn:disabled{opacity:0.5;cursor:not-allowed}
+
+  /* IA rec */
+  .ia-rec{background:rgba(0,230,118,0.05);border-left:3px solid var(--verde);padding:1rem;display:none;animation:fadeUp 0.3s ease both}
+  .ia-rec.visible{display:block}
+  .ia-rec-tag{font-family:'Space Mono',monospace;font-size:0.58rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--verde);display:block;margin-bottom:0.4rem}
+  .ia-rec-text{font-size:0.87rem;color:#ccc;line-height:1.65}
+  .ia-loading{font-family:'Space Mono',monospace;font-size:0.68rem;color:var(--verde);animation:pulse 1.2s infinite}
+
+  /* RESUMEN PANE */
+  .resumen-header{padding:1.5rem;background:var(--gris);border-bottom:1px solid rgba(255,255,255,0.06);flex-shrink:0}
+  .resumen-total-label{font-family:'Space Mono',monospace;font-size:0.62rem;text-transform:uppercase;letter-spacing:0.1em;color:#555}
+  .resumen-total{font-family:'Bebas Neue',sans-serif;font-size:3rem;color:var(--rojo);line-height:1;margin:0.3rem 0 0.5rem;letter-spacing:0.02em}
+  .cats-row{display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.8rem}
+  .cat-chip{font-family:'Space Mono',monospace;font-size:0.58rem;text-transform:uppercase;letter-spacing:0.05em;color:#777;border:1px solid rgba(255,255,255,0.08);padding:0.25rem 0.6rem;display:flex;align-items:center;gap:0.3rem}
+  .cat-chip b{color:var(--amarillo);font-weight:400}
+
+  /* Analisis */
+  .analisis-row{padding:1rem 1.5rem;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:flex-start;gap:1rem;flex-shrink:0}
+  .analisis-btn{font-family:'Space Mono',monospace;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;background:transparent;color:var(--verde);border:1px solid rgba(0,230,118,0.25);padding:0.6rem 1.2rem;cursor:pointer;transition:all 0.2s;flex-shrink:0}
+  .analisis-btn:hover{background:rgba(0,230,118,0.07)}
+  .analisis-btn:disabled{opacity:0.3;cursor:not-allowed}
+  .analisis-text{font-size:0.82rem;color:#aaa;line-height:1.7;display:none;flex:1;animation:fadeUp 0.25s ease both}
+  .analisis-text.visible{display:block}
+
+  /* Expense list */
+  .expenses-list{flex:1;overflow-y:auto}
+  .expenses-list::-webkit-scrollbar{width:4px}
+  .expenses-list::-webkit-scrollbar-thumb{background:#2a2a2a}
+  .day-header{padding:0.6rem 1.5rem;font-family:'Space Mono',monospace;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.1em;color:#444;background:rgba(255,255,255,0.02);border-bottom:1px solid rgba(255,255,255,0.04);display:flex;justify-content:space-between}
+  .day-header span{color:#666}
+  .expense-item{display:flex;align-items:center;gap:0.9rem;padding:0.95rem 1.5rem;border-bottom:1px solid rgba(255,255,255,0.04);transition:background 0.15s;animation:fadeUp 0.2s ease both}
+  .expense-item:hover{background:rgba(255,255,255,0.02)}
+  .ei-circle{width:38px;height:38px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.1rem;background:rgba(255,255,255,0.05)}
+  .ei-body{flex:1;min-width:0}
+  .ei-name{font-size:0.88rem;color:var(--blanco);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ei-meta{font-family:'Space Mono',monospace;font-size:0.58rem;text-transform:uppercase;color:#444;margin-top:0.12rem;letter-spacing:0.05em}
+  .ei-amount{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--rojo);flex-shrink:0;letter-spacing:0.02em}
+  .ei-del{background:none;border:none;color:#2a2a2a;cursor:pointer;font-size:0.85rem;padding:0.3rem;transition:color 0.2s;flex-shrink:0}
+  .ei-del:hover{color:var(--rojo)}
+  .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;padding:4rem 2rem;text-align:center;gap:1rem}
+  .empty-icon{font-size:3rem;opacity:0.3}
+  .empty-text{font-family:'Space Mono',monospace;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.1em;color:#333;line-height:1.8}
+
+  /* Toast */
+  .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(20px);background:var(--verde);color:var(--negro);font-family:'Space Mono',monospace;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:0.6rem 1.4rem;opacity:0;transition:all 0.3s;pointer-events:none;z-index:999;white-space:nowrap}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  @media(max-width:600px){.resumen-total{font-size:2.2rem}.expense-item{padding:0.85rem 1rem}}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="topbar">
+    <a class="topbar-back" href="/">← Inicio</a>
+    <div class="topbar-divider"></div>
+    <div class="topbar-title">💸 Mis Gastos</div>
+    <a href="asesor.html" class="topbar-asesor" style="margin-left:auto">🧠 Asesor IA →</a>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-pane="cargar">+ Cargar gasto</button>
+    <button class="tab" data-pane="resumen">Resumen del mes</button>
+  </div>
+
+  <div class="main">
+
+    <!-- CARGAR -->
+    <div class="pane active" id="pane-cargar">
+      <div class="cargar-pane">
+
+        <div>
+          <label class="field-label">Subí una foto — ticket, factura o captura de tu banco</label>
+          <div class="upload-zone" id="uploadZone">
+            <input type="file" id="fileInput" accept="image/*" capture="environment">
+            <div id="uploadContent">
+              <div class="upload-icon">📷</div>
+              <div class="upload-title">Subí una foto</div>
+              <div class="upload-sub">La IA lee los gastos automáticamente</div>
+            </div>
+            <img id="uploadPreview" class="upload-preview" alt="preview">
+          </div>
+          <div class="scan-overlay" id="scanOverlay">
+            <div class="scan-spinner"></div>
+            <div class="scan-text">Leyendo gastos de la imagen…</div>
+          </div>
+          <div id="extractedSection" style="display:none;margin-top:0.8rem">
+            <div class="extracted-header">
+              Gastos detectados
+              <button class="extracted-add-all" id="addAllBtn">+ Agregar todos</button>
+            </div>
+            <div class="extracted-list" id="extractedList"></div>
+          </div>
+        </div>
+
+        <div class="form-divider">o cargá manualmente</div>
+
+        <div class="form-box">
+          <div>
+            <label class="field-label">Descripción</label>
+            <input class="field-input" id="fDesc" placeholder="Ej: café, Uber, delivery, supermercado…" maxlength="80">
+          </div>
+          <div class="date-row">
+            <div>
+              <label class="field-label">Categoría</label>
+              <select class="field-select" id="fCat">
+                <option>☕ Café / Bebidas</option>
+                <option>🍔 Comida / Delivery</option>
+                <option>🚗 Transporte</option>
+                <option>🛍️ Compras / Ropa</option>
+                <option>🎮 Entretenimiento</option>
+                <option>📱 Suscripciones</option>
+                <option>🏠 Hogar / Servicios</option>
+                <option>💊 Salud / Farmacia</option>
+                <option>📚 Educación</option>
+                <option>🎯 Otro</option>
+              </select>
+            </div>
+            <div>
+              <label class="field-label">Fecha</label>
+              <input class="field-input" type="date" id="fFecha">
+            </div>
+          </div>
+          <div>
+            <label class="field-label">Monto</label>
+            <div class="monto-row">
+              <span class="monto-sign">$</span>
+              <input class="monto-input" id="fMonto" type="number" placeholder="6000" min="1" inputmode="numeric">
+            </div>
+          </div>
+          <button class="submit-btn" id="submitBtn">Cargar gasto →</button>
+        </div>
+
+        <div class="ia-rec" id="iaRec">
+          <span class="ia-rec-tag">🧠 PesoSmart dice</span>
+          <div class="ia-rec-text" id="iaRecText"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RESUMEN -->
+    <div class="pane" id="pane-resumen">
+      <div class="resumen-header">
+        <div class="resumen-total-label">Total gastado este mes</div>
+        <div class="resumen-total" id="resumenTotal">$0</div>
+        <div class="cats-row" id="catsRow"></div>
+      </div>
+      <div class="analisis-row">
+        <button class="analisis-btn" id="analisisBtn" disabled>🔍 Analizar con IA</button>
+        <div class="analisis-text" id="analisisText"></div>
+      </div>
+      <div class="expenses-list" id="expensesList">
+        <div class="empty-state" id="emptyState">
+          <div class="empty-icon">💸</div>
+          <div class="empty-text">Todavía no cargaste<br>gastos este mes</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// State
+let expenses = [];
+try { expenses = JSON.parse(localStorage.getItem('ps_expenses') || '[]'); } catch(e) { expenses = []; }
+const today = new Date().toISOString().split('T')[0];
+document.getElementById('fFecha').value = today;
+const fmt = n => '$' + Math.round(n).toLocaleString('es-AR');
+
+// Tabs
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('pane-' + tab.dataset.pane).classList.add('active');
+    if (tab.dataset.pane === 'resumen') renderResumen();
+  });
+});
+
+// Toast
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+function save() {
+  try { localStorage.setItem('ps_expenses', JSON.stringify(expenses)); } catch(e) {}
+}
+
+// PHOTO UPLOAD
+const fileInput = document.getElementById('fileInput');
+const uploadZone = document.getElementById('uploadZone');
+const uploadPreview = document.getElementById('uploadPreview');
+const uploadContent = document.getElementById('uploadContent');
+const scanOverlay = document.getElementById('scanOverlay');
+
+uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag'); });
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag'));
+uploadZone.addEventListener('drop', e => { e.preventDefault(); uploadZone.classList.remove('drag'); if (e.dataTransfer.files[0]) processImage(e.dataTransfer.files[0]); });
+fileInput.addEventListener('change', () => { if (fileInput.files[0]) processImage(fileInput.files[0]); });
+
+async function processImage(file) {
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    uploadPreview.src = e.target.result;
+    uploadPreview.style.display = 'block';
+    uploadContent.style.display = 'none';
+    uploadZone.style.pointerEvents = 'none';
+    scanOverlay.classList.add('visible');
+    document.getElementById('extractedSection').style.display = 'none';
+    const base64 = e.target.result.split(',')[1];
+    await analyzeImage(base64, file.type || 'image/jpeg');
+    scanOverlay.classList.remove('visible');
+    uploadZone.style.pointerEvents = 'auto';
+  };
+  reader.readAsDataURL(file);
+}
+
+let extractedGastos = [];
+async function analyzeImage(base64, mimeType) {
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'image', source: { type: 'base64', media_type: mimeType, data: base64 } },
+            { type: 'text', text: `Analizá esta imagen y extraé todos los gastos o transacciones que veas. Respondé SOLO con un JSON array, sin texto extra ni markdown:\n[{"desc":"descripción","cat":"categoría","monto":1234,"icon":"emoji"}]\nCategorías: Café/Bebidas, Comida/Delivery, Transporte, Compras/Ropa, Entretenimiento, Suscripciones, Hogar/Servicios, Salud/Farmacia, Educación, Otro.\nSi no encontrás gastos, devolvé [].` }
+          ]
+        }]
+      })
+    });
+    const data = await res.json();
+    let gastos = [];
+    try { gastos = JSON.parse((data?.content?.[0]?.text || '[]').replace(/```json|```/g, '').trim()); } catch(e) {}
+    if (gastos.length > 0) {
+      extractedGastos = gastos;
+      renderExtracted(gastos);
+    } else {
+      showToast('No detecté gastos. Cargalos manualmente.');
+    }
+  } catch(e) {
+    showToast('Sin conexión. Cargá el gasto manualmente.');
+  }
+}
+
+function renderExtracted(gastos) {
+  const list = document.getElementById('extractedList');
+  list.innerHTML = '';
+  gastos.forEach((g, i) => {
+    const d = document.createElement('div');
+    d.className = 'extracted-item';
+    d.innerHTML = `<div class="ei-icon">${g.icon||'💸'}</div><div class="ei-info"><div class="ei-desc">${g.desc}</div><div class="ei-cat">${g.cat}</div></div><div class="ei-monto">${fmt(g.monto)}</div><button class="ei-add" onclick="addExtracted(${i})">+ Agregar</button>`;
+    list.appendChild(d);
+  });
+  document.getElementById('extractedSection').style.display = 'block';
+}
+
+window.addExtracted = function(i) {
+  const g = extractedGastos[i];
+  addExpense({ desc: g.desc, cat: g.cat, monto: g.monto, fecha: today });
+  const item = document.getElementById('extractedList').children[i];
+  if (item) { item.style.opacity = '0.4'; const btn = item.querySelector('.ei-add'); if(btn){btn.textContent='✓';btn.style.pointerEvents='none';} }
+  showToast('Gasto agregado ✓');
+};
+
+document.getElementById('addAllBtn').addEventListener('click', () => {
+  extractedGastos.forEach((g, i) => {
+    addExpense({ desc: g.desc, cat: g.cat, monto: g.monto, fecha: today });
+    const item = document.getElementById('extractedList').children[i];
+    if (item) { item.style.opacity = '0.4'; const btn = item.querySelector('.ei-add'); if(btn){btn.textContent='✓';btn.style.pointerEvents='none';} }
+  });
+  showToast(`${extractedGastos.length} gastos agregados ✓`);
+});
+
+// MANUAL FORM
+const GASTOS_SYS = `Sos PesoSmart, asesor financiero argentino. Sin listas ni bullets. Texto corrido como WhatsApp. Máximo 2-3 oraciones. Datos: inflación 2.9%/mes, dólar MEP $1.261, FCI CER ~3.4%/mes. Cuando te mandan un gasto: contextualizás con humor leve (sin juzgar) y decís qué rendiría ese monto mensual si lo ahorraran.`;
+
+document.getElementById('submitBtn').addEventListener('click', async () => {
+  const desc = document.getElementById('fDesc').value.trim();
+  const cat = document.getElementById('fCat').value;
+  const monto = parseFloat(document.getElementById('fMonto').value);
+  const fecha = document.getElementById('fFecha').value || today;
+  if (!monto || monto <= 0) { document.getElementById('fMonto').focus(); return; }
+  const label = desc || cat;
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true; btn.textContent = 'Cargando…';
+  addExpense({ desc: label, cat, monto, fecha });
+  document.getElementById('fDesc').value = '';
+  document.getElementById('fMonto').value = '';
+  showToast('Gasto cargado ✓');
+  const iaRec = document.getElementById('iaRec');
+  const iaRecText = document.getElementById('iaRecText');
+  iaRec.classList.add('visible');
+  iaRecText.innerHTML = '<span class="ia-loading">Analizando…</span>';
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, system: GASTOS_SYS,
+        messages: [{ role: 'user', content: `Gasto: ${label} — ${cat} — ${fmt(monto)}. Si lo repetís todos los días del mes son ${fmt(monto*30)} mensuales.` }] })
+    });
+    const data = await res.json();
+    iaRecText.textContent = data?.content?.[0]?.text || 'Sin análisis disponible.';
+  } catch(e) { iaRecText.textContent = 'La IA no está conectada aún. El gasto quedó registrado igual.'; }
+  btn.disabled = false; btn.textContent = 'Cargar gasto →';
+});
+
+document.getElementById('fMonto').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('submitBtn').click(); });
+
+// ADD / DELETE
+function addExpense(g) {
+  expenses.unshift({ id: Date.now(), desc: g.desc, cat: g.cat, monto: g.monto, fecha: g.fecha || today });
+  save();
+}
+
+window.deleteExpense = function(id) {
+  expenses = expenses.filter(e => e.id !== id);
+  save();
+  renderResumen();
+  showToast('Gasto eliminado');
+};
+
+// RENDER RESUMEN
+function renderResumen() {
+  const total = expenses.reduce((s, e) => s + e.monto, 0);
+  document.getElementById('resumenTotal').textContent = fmt(total);
+
+  // Categories
+  const cats = {};
+  expenses.forEach(e => { cats[e.cat] = (cats[e.cat]||0) + e.monto; });
+  const catsRow = document.getElementById('catsRow');
+  catsRow.innerHTML = '';
+  Object.entries(cats).sort((a,b) => b[1]-a[1]).forEach(([cat, t]) => {
+    const chip = document.createElement('div');
+    chip.className = 'cat-chip';
+    chip.innerHTML = `${cat.split(' ')[0]} ${cat.split(' ').slice(1).join(' ')} <b>${fmt(t)}</b>`;
+    catsRow.appendChild(chip);
+  });
+
+  document.getElementById('analisisBtn').disabled = expenses.length < 2;
+
+  const list = document.getElementById('expensesList');
+  const empty = document.getElementById('emptyState');
+  if (expenses.length === 0) { list.innerHTML = ''; list.appendChild(empty); empty.style.display = 'flex'; return; }
+  empty.style.display = 'none';
+
+  // Group by date
+  const grouped = {};
+  expenses.forEach(e => { const d = e.fecha||today; if(!grouped[d]) grouped[d]=[]; grouped[d].push(e); });
+  list.innerHTML = '';
+  Object.entries(grouped).sort((a,b) => b[0].localeCompare(a[0])).forEach(([date, items]) => {
+    const dayTotal = items.reduce((s,e) => s+e.monto, 0);
+    const [y,m,d] = date.split('-');
+    const group = document.createElement('div');
+    group.innerHTML = `<div class="day-header">${d}/${m}/${y} <span>${fmt(dayTotal)}</span></div>`;
+    items.forEach(e => {
+      const icon = e.cat.split(' ')[0];
+      const item = document.createElement('div');
+      item.className = 'expense-item';
+      item.innerHTML = `<div class="ei-circle">${icon}</div><div class="ei-body"><div class="ei-name">${e.desc}</div><div class="ei-meta">${e.cat}</div></div><div class="ei-amount">${fmt(e.monto)}</div><button class="ei-del" onclick="deleteExpense(${e.id})">✕</button>`;
+      group.appendChild(item);
+    });
+    list.appendChild(group);
+  });
+}
+
+// ANALISIS
+const ANALISIS_SYS = `Sos PesoSmart. Analizás gastos mensuales de un argentino. Sin listas ni bullets. Texto corrido, máximo 4 oraciones. Identificás en qué categoría gasta más, cuánto ahorraría bajando ese rubro 30%, y qué haría con ese ahorro (FCI CER al 3.4% mensual o dólares MEP a $1.261).`;
+
+document.getElementById('analisisBtn').addEventListener('click', async () => {
+  if (expenses.length < 2) return;
+  const btn = document.getElementById('analisisBtn');
+  const textEl = document.getElementById('analisisText');
+  btn.disabled = true; btn.textContent = 'Analizando…';
+  textEl.classList.add('visible');
+  textEl.innerHTML = '<span class="ia-loading" style="font-family:Space Mono,monospace;font-size:0.65rem;color:var(--verde);animation:pulse 1.2s infinite">Analizando tus gastos…</span>';
+  try {
+    const total = expenses.reduce((s,e) => s+e.monto, 0);
+    const resumen = expenses.slice(0,20).map(e => `${e.cat}: ${fmt(e.monto)} (${e.desc})`).join(' | ');
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, system: ANALISIS_SYS,
+        messages: [{ role: 'user', content: `Total del mes: ${fmt(total)}. Detalle: ${resumen}.` }] })
+    });
+    const data = await res.json();
+    textEl.textContent = data?.content?.[0]?.text || 'No pude analizar ahora.';
+  } catch(e) { textEl.textContent = 'La IA no está conectada aún.'; }
+  btn.disabled = false; btn.textContent = '🔍 Analizar con IA';
+});
+
+// Init
+renderResumen();
+</script>
+</body>
+</html>
