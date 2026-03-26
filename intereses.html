@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mis Intereses — PesoSmart</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--negro:#0a0a0a;--blanco:#f2f0ea;--verde:#00e676;--rojo:#ff3d3d;--amarillo:#ffe600;--gris:#1a1a1a;--gris2:#0d0d0d;--gris3:#2a2a2a}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--negro);color:var(--blanco);font-family:'DM Sans',sans-serif;min-height:100vh}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
+  @keyframes blink{0%,80%,100%{opacity:0.15}40%{opacity:1}}
+  @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+
+  /* TOPBAR */
+  .topbar{display:flex;align-items:center;gap:0.8rem;padding:0.85rem 1.5rem;background:var(--gris2);border-bottom:1px solid rgba(255,255,255,0.07);position:sticky;top:0;z-index:100}
+  .topbar-back{font-family:'Space Mono',monospace;font-size:0.62rem;text-transform:uppercase;letter-spacing:0.08em;color:#444;text-decoration:none;transition:color 0.2s}
+  .topbar-back:hover{color:var(--verde)}
+  .topbar-divider{width:1px;height:18px;background:rgba(255,255,255,0.07);flex-shrink:0}
+  .topbar-title{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.05em;color:var(--blanco)}
+  .topbar-asesor{font-family:'Space Mono',monospace;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.07em;color:#333;text-decoration:none;transition:color 0.2s;margin-left:auto}
+  .topbar-asesor:hover{color:var(--verde)}
+
+  /* MAIN */
+  .main{max-width:860px;margin:0 auto;padding:2.5rem 1.5rem 4rem}
+
+  /* HEADER */
+  .page-header{margin-bottom:2.5rem;animation:fadeUp 0.4s ease both}
+  .page-label{font-family:'Space Mono',monospace;font-size:0.62rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--verde);margin-bottom:0.6rem}
+  .page-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.2rem,5vw,3.5rem);line-height:0.95;letter-spacing:0.03em}
+  .page-title span{color:var(--verde)}
+  .page-sub{font-size:0.9rem;color:#777;line-height:1.7;margin-top:0.8rem;max-width:500px}
+
+  /* PERFIL DE RIESGO */
+  .riesgo-section{margin-bottom:2.5rem;animation:fadeUp 0.4s 0.1s ease both}
+  .section-label{font-family:'Space Mono',monospace;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.1em;color:#555;margin-bottom:0.8rem}
+  .riesgo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.8rem}
+  .riesgo-card{border:1px solid var(--gris3);padding:1.2rem;cursor:pointer;transition:all 0.2s;position:relative;background:var(--gris)}
+  .riesgo-card:hover{border-color:rgba(255,255,255,0.2)}
+  .riesgo-card.selected{border-color:var(--verde);background:rgba(0,230,118,0.06)}
+  .riesgo-card.selected .riesgo-dot{background:var(--verde)}
+  .riesgo-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.5rem}
+  .riesgo-icon{font-size:1.4rem}
+  .riesgo-dot{width:10px;height:10px;border-radius:50%;border:1.5px solid #444;transition:background 0.2s,border-color 0.2s;flex-shrink:0}
+  .riesgo-card.selected .riesgo-dot{border-color:var(--verde)}
+  .riesgo-name{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:0.03em;color:var(--blanco);margin-bottom:0.2rem}
+  .riesgo-desc{font-size:0.78rem;color:#666;line-height:1.5}
+  .riesgo-tag{font-family:'Space Mono',monospace;font-size:0.55rem;text-transform:uppercase;letter-spacing:0.07em;color:var(--verde);margin-top:0.6rem;opacity:0;transition:opacity 0.2s}
+  .riesgo-card.selected .riesgo-tag{opacity:1}
+
+  /* INTERESES GRID */
+  .intereses-section{margin-bottom:2.5rem;animation:fadeUp 0.4s 0.2s ease both}
+  .intereses-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:0.8rem}
+  .interes-card{border:1px solid var(--gris3);padding:1.2rem 1rem;cursor:pointer;transition:all 0.2s;background:var(--gris);position:relative;overflow:hidden;user-select:none}
+  .interes-card::before{content:'';position:absolute;inset:0;background:var(--card-color, rgba(0,230,118,0.06));opacity:0;transition:opacity 0.2s}
+  .interes-card.selected::before{opacity:1}
+  .interes-card.selected{border-color:var(--card-border, rgba(0,230,118,0.4))}
+  .interes-card:hover{border-color:rgba(255,255,255,0.15)}
+  .interes-emoji{font-size:1.8rem;display:block;margin-bottom:0.6rem}
+  .interes-name{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.03em;color:var(--blanco);display:block;margin-bottom:0.15rem}
+  .interes-ejemplo{font-size:0.7rem;color:#555;font-family:'Space Mono',monospace;display:block}
+  .interes-check{position:absolute;top:0.6rem;right:0.6rem;width:18px;height:18px;border-radius:50%;background:var(--verde);display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:var(--negro);font-weight:700;opacity:0;transform:scale(0.5);transition:all 0.2s}
+  .interes-card.selected .interes-check{opacity:1;transform:scale(1)}
+
+  /* MONTO */
+  .monto-section{margin-bottom:2.5rem;animation:fadeUp 0.4s 0.3s ease both}
+  .monto-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:0.6rem;margin-bottom:1rem}
+  .monto-btn{border:1px solid var(--gris3);background:var(--gris);padding:0.8rem;cursor:pointer;transition:all 0.2s;text-align:left}
+  .monto-btn:hover{border-color:rgba(255,255,255,0.15)}
+  .monto-btn.selected{border-color:var(--verde);background:rgba(0,230,118,0.06)}
+  .monto-val{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--blanco);letter-spacing:0.02em;display:block}
+  .monto-btn.selected .monto-val{color:var(--verde)}
+  .monto-lbl{font-family:'Space Mono',monospace;font-size:0.58rem;text-transform:uppercase;color:#555;letter-spacing:0.06em;display:block;margin-top:0.15rem}
+
+  /* CTA */
+  .cta-section{animation:fadeUp 0.4s 0.4s ease both}
+  .cta-btn{width:100%;font-family:'Space Mono',monospace;font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;background:var(--verde);color:var(--negro);border:none;padding:1.1rem;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden}
+  .cta-btn:hover{background:var(--amarillo)}
+  .cta-btn:disabled{opacity:0.3;cursor:not-allowed;background:var(--gris3);color:#555}
+  .cta-note{font-family:'Space Mono',monospace;font-size:0.58rem;text-transform:uppercase;letter-spacing:0.07em;color:#333;text-align:center;margin-top:0.8rem}
+
+  /* RECOMENDACIONES */
+  .recs-section{margin-top:3rem;display:none;animation:fadeUp 0.5s ease both}
+  .recs-section.visible{display:block}
+  .recs-header{display:flex;align-items:center;gap:0.8rem;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid rgba(255,255,255,0.06)}
+  .recs-title{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:0.03em}
+  .recs-title span{color:var(--verde)}
+  .recs-loading{display:flex;align-items:center;gap:0.8rem;padding:2rem;background:var(--gris);border:1px solid var(--gris3)}
+  .dot-pulse{display:flex;gap:5px;align-items:center}
+  .dp{width:6px;height:6px;border-radius:50%;background:var(--verde);animation:blink 1.4s infinite both}
+  .dp:nth-child(2){animation-delay:.2s}
+  .dp:nth-child(3){animation-delay:.4s}
+  .loading-text{font-family:'Space Mono',monospace;font-size:0.65rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--verde)}
+  .rec-card{background:var(--gris);border:1px solid var(--gris3);margin-bottom:1rem;overflow:hidden;animation:fadeUp 0.3s ease both}
+  .rec-card-header{display:flex;align-items:center;gap:1rem;padding:1.2rem 1.5rem;border-bottom:1px solid rgba(255,255,255,0.05)}
+  .rec-interes-tag{font-family:'Space Mono',monospace;font-size:0.58rem;text-transform:uppercase;letter-spacing:0.08em;padding:0.2rem 0.6rem;border:1px solid rgba(0,230,118,0.2);color:var(--verde);flex-shrink:0}
+  .rec-instrumento{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:0.03em;color:var(--blanco)}
+  .rec-tipo{font-family:'Space Mono',monospace;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.06em;color:#555;margin-left:auto;flex-shrink:0}
+  .rec-body{padding:1.2rem 1.5rem}
+  .rec-text{font-size:0.88rem;color:#aaa;line-height:1.75;margin-bottom:1rem}
+  .rec-stats{display:flex;gap:1.5rem;flex-wrap:wrap}
+  .rec-stat{display:flex;flex-direction:column;gap:0.15rem}
+  .rec-stat-val{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--verde);letter-spacing:0.02em}
+  .rec-stat-lbl{font-family:'Space Mono',monospace;font-size:0.58rem;text-transform:uppercase;letter-spacing:0.06em;color:#444}
+  .rec-cta{font-family:'Space Mono',monospace;font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;background:transparent;color:var(--verde);border:1px solid rgba(0,230,118,0.2);padding:0.5rem 1rem;cursor:pointer;transition:all 0.2s;margin-top:1rem;display:inline-block}
+  .rec-cta:hover{background:rgba(0,230,118,0.07);border-color:var(--verde)}
+  .rec-card.rojo .rec-interes-tag{color:var(--amarillo);border-color:rgba(255,230,0,0.2)}
+  .rec-card.rojo .rec-stat-val{color:var(--amarillo)}
+  .rec-card.rojo .rec-cta{color:var(--amarillo);border-color:rgba(255,230,0,0.2)}
+  .rec-card.rojo .rec-cta:hover{background:rgba(255,230,0,0.06);border-color:var(--amarillo)}
+
+  /* SELECCIÓN COUNTER */
+  .sel-counter{font-family:'Space Mono',monospace;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:#444;margin-bottom:0.8rem}
+  .sel-counter span{color:var(--verde);font-weight:700}
+
+  @media(max-width:600px){
+    .riesgo-grid{grid-template-columns:1fr}
+    .intereses-grid{grid-template-columns:repeat(2,1fr)}
+    .monto-grid{grid-template-columns:repeat(2,1fr)}
+    .topbar-asesor{display:none}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="topbar-back" href="/">← Inicio</a>
+  <div class="topbar-divider"></div>
+  <div class="topbar-title">🎯 Mis Intereses</div>
+  <a href="asesor.html" class="topbar-asesor">🧠 Asesor →</a>
+</div>
+
+<div class="main">
+
+  <div class="page-header">
+    <div class="page-label">Personalización</div>
+    <h1 class="page-title">TU PLATA,<br><span>TUS REGLAS</span></h1>
+    <p class="page-sub">Contanos qué te apasiona y cuánto podés invertir. La IA te va a mostrar cómo conectar tus intereses con inversiones reales en el mercado argentino.</p>
+  </div>
+
+  <!-- PERFIL DE RIESGO -->
+  <div class="riesgo-section">
+    <div class="section-label">01 — ¿Cuál es tu perfil inversor?</div>
+    <div class="riesgo-grid">
+      <div class="riesgo-card" data-riesgo="conservador">
+        <div class="riesgo-header">
+          <span class="riesgo-icon">🛡️</span>
+          <div class="riesgo-dot"></div>
+        </div>
+        <div class="riesgo-name">Conservador</div>
+        <div class="riesgo-desc">Preferís cuidar tu plata antes que arriesgar. Buscás rendimientos estables aunque sean menores.</div>
+        <div class="riesgo-tag">CEDEARs · FCI · Bonos</div>
+      </div>
+      <div class="riesgo-card" data-riesgo="moderado">
+        <div class="riesgo-header">
+          <span class="riesgo-icon">⚖️</span>
+          <div class="riesgo-dot"></div>
+        </div>
+        <div class="riesgo-name">Moderado</div>
+        <div class="riesgo-desc">Aceptás algo de volatilidad si hay potencial de crecimiento. Balance entre riesgo y retorno.</div>
+        <div class="riesgo-tag">Acciones · ETFs · CEDEARs</div>
+      </div>
+      <div class="riesgo-card" data-riesgo="agresivo">
+        <div class="riesgo-header">
+          <span class="riesgo-icon">🚀</span>
+          <div class="riesgo-dot"></div>
+        </div>
+        <div class="riesgo-name">Agresivo</div>
+        <div class="riesgo-desc">Buscás máximo retorno y tolerás caídas temporales. Horizonte de largo plazo.</div>
+        <div class="riesgo-tag">Acciones · Cripto · Startups</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INTERESES -->
+  <div class="intereses-section">
+    <div class="section-label">02 — ¿Qué te apasiona? (elegí al menos 2)</div>
+    <div class="sel-counter">Seleccionados: <span id="selCount">0</span></div>
+    <div class="intereses-grid" id="interesesGrid">
+      <!-- generado por JS -->
+    </div>
+  </div>
+
+  <!-- MONTO -->
+  <div class="monto-section">
+    <div class="section-label">03 — ¿Cuánto podés invertir por mes?</div>
+    <div class="monto-grid" id="montoGrid">
+      <!-- generado por JS -->
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <button class="cta-btn" id="ctaBtn" disabled>Ver mis recomendaciones →</button>
+    <p class="cta-note">La IA analiza tus intereses y te muestra inversiones reales</p>
+  </div>
+
+  <!-- RECOMENDACIONES -->
+  <div class="recs-section" id="recsSection">
+    <div class="recs-header">
+      <div class="recs-title">TUS <span>RECOMENDACIONES</span></div>
+    </div>
+    <div id="recsContent"></div>
+  </div>
+
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const INTERESES = [
+  { id:'autos',      emoji:'🚗', name:'Autos',        ejemplo:'Tesla · Ford · Stellantis',  color:'rgba(255,61,61,0.08)',   border:'rgba(255,61,61,0.3)' },
+  { id:'tecnologia', emoji:'💻', name:'Tecnología',   ejemplo:'Apple · Google · Nvidia',    color:'rgba(0,230,118,0.07)',   border:'rgba(0,230,118,0.35)' },
+  { id:'energia',    emoji:'⚡', name:'Energía',      ejemplo:'YPF · Shell · Pampa',        color:'rgba(255,230,0,0.07)',   border:'rgba(255,230,0,0.35)' },
+  { id:'salud',      emoji:'💊', name:'Salud',         ejemplo:'Pfizer · Johnson · Roche',   color:'rgba(100,180,255,0.08)', border:'rgba(100,180,255,0.35)' },
+  { id:'retail',     emoji:'🛍️', name:'Retail',       ejemplo:'MercadoLibre · Amazon',      color:'rgba(255,140,0,0.08)',   border:'rgba(255,140,0,0.35)' },
+  { id:'crypto',     emoji:'₿',  name:'Cripto',        ejemplo:'Bitcoin · ETH · Stablecoins',color:'rgba(255,165,0,0.08)',   border:'rgba(255,165,0,0.35)' },
+  { id:'campo',      emoji:'🌾', name:'Agro',          ejemplo:'Cresud · Adecoagro · Soja',  color:'rgba(100,200,100,0.08)', border:'rgba(100,200,100,0.35)' },
+  { id:'finanzas',   emoji:'🏦', name:'Finanzas',      ejemplo:'Galicia · Macro · Letes',    color:'rgba(150,100,255,0.08)', border:'rgba(150,100,255,0.35)' },
+  { id:'entretenimiento', emoji:'🎮', name:'Entretenimiento', ejemplo:'Netflix · Disney · EA', color:'rgba(255,100,150,0.08)', border:'rgba(255,100,150,0.35)' },
+  { id:'construccion', emoji:'🏗️', name:'Construcción', ejemplo:'Loma Negra · Holcim',      color:'rgba(180,140,100,0.08)', border:'rgba(180,140,100,0.35)' },
+  { id:'transporte', emoji:'✈️', name:'Transporte',   ejemplo:'Aerolíneas · UPS · Delta',   color:'rgba(100,200,255,0.08)', border:'rgba(100,200,255,0.35)' },
+  { id:'sustentabilidad', emoji:'🌱', name:'Sustentable', ejemplo:'ETFs ESG · Solar · Wind', color:'rgba(50,220,120,0.08)',  border:'rgba(50,220,120,0.35)' },
+];
+
+const MONTOS = [
+  { val:'$10.000',  lbl:'por mes' },
+  { val:'$30.000',  lbl:'por mes' },
+  { val:'$50.000',  lbl:'por mes' },
+  { val:'$100.000', lbl:'por mes' },
+  { val:'$200.000', lbl:'por mes' },
+  { val:'$500.000+',lbl:'por mes' },
+];
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+const LS = 'ps_perfil';
+let state = { riesgo: null, intereses: [], monto: null };
+try { const s = JSON.parse(localStorage.getItem(LS)); if(s) state = s; } catch(e) {}
+
+// ── RENDER GRIDS ──────────────────────────────────────────────────────────────
+function renderIntereses() {
+  const grid = document.getElementById('interesesGrid');
+  grid.innerHTML = '';
+  INTERESES.forEach(int => {
+    const sel = state.intereses.includes(int.id);
+    const d = document.createElement('div');
+    d.className = 'interes-card' + (sel ? ' selected' : '');
+    d.style.setProperty('--card-color', int.color);
+    d.style.setProperty('--card-border', int.border);
+    d.dataset.id = int.id;
+    d.innerHTML = `
+      <span class="interes-emoji">${int.emoji}</span>
+      <span class="interes-name">${int.name}</span>
+      <span class="interes-ejemplo">${int.ejemplo}</span>
+      <div class="interes-check">✓</div>
+    `;
+    d.addEventListener('click', () => toggleInteres(int.id));
+    grid.appendChild(d);
+  });
+  updateCounter();
+}
+
+function renderMontos() {
+  const grid = document.getElementById('montoGrid');
+  grid.innerHTML = '';
+  MONTOS.forEach(m => {
+    const sel = state.monto === m.val;
+    const d = document.createElement('div');
+    d.className = 'monto-btn' + (sel ? ' selected' : '');
+    d.innerHTML = `<span class="monto-val">${m.val}</span><span class="monto-lbl">${m.lbl}</span>`;
+    d.addEventListener('click', () => selectMonto(m.val, d));
+    grid.appendChild(d);
+  });
+}
+
+function renderRiesgo() {
+  document.querySelectorAll('.riesgo-card').forEach(card => {
+    card.classList.toggle('selected', card.dataset.riesgo === state.riesgo);
+  });
+}
+
+// ── INTERACTIONS ──────────────────────────────────────────────────────────────
+document.querySelectorAll('.riesgo-card').forEach(card => {
+  card.addEventListener('click', () => {
+    state.riesgo = card.dataset.riesgo;
+    document.querySelectorAll('.riesgo-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    save(); checkCta();
+  });
+});
+
+function toggleInteres(id) {
+  const idx = state.intereses.indexOf(id);
+  if (idx === -1) state.intereses.push(id);
+  else state.intereses.splice(idx, 1);
+  renderIntereses();
+  save(); checkCta();
+}
+
+function selectMonto(val, el) {
+  state.monto = val;
+  document.querySelectorAll('.monto-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  save(); checkCta();
+}
+
+function updateCounter() {
+  document.getElementById('selCount').textContent = state.intereses.length;
+}
+
+function save() {
+  try { localStorage.setItem(LS, JSON.stringify(state)); } catch(e) {}
+}
+
+function checkCta() {
+  const btn = document.getElementById('ctaBtn');
+  const ok = state.riesgo && state.intereses.length >= 2 && state.monto;
+  btn.disabled = !ok;
+  btn.textContent = ok
+    ? `Ver mis recomendaciones (${state.intereses.length} intereses) →`
+    : 'Completá los 3 pasos para continuar';
+}
+
+// ── RECOMENDACIONES ───────────────────────────────────────────────────────────
+const GROQ_KEY = ''; // Se usa el proxy de Netlify en producción
+
+const SYSTEM_REC = `Sos PesoSmart, asesor financiero argentino. Generás recomendaciones de inversión personalizadas basadas en los intereses del usuario.
+
+CONTEXTO MERCADO (Argentina, 2026):
+- CEDEARs: certificados que replican acciones extranjeras, se compran en pesos desde cualquier broker argentino
+- FCI CER: 3.4%/mes, protege de inflación
+- Acciones BYMA: mercado local argentino
+- Dólar MEP: $1.261 legal
+- Inflación: 2.9%/mes
+
+PERFILES:
+- Conservador: recomendar CEDEARs de empresas grandes y estables, FCI sectoriales
+- Moderado: mix de CEDEARs y acciones locales, ETFs
+- Agresivo: acciones de crecimiento, mayor concentración sectorial
+
+REGLAS:
+- Respondé SOLO con un JSON array, sin markdown ni texto extra
+- Generá exactamente 4 recomendaciones
+- Cada una debe conectar emocionalmente con el interés del usuario
+- Usá datos reales de empresas argentinas o CEDEARs disponibles
+- Formato: [{"interes":"nombre","instrumento":"nombre del instrumento","tipo":"CEDEAR|FCI|Acción|ETF","texto":"2 oraciones explicando por qué este instrumento conecta con el interés, en tono de amigo","retorno_estimado":"X%/mes o X%/año","riesgo":"Bajo|Medio|Alto","donde_comprar":"broker o plataforma argentina"}]`;
+
+document.getElementById('ctaBtn').addEventListener('click', async () => {
+  const sec = document.getElementById('recsSection');
+  const content = document.getElementById('recsContent');
+  sec.classList.add('visible');
+  sec.scrollIntoView({ behavior:'smooth', block:'start' });
+
+  const interesesNombres = state.intereses.map(id => INTERESES.find(i => i.id === id)?.name).filter(Boolean);
+
+  content.innerHTML = `
+    <div class="recs-loading">
+      <div class="dot-pulse"><div class="dp"></div><div class="dp"></div><div class="dp"></div></div>
+      <div class="loading-text">Analizando tus intereses y el mercado...</div>
+    </div>`;
+
+  const prompt = `El usuario tiene perfil ${state.riesgo}, le interesan: ${interesesNombres.join(', ')}. Puede invertir ${state.monto} por mes. Generá 4 recomendaciones personalizadas que conecten sus intereses con inversiones reales disponibles en Argentina.`;
+
+  try {
+    // En Netlify usa el proxy, en local intenta directo
+    const endpoint = window.location.hostname === 'localhost' || window.location.protocol === 'file:'
+      ? 'https://api.groq.com/openai/v1/chat/completions'
+      : '/.netlify/functions/chat';
+
+    const headers = { 'Content-Type': 'application/json' };
+    if (endpoint.includes('groq.com') && GROQ_KEY) headers['Authorization'] = 'Bearer ' + GROQ_KEY;
+
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        max_tokens: 1500,
+        temperature: 0.7,
+        messages: [
+          { role: 'system', content: SYSTEM_REC },
+          { role: 'user', content: prompt }
+        ]
+      })
+    });
+
+    const data = await res.json();
+    const raw = data?.choices?.[0]?.message?.content || '[]';
+    let recs = [];
+    try { recs = JSON.parse(raw.replace(/```json|```/g, '').trim()); } catch(e) { recs = []; }
+
+    if (!recs.length) throw new Error('Sin resultados');
+
+    content.innerHTML = '';
+    recs.forEach((rec, i) => {
+      const intObj = INTERESES.find(int => int.name.toLowerCase() === rec.interes?.toLowerCase()) || INTERESES[0];
+      const isAlt = i % 2 === 1;
+      const card = document.createElement('div');
+      card.className = 'rec-card' + (isAlt ? ' rojo' : '');
+      card.style.animationDelay = (i * 0.1) + 's';
+      card.innerHTML = `
+        <div class="rec-card-header">
+          <span class="rec-interes-tag">${intObj.emoji} ${rec.interes}</span>
+          <span class="rec-instrumento">${rec.instrumento}</span>
+          <span class="rec-tipo">${rec.tipo}</span>
+        </div>
+        <div class="rec-body">
+          <p class="rec-text">${rec.texto}</p>
+          <div class="rec-stats">
+            <div class="rec-stat">
+              <span class="rec-stat-val">${rec.retorno_estimado}</span>
+              <span class="rec-stat-lbl">Retorno estimado</span>
+            </div>
+            <div class="rec-stat">
+              <span class="rec-stat-val">${rec.riesgo}</span>
+              <span class="rec-stat-lbl">Nivel de riesgo</span>
+            </div>
+            <div class="rec-stat">
+              <span class="rec-stat-val">${state.monto}</span>
+              <span class="rec-stat-lbl">Tu inversión mensual</span>
+            </div>
+          </div>
+          <button class="rec-cta" onclick="consultarAsesor('${rec.instrumento}', '${rec.interes}')">
+            Preguntarle al asesor sobre esto →
+          </button>
+        </div>`;
+      content.appendChild(card);
+    });
+
+    // Guardar recomendaciones en el perfil
+    state.recomendaciones = recs;
+    save();
+
+  } catch(e) {
+    content.innerHTML = mostrarFallback();
+  }
+});
+
+function mostrarFallback() {
+  // Recomendaciones de ejemplo si la IA no está disponible
+  const ejemplos = [
+    { interes:'Tu interés', instrumento:'CEDEAR Toyota (TM)', tipo:'CEDEAR', texto:'Si te apasionan los autos, Toyota es una de las empresas más sólidas del mundo. Podés invertir en pesos desde tu broker argentino y participar de su crecimiento global.', retorno_estimado:'~15%/año USD', riesgo:'Medio', donde:'Balanz, IOL, Bull Market' },
+    { interes:'Tu interés', instrumento:'CEDEAR Tesla (TSLA)', tipo:'CEDEAR', texto:'Tesla lidera la revolución eléctrica. Alto riesgo pero alto potencial. Ideal si tenés horizonte largo y te copa el tema de movilidad del futuro.', retorno_estimado:'Variable', riesgo:'Alto', donde:'Balanz, IOL, Bull Market' },
+  ];
+  return ejemplos.map((rec, i) => `
+    <div class="rec-card ${i%2?'rojo':''}">
+      <div class="rec-card-header">
+        <span class="rec-interes-tag">🎯 ${rec.interes}</span>
+        <span class="rec-instrumento">${rec.instrumento}</span>
+        <span class="rec-tipo">${rec.tipo}</span>
+      </div>
+      <div class="rec-body">
+        <p class="rec-text">${rec.texto}</p>
+        <div class="rec-stats">
+          <div class="rec-stat"><span class="rec-stat-val">${rec.retorno_estimado}</span><span class="rec-stat-lbl">Retorno estimado</span></div>
+          <div class="rec-stat"><span class="rec-stat-val">${rec.riesgo}</span><span class="rec-stat-lbl">Nivel de riesgo</span></div>
+        </div>
+        <p style="font-family:'Space Mono',monospace;font-size:0.6rem;color:#333;margin-top:0.8rem;text-transform:uppercase;letter-spacing:0.07em;">Conectá la IA en Netlify para ver recomendaciones personalizadas</p>
+      </div>
+    </div>`).join('');
+}
+
+function consultarAsesor(instrumento, interes) {
+  const msg = `Quiero saber más sobre invertir en ${instrumento} relacionado con mi interés en ${interes}. ¿Me explicás cómo arranco?`;
+  localStorage.setItem('ps_pending_msg', msg);
+  window.location.href = 'asesor.html';
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+renderRiesgo();
+renderIntereses();
+renderMontos();
+checkCta();
+
+// Si volvió de una sesión anterior con recomendaciones guardadas, mostrarlo
+if (state.recomendaciones?.length && state.intereses.length >= 2) {
+  // Solo mostrar CTA activo, no auto-ejecutar
+}
+</script>
+</body>
+</html>
