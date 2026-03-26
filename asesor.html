@@ -98,7 +98,18 @@
 <script>
 // ─── CONFIGURACIÓN ───────────────────────────────────
 // Reemplazá con tu key de Groq (console.groq.com)
-const GROQ_KEY = 'PROXIMAMENTE';
+const GROQ_KEY = 'PEGA_TU_KEY_ACÁ';
+
+// Lee el perfil guardado en intereses.html
+function getPerfilContext() {
+  try {
+    const p = JSON.parse(localStorage.getItem('ps_perfil') || '{}');
+    if (!p.intereses?.length) return '';
+    const N = {autos:'Autos',tecnologia:'Tecnología',energia:'Energía',salud:'Salud',retail:'Retail',crypto:'Cripto',campo:'Agro',finanzas:'Finanzas',entretenimiento:'Entretenimiento',construccion:'Construcción',transporte:'Transporte',sustentabilidad:'Sustentabilidad'};
+    const ints = p.intereses.map(i => N[i]||i).join(', ');
+    return '\n\nPERFIL DEL USUARIO: ' + (p.riesgo||'?') + ', intereses: ' + ints + ', invierte: ' + (p.monto||'?') + '/mes. Personaliza tus respuestas con este contexto.';
+  } catch(e) { return ''; }
+}
 // ─────────────────────────────────────────────────────
 
 const SYSTEM = `Sos PesoSmart, un amigo argentino que sabe mucho de finanzas y le explica todo a alguien que recién empieza o que nunca invirtió en su vida. Tu objetivo es que la persona entienda todo sin sentirse tonta.
@@ -121,6 +132,9 @@ CÓMO HABLÁS:
 - Siempre terminás con una pregunta o próximo paso.
 - Si alguien tiene miedo de invertir, lo tranquilizás primero.
 - Aclarás brevemente al final que es orientación general, no asesoría oficial.`;
+
+// Append profile context to system prompt
+const SYSTEM_WITH_PROFILE = SYSTEM + getPerfilContext();
 
 const LS_HIST = 'ps_chat_history';
 const LS_MSGS = 'ps_chat_messages';
@@ -235,6 +249,14 @@ document.querySelectorAll('.sugg-btn').forEach(b => {
 const restored = restore();
 if (!restored) { addStamp('Hoy'); addMsg('¡Hola! 👋 Soy tu asesor financiero argentino. No importa si nunca invertiste nada — acá no hablamos en difícil. Preguntame lo que quieras sobre tu plata.', 'bot'); }
 if (history.length > 0) suggsWrap.style.display = 'none';
+
+// Si viene de intereses.html con un mensaje pendiente
+const pendingMsg = localStorage.getItem('ps_pending_msg');
+if (pendingMsg) {
+  localStorage.removeItem('ps_pending_msg');
+  setTimeout(() => { chatInput.value = pendingMsg; send(); }, 600);
+}
+
 chatInput.focus();
 </script>
 </body>
