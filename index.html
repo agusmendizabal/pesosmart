@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Pesos — Tu plata, bajo control</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* App exact colors */
+    --green-dark:   #1B5E37;
+    --green:        #2D6A4F;
+    --green-mid:    #40916C;
+    --green-light:  #52B788;
+    --green-pale:   #D8F3DC;
+    --green-bg:     #F0FAF4;
+    --orange:       #E8703A;
+    --orange-pale:  #FFF3ED;
+    --bg:           #F5F5F5;
+    --white:        #FFFFFF;
+    --card:         #FFFFFF;
+    --border:       #E8E8E8;
+    --text:         #1A1A1A;
+    --text-mid:     #444444;
+    --text-soft:    #888888;
+    --text-light:   #BBBBBB;
+    --purple:       #9B59B6;
+    --purple-pale:  #F3E8FF;
+    --shadow:       0 2px 16px rgba(0,0,0,0.07);
+    --shadow-md:    0 4px 28px rgba(0,0,0,0.10);
+    --radius:       16px;
+    --radius-sm:    12px;
+    --radius-xs:    8px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+  h1,h2,h3,h4,h5 { font-family: 'Sora', sans-serif; }
+
+  /* ──────────────── NAV ──────────────── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(255,255,255,0.96);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5%; height: 64px;
+  }
+  .logo {
+    font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.25rem;
+    text-decoration: none; color: var(--text); letter-spacing: -.02em;
+  }
+  .logo span { color: var(--green-light); }
+  .nav-links { display: flex; gap: 1.8rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.85rem; font-weight: 600; color: var(--text-soft);
+    text-decoration: none; transition: color .15s;
+  }
+  .nav-links a:hover { color: var(--green); }
+  .nav-btn {
+    background: var(--green); color: #fff;
+    font-family: 'Sora', sans-serif; font-weight: 700; font-size: 0.85rem;
+    border: none; border-radius: 50px; padding: 0.55rem 1.4rem;
+    cursor: pointer; text-decoration: none; display: inline-block;
+    transition: background .15s, transform .1s;
+  }
+  .nav-btn:hover { background: var(--green-mid); transform: scale(1.03); }
+
+  /* ──────────────── HERO ──────────────── */
+  .hero {
+    min-height: 100vh;
+    padding: 100px 5% 70px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    background: var(--white);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, var(--green-pale) 0%, transparent 70%);
+    right: -180px; top: 50%; transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--green-pale); color: var(--green);
+    font-family: 'Sora', sans-serif; font-weight: 700;
+    font-size: 0.72rem; letter-spacing: .1em; text-transform: uppercase;
+    border-radius: 50px; padding: 5px 13px; margin-bottom: 1.4rem;
+  }
+  .eyebrow .dot { width: 7px; height: 7px; background: var(--green-light); border-radius: 50%; animation: blink 2s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+  .hero h1 {
+    font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+    font-weight: 800; line-height: 1.08; letter-spacing: -.03em;
+    margin-bottom: 1.2rem; color: var(--text);
+  }
+  .hero h1 em { color: var(--green-light); font-style: normal; }
+  .hero-desc {
+    font-size: 1.05rem; color: var(--text-mid); line-height: 1.75;
+    max-width: 480px; margin-bottom: 2rem;
+  }
+
+  .hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2.8rem; }
+  .btn-primary {
+    background: var(--green); color: #fff;
+    font-family: 'Sora', sans-serif; font-weight: 700; font-size: 0.95rem;
+    border: none; border-radius: 50px; padding: 0.85rem 2rem;
+    cursor: pointer; text-decoration: none; display: inline-block;
+    box-shadow: 0 4px 18px rgba(45,106,79,.28);
+    transition: background .15s, transform .15s;
+  }
+  .btn-primary:hover { background: var(--green-mid); transform: translateY(-2px); }
+  .btn-ghost {
+    background: transparent; color: var(--text);
+    font-family: 'Sora', sans-serif; font-weight: 700; font-size: 0.95rem;
+    border: 1.5px solid var(--border); border-radius: 50px;
+    padding: 0.82rem 1.8rem; cursor: pointer; text-decoration: none;
+    display: inline-block; transition: border-color .15s;
+  }
+  .btn-ghost:hover { border-color: var(--green-light); color: var(--green); }
+
+  .hero-stats {
+    display: flex; gap: 2.5rem;
+    border-top: 1px solid var(--border); padding-top: 2rem;
+  }
+  .hstat-num { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.7rem; color: var(--green); }
+  .hstat-label { font-size: 0.78rem; color: var(--text-soft); font-weight: 500; margin-top: 2px; line-height: 1.4; max-width: 130px; }
+
+  /* ── PHONE MOCKUP ── */
+  .hero-phone { display: flex; justify-content: center; align-items: center; position: relative; z-index: 1; }
+  .phone-shell {
+    width: 295px;
+    background: var(--white);
+    border-radius: 38px;
+    box-shadow: 0 30px 80px rgba(0,0,0,.16), 0 0 0 1.5px rgba(0,0,0,.06);
+    padding: 30px 20px 26px;
+    animation: float 4s ease-in-out infinite;
+  }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+  .phone-notch {
+    width: 60px; height: 5px; background: var(--border); border-radius: 10px;
+    margin: 0 auto 18px;
+  }
+  .ph-greeting { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.05rem; margin-bottom: 2px; }
+  .ph-sub { font-size: 0.72rem; color: var(--green-mid); font-weight: 600; margin-bottom: 18px; }
+
+  /* orange alert card (like the app) */
+  .ph-alert {
+    background: var(--orange-pale);
+    border: 1.5px solid #F4A07A;
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    margin-bottom: 12px;
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .ph-alert-icon { font-size: 1.1rem; flex-shrink: 0; }
+  .ph-alert-title { font-weight: 700; font-size: 0.82rem; color: var(--text); }
+  .ph-alert-sub { font-size: 0.72rem; color: var(--text-soft); margin-top: 2px; }
+  .ph-alert-action { font-size: 0.72rem; font-weight: 700; color: var(--orange); margin-top: 6px; }
+
+  /* green opportunity card */
+  .ph-opp {
+    background: var(--green);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    margin-bottom: 12px;
+    color: #fff;
+  }
+  .ph-opp-label { font-size: 0.65rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; opacity: .8; }
+  .ph-opp-amount { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.7rem; margin: 4px 0 2px; }
+  .ph-opp-sub { font-size: 0.72rem; opacity: .8; margin-bottom: 10px; }
+  .ph-opp-btn {
+    background: rgba(255,255,255,.18); border: none; color: #fff;
+    border-radius: 8px; padding: 7px 14px; font-size: 0.72rem; font-weight: 700;
+    cursor: pointer; display: inline-flex; align-items: center; gap: 5px;
+  }
+
+  /* month spend card */
+  .ph-spend {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 12px 14px; margin-bottom: 10px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .ph-spend-main { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1rem; }
+  .ph-spend-of { font-size: 0.7rem; color: var(--text-soft); }
+  .ph-progress { height: 5px; background: var(--border); border-radius: 4px; margin-top: 6px; }
+  .ph-progress-bar { height: 100%; border-radius: 4px; background: var(--green); }
+  .ph-pct { font-size: 0.72rem; font-weight: 700; color: var(--green); }
+
+  /* inflation row */
+  .ph-infl {
+    background: var(--green-bg); border-radius: var(--radius-sm); padding: 11px 13px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .ph-infl-col { text-align: center; }
+  .ph-infl-label { font-size: 0.65rem; color: var(--text-soft); font-weight: 600; }
+  .ph-infl-val { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1rem; color: var(--text); }
+  .ph-infl-win { color: var(--green-light); }
+
+  /* floating badge */
+  .float-badge {
+    position: absolute; background: var(--white); border-radius: 14px;
+    padding: 10px 14px; box-shadow: 0 4px 20px rgba(0,0,0,.13);
+    font-size: 0.76rem; font-weight: 700; display: flex; align-items: center; gap: 7px;
+  }
+  .fb-1 { top: 60px; right: -30px; animation: float 3.5s ease-in-out infinite .3s; }
+  .fb-2 { bottom: 80px; left: -40px; animation: float 3.2s ease-in-out infinite 1s; }
+  .fb-icon { font-size: 1.1rem; }
+  .fb-val-red { font-family: 'Sora', sans-serif; color: #E53E3E; font-weight: 800; font-size: 0.85rem; }
+  .fb-val-green { font-family: 'Sora', sans-serif; color: var(--green-light); font-weight: 800; font-size: 0.85rem; }
+  .fb-tiny { font-size: 0.65rem; color: var(--text-soft); font-weight: 500; }
+
+  /* ──────────────── GENERIC SECTION ──────────────── */
+  .section { padding: 90px 5%; }
+  .section-eyebrow {
+    display: inline-block; background: var(--green-pale); color: var(--green);
+    font-family: 'Sora', sans-serif; font-weight: 700;
+    font-size: 0.72rem; letter-spacing: .1em; text-transform: uppercase;
+    border-radius: 50px; padding: 4px 13px; margin-bottom: 1rem;
+  }
+  .section-title {
+    font-size: clamp(1.9rem, 3.5vw, 3rem); font-weight: 800;
+    line-height: 1.1; letter-spacing: -.03em; margin-bottom: 1rem;
+  }
+  .section-title em { color: var(--green-light); font-style: normal; }
+  .section-body { font-size: 1rem; color: var(--text-mid); line-height: 1.75; max-width: 540px; }
+
+  /* ──────────────── PROBLEMA ──────────────── */
+  #problema { background: var(--white); }
+  .prob-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem; margin-top: 3rem;
+  }
+  .prob-card {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 28px 24px;
+    transition: box-shadow .2s, transform .2s;
+  }
+  .prob-card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); }
+  .prob-icon { font-size: 1.8rem; margin-bottom: 12px; }
+  .prob-card h4 { font-weight: 700; font-size: 0.95rem; margin-bottom: 8px; }
+  .prob-card p { font-size: 0.83rem; color: var(--text-soft); line-height: 1.65; }
+
+  /* ──────────────── STATS ──────────────── */
+  .stats-band {
+    background: var(--green); padding: 60px 5%;
+    display: grid; grid-template-columns: repeat(3, 1fr);
+  }
+  .sband-item { padding: 0 40px; border-right: 1px solid rgba(255,255,255,.2); }
+  .sband-item:first-child { padding-left: 0; }
+  .sband-item:last-child { border: none; }
+  .sband-num { font-family: 'Sora', sans-serif; font-weight: 900; font-size: 3.2rem; color: #fff; line-height: 1; }
+  .sband-label { font-size: 0.82rem; color: rgba(255,255,255,.7); margin-top: 6px; line-height: 1.5; max-width: 200px; }
+
+  /* ──────────────── QUÉ ES ──────────────── */
+  #que-es { background: var(--bg); }
+  .que-es-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+  .feature-list { display: flex; flex-direction: column; gap: 1rem; }
+  .feat-item {
+    display: flex; gap: 14px; align-items: flex-start;
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 18px;
+    box-shadow: var(--shadow); transition: transform .2s;
+  }
+  .feat-item:hover { transform: translateX(5px); }
+  .feat-ico {
+    width: 42px; height: 42px; background: var(--green-pale);
+    border-radius: var(--radius-xs); display: flex; align-items: center;
+    justify-content: center; font-size: 1.2rem; flex-shrink: 0;
+  }
+  .feat-item h4 { font-weight: 700; font-size: 0.9rem; margin-bottom: 4px; }
+  .feat-item p { font-size: 0.8rem; color: var(--text-soft); line-height: 1.55; }
+
+  /* dashboard preview card */
+  .dash-preview {
+    background: var(--white); border-radius: var(--radius);
+    box-shadow: var(--shadow-md); padding: 24px; border: 1px solid var(--border);
+  }
+  .dash-title { font-weight: 800; font-size: 1.1rem; margin-bottom: 4px; }
+  .dash-sub { font-size: 0.78rem; color: var(--text-soft); margin-bottom: 20px; }
+  .dash-cat-row {
+    margin-bottom: 14px;
+  }
+  .dash-cat-top { display: flex; justify-content: space-between; margin-bottom: 5px; }
+  .dash-cat-name { font-size: 0.82rem; font-weight: 600; display: flex; align-items: center; gap: 7px; }
+  .dash-cat-pct { font-size: 0.78rem; color: var(--text-soft); }
+  .dash-cat-val { font-size: 0.85rem; font-weight: 700; color: var(--green); }
+  .bar-track { height: 6px; background: var(--border); border-radius: 4px; }
+  .bar-fill { height: 100%; border-radius: 4px; }
+  .dash-proj {
+    background: var(--green); border-radius: var(--radius-xs);
+    padding: 16px; color: #fff; margin-top: 16px;
+  }
+  .dash-proj-label { font-size: 0.68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; opacity: .8; }
+  .dash-proj-val { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.8rem; margin: 4px 0 2px; }
+  .dash-proj-sub { font-size: 0.72rem; opacity: .75; }
+  .dash-proj-explain {
+    font-size: 0.68rem; opacity: .65; margin-top: 8px;
+    border-top: 1px solid rgba(255,255,255,.2); padding-top: 8px; line-height: 1.5;
+  }
+  .dash-total-spent {
+    font-size: 0.82rem; color: var(--text-soft); margin-bottom: 4px;
+  }
+  .dash-total-spent strong { color: var(--text); font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1rem; }
+
+  /* ──────────────── CALCULADORA ──────────────── */
+  #calculadora { background: var(--white); }
+  .calc-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; margin-top: 2.5rem; }
+  .calc-box {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 32px;
+  }
+  .calc-label { font-size: 0.72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-soft); margin-bottom: 8px; }
+  .calc-input-row {
+    display: flex; align-items: center;
+    background: var(--white); border: 1.5px solid var(--border);
+    border-radius: var(--radius-xs); padding: 13px 16px; gap: 8px; margin-bottom: 24px;
+  }
+  .calc-input-row:focus-within { border-color: var(--green-light); }
+  .calc-sym { color: var(--text-soft); font-weight: 700; font-size: 1.1rem; }
+  .calc-input-row input {
+    background: transparent; border: none; outline: none;
+    font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.5rem;
+    color: var(--text); width: 100%;
+  }
+  .calc-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 0; border-bottom: 1px solid var(--border);
+  }
+  .calc-row:last-child { border: none; }
+  .calc-rlabel { font-size: 0.82rem; color: var(--text-soft); font-weight: 500; }
+  .calc-rval { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1rem; color: #E53E3E; }
+  .calc-rval.green { color: var(--green-light); }
+  .calc-share {
+    width: 100%; margin-top: 20px;
+    background: #FFE000; color: var(--text);
+    font-family: 'Sora', sans-serif; font-weight: 800; font-size: 0.9rem;
+    letter-spacing: .06em; text-transform: uppercase;
+    border: none; border-radius: var(--radius-xs); padding: 14px;
+    cursor: pointer; transition: opacity .15s;
+  }
+  .calc-share:hover { opacity: .88; }
+  .calc-note { font-size: 0.68rem; color: var(--text-light); text-transform: uppercase; letter-spacing: .07em; margin-top: 12px; }
+
+  /* share text card (like app's viral message) */
+  .share-card {
+    background: var(--green-pale); border: 1px solid var(--green-light);
+    border-radius: var(--radius-xs); padding: 14px 16px; margin-top: 14px;
+    font-size: 0.8rem; color: var(--text-mid); line-height: 1.6;
+    display: none;
+  }
+
+  /* ──────────────── GASTOS SCREEN ──────────────── */
+  #gastos-screen { background: var(--bg); }
+  .gastos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+
+  .gastos-mockup {
+    background: var(--white); border-radius: var(--radius);
+    box-shadow: var(--shadow-md); padding: 26px; border: 1px solid var(--border);
+  }
+  .gm-title { font-weight: 800; font-size: 1.3rem; margin-bottom: 16px; }
+
+  /* month tabs */
+  .month-tabs { display: flex; gap: 8px; margin-bottom: 18px; overflow-x: auto; }
+  .mtab {
+    background: var(--bg); border: 1.5px solid var(--border);
+    border-radius: 50px; padding: 5px 14px;
+    font-size: 0.75rem; font-weight: 600; color: var(--text-soft); white-space: nowrap;
+  }
+  .mtab.active { background: var(--white); border-color: var(--green); color: var(--green); font-weight: 700; }
+
+  /* donut card */
+  .donut-card {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 18px; margin-bottom: 12px;
+    display: flex; align-items: center; gap: 20px;
+  }
+  .donut-svg { flex-shrink: 0; }
+  .donut-total-label { font-size: 0.7rem; color: var(--text-soft); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
+  .donut-total-val { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.5rem; margin: 4px 0 10px; }
+  .donut-legend { display: flex; flex-direction: column; gap: 4px; }
+  .dleg { font-size: 0.72rem; font-weight: 500; color: var(--text-mid); display: flex; align-items: center; gap: 5px; }
+  .dleg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  /* budget row */
+  .budget-row {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 14px 16px; margin-bottom: 10px;
+  }
+  .brow-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .brow-name { font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+  .brow-pct-badge {
+    background: var(--green-pale); color: var(--green);
+    font-size: 0.68rem; font-weight: 700; border-radius: 50px; padding: 2px 8px;
+  }
+  .brow-vals { font-size: 0.72rem; color: var(--text-soft); display: flex; justify-content: space-between; margin-top: 6px; }
+
+  /* ──────────────── CÓMO FUNCIONA ──────────────── */
+  #como { background: var(--white); }
+  .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 2.5rem; }
+  .step-card {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 30px 24px;
+    text-align: center; transition: box-shadow .2s;
+  }
+  .step-card:hover { box-shadow: var(--shadow-md); }
+  .step-num {
+    width: 50px; height: 50px; background: var(--green); color: #fff;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.2rem;
+    margin: 0 auto 16px;
+  }
+  .step-card h4 { font-weight: 700; font-size: 0.95rem; margin-bottom: 10px; }
+  .step-card p { font-size: 0.83rem; color: var(--text-soft); line-height: 1.65; }
+
+  /* ──────────────── GRUPOS ──────────────── */
+  #grupos { background: var(--bg); }
+  .grupos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+  .grupos-mockup {
+    background: var(--white); border-radius: var(--radius);
+    box-shadow: var(--shadow-md); padding: 26px; border: 1px solid var(--border);
+  }
+  .gru-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+  .gru-title { font-weight: 800; font-size: 1.3rem; }
+  .gru-add {
+    width: 34px; height: 34px; background: var(--green-pale);
+    border-radius: 50%; border: 1.5px solid var(--green-light);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--green); font-size: 1.2rem; cursor: pointer;
+  }
+  .gru-invite-card {
+    background: var(--green-bg); border: 1px solid var(--green-pale);
+    border-radius: var(--radius-sm); padding: 18px; margin-bottom: 16px;
+  }
+  .gru-invite-card h4 { font-weight: 800; font-size: 1rem; margin-bottom: 5px; }
+  .gru-invite-card p { font-size: 0.78rem; color: var(--text-soft); margin-bottom: 12px; line-height: 1.5; }
+  .gru-invite-btn {
+    display: inline-block; color: var(--green);
+    font-weight: 700; font-size: 0.78rem; letter-spacing: .06em;
+    text-transform: uppercase; text-decoration: none; cursor: pointer;
+  }
+  .gru-empty {
+    text-align: center; padding: 28px 16px;
+    color: var(--text-soft); font-size: 0.82rem; line-height: 1.6;
+    border: 1px dashed var(--border); border-radius: var(--radius-sm); margin-bottom: 12px;
+  }
+  .gru-empty-icon { font-size: 2rem; margin-bottom: 8px; }
+  .gru-empty-link { display: block; margin-top: 10px; color: var(--green); font-weight: 700; font-size: 0.8rem; letter-spacing: .06em; text-transform: uppercase; cursor: pointer; }
+  .gru-tabs { display: flex; gap: 5px; background: var(--bg); border-radius: 10px; padding: 4px; margin-bottom: 18px; }
+  .gru-tab { flex: 1; text-align: center; padding: 8px 6px; border-radius: 7px; font-size: 0.76rem; font-weight: 700; cursor: pointer; color: var(--text-soft); transition: all 0.18s ease; user-select: none; }
+  .gru-tab.active { background: var(--white); color: var(--text); box-shadow: 0 1px 5px rgba(0,0,0,0.1); }
+  .gru-panel { display: none; }
+  .gru-panel.active { display: block; }
+  .priv-items { display: flex; flex-direction: column; gap: 1rem; }
+  .priv-item {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 16px 18px;
+    display: flex; align-items: flex-start; gap: 14px;
+  }
+  .priv-ico { width: 36px; height: 36px; background: var(--green-pale); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+  .priv-item h5 { font-weight: 700; font-size: 0.88rem; margin-bottom: 3px; }
+  .priv-item p { font-size: 0.78rem; color: var(--text-soft); }
+
+  /* ──────────────── FAQ ──────────────── */
+  #faq { background: var(--white); }
+  .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2.5rem; }
+  .faq-card {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 20px 22px; cursor: pointer;
+    transition: box-shadow .2s;
+  }
+  .faq-card:hover { box-shadow: var(--shadow); }
+  .faq-q { font-weight: 700; font-size: 0.88rem; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+  .faq-q span { color: var(--green-light); font-size: 1.1rem; flex-shrink: 0; margin-top: -1px; }
+  .faq-a { font-size: 0.82rem; color: var(--text-soft); line-height: 1.65; display: none; }
+  .faq-card.open .faq-a { display: block; }
+
+  /* ──────────────── CTA ──────────────── */
+  .cta-section {
+    background: var(--green); padding: 100px 5%;
+    text-align: center; position: relative; overflow: hidden;
+  }
+  .cta-section::before {
+    content: ''; position: absolute;
+    width: 700px; height: 700px; background: rgba(255,255,255,.07);
+    border-radius: 50%; top: -350px; right: -150px;
+  }
+  .cta-section h2 { font-size: clamp(2rem, 4vw, 3.2rem); color: #fff; margin-bottom: 1rem; position: relative; }
+  .cta-section p { font-size: 1rem; color: rgba(255,255,255,.8); max-width: 500px; margin: 0 auto 2.5rem; line-height: 1.75; position: relative; }
+  .cta-dl-btn {
+    display: inline-block; background: #fff; color: var(--green);
+    font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1rem;
+    border-radius: 50px; padding: 1rem 2.8rem;
+    text-decoration: none; box-shadow: 0 8px 32px rgba(0,0,0,.18);
+    transition: transform .15s; position: relative;
+  }
+  .cta-dl-btn:hover { transform: translateY(-3px); }
+  .cta-note { font-size: 0.75rem; color: rgba(255,255,255,.5); margin-top: 1.2rem; position: relative; }
+
+  /* ──────────────── FOOTER ──────────────── */
+  footer {
+    background: var(--text); color: #666;
+    padding: 56px 5% 32px;
+  }
+  .ft { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 36px; padding-bottom: 36px; border-bottom: 1px solid #2A2A2A; }
+  .ft-logo { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.2rem; color: #fff; }
+  .ft-logo span { color: var(--green-light); }
+  .ft-tag { font-size: 0.78rem; color: #555; margin-top: 5px; }
+  .ft-cols { display: flex; gap: 3.5rem; }
+  .ft-col h6 { font-size: 0.72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #444; margin-bottom: 14px; }
+  .ft-col a { display: block; color: #555; text-decoration: none; font-size: 0.82rem; margin-bottom: 9px; transition: color .15s; }
+  .ft-col a:hover { color: var(--green-light); }
+  .ft-bottom { display: flex; justify-content: space-between; font-size: 0.75rem; color: #3A3A3A; }
+
+  /* ──────────────── RESPONSIVE ──────────────── */
+  @media (max-width: 900px) {
+    nav .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; text-align: center; }
+    .hero-desc, .hero-ctas { margin-left: auto; margin-right: auto; }
+    .hero-ctas { justify-content: center; }
+    .hero-stats { justify-content: center; }
+    .hero-phone { display: none; }
+    .prob-grid, .steps-grid { grid-template-columns: 1fr; }
+    .stats-band { grid-template-columns: 1fr; gap: 2rem; }
+    .sband-item { border: none; padding: 0; }
+    .que-es-grid, .gastos-grid, .grupos-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    .calc-wrap { grid-template-columns: 1fr; gap: 2rem; }
+    .faq-grid { grid-template-columns: 1fr; }
+    .ft { flex-direction: column; gap: 2rem; }
+    .ft-cols { flex-wrap: wrap; gap: 2rem; }
+  }
+
+  /* reveal */
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .5s ease, transform .5s ease; }
+  .reveal.visible { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="#">Smart <span>Pesos</span></a>
+  <ul class="nav-links">
+    <li><a href="#que-es">¿Qué es?</a></li>
+    <li><a href="#grupos">Grupos</a></li>
+    <li><a href="#como">¿Cómo funciona?</a></li>
+    <li><a href="#calculadora">Calculadora</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <a class="nav-btn" href="#cta-final">Empezar gratis →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <div class="eyebrow"><span class="dot"></span>AR · Diseñado para Argentina</div>
+    <h1>Entendé a dónde<br>va <em>tu plata</em><br>cada mes</h1>
+    <p class="hero-desc">Smart Pesos analiza tus gastos, mide tu inflación personal y te muestra exactamente qué podés mejorar. En tiempo real, sin vueltas.</p>
+    <div class="hero-ctas">
+      <a class="btn-primary" href="#cta-final">Empezar gratis</a>
+      <a class="btn-ghost" href="#como">Ver cómo funciona</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="hstat-num" id="stat-inflacion-hero">2,9%</div>
+        <div class="hstat-label">Perdés por mes aunque no gastes nada</div>
+      </div>
+      <div>
+        <div class="hstat-num">33%</div>
+        <div class="hstat-label">Poder adquisitivo perdido en 1 año</div>
+      </div>
+      <div>
+        <div class="hstat-num">$0</div>
+        <div class="hstat-label">Para empezar a protegerte</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-phone">
+    <div class="float-badge fb-1">
+      <span class="fb-icon">📉</span>
+      <div>
+        <div class="fb-tiny">Perdés por mes</div>
+        <div class="fb-val-red">$29.000</div>
+      </div>
+    </div>
+    <div class="float-badge fb-2">
+      <span class="fb-icon">🎯</span>
+      <div>
+        <div class="fb-tiny">Podés recuperar</div>
+        <div class="fb-val-green">$35.070</div>
+      </div>
+    </div>
+    <div class="phone-shell">
+      <div class="phone-notch"></div>
+      <div class="ph-greeting">👋 Buen día, Agustin</div>
+      <div class="ph-sub">Este es tu resumen hasta hoy</div>
+
+      <div class="ph-spend" style="margin-bottom:12px;">
+        <div>
+          <div style="font-size:.7rem;color:var(--text-soft);">Total gastado este mes</div>
+          <div class="ph-spend-main">$ 306.160</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:.68rem;color:var(--text-soft)">en 47 gastos</div>
+          <div class="ph-pct">ABR · 2026</div>
+        </div>
+      </div>
+
+      <div class="ph-opp">
+        <div class="ph-opp-label">Tu oportunidad este mes</div>
+        <div>Podés recuperar</div>
+        <div class="ph-opp-amount">$ 35.070</div>
+        <div class="ph-opp-sub">Si ajustás estos gastos</div>
+        <button class="ph-opp-btn">Ver cómo →</button>
+      </div>
+
+      <div class="ph-spend">
+        <div>
+          <div style="font-size:.7rem;color:var(--text-soft);">Gastaste en el mes</div>
+          <div class="ph-spend-main">$ 306.160</div>
+          <div class="ph-progress" style="width:140px;margin-top:5px;"><div class="ph-progress-bar" style="width:20%"></div></div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:.68rem;color:var(--text-soft)">de $1.500.000</div>
+          <div class="ph-pct">20% del ingreso</div>
+        </div>
+      </div>
+
+      <div class="ph-infl">
+        <div class="ph-infl-col">
+          <div class="ph-infl-label">Tu inflación</div>
+          <div class="ph-infl-val">3,1%</div>
+        </div>
+        <div class="ph-infl-col">
+          <div class="ph-infl-label">Le ganaste por</div>
+          <div class="ph-infl-val ph-infl-win">0,3% 🎉</div>
+        </div>
+        <div class="ph-infl-col">
+          <div class="ph-infl-label">INDEC</div>
+          <div class="ph-infl-val">3,4%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEMA -->
+<section id="problema" class="section">
+  <div class="section-eyebrow">El problema que nadie te explica</div>
+  <h2 class="section-title">En Argentina, el dinero se evapora<br><em>y nadie te avisa</em></h2>
+  <p class="section-body" style="margin-bottom:2.5rem;">La inflación, los gastos invisibles y la falta de herramientas hacen que ahorrar en pesos sea una carrera perdida. Smart Pesos vino a cambiar eso.</p>
+  <div class="prob-grid reveal">
+    <div class="prob-card">
+      <div class="prob-icon">📈</div>
+      <h4>La inflación te come en silencio</h4>
+      <p>Cada mes que tus pesos están quietos, perdés poder adquisitivo. Nadie te dice cuánto ni qué hacer al respecto.</p>
+    </div>
+    <div class="prob-card">
+      <div class="prob-icon">❓</div>
+      <h4>No sabés a dónde va tu plata</h4>
+      <p>El sueldo entra y desaparece. Sin registro, sin análisis, sin contexto. Solo la sensación de que "no alcanza".</p>
+    </div>
+    <div class="prob-card">
+      <div class="prob-icon">🎯</div>
+      <h4>Sin metas claras, no hay ahorro</h4>
+      <p>Querés ahorrar pero no sabés de dónde recortar. Falta un sistema que muestre las oportunidades concretas.</p>
+    </div>
+    <div class="prob-card">
+      <div class="prob-icon">📊</div>
+      <h4>La inflación del INDEC no es la tuya</h4>
+      <p>El promedio oficial no refleja cómo gastás vos. Necesitás tu propia medición, basada en tu canasta real.</p>
+    </div>
+    <div class="prob-card">
+      <div class="prob-icon">💸</div>
+      <h4>Los gastos prescindibles se escapan</h4>
+      <p>Suscripciones, salidas, caprichos. Se acumulan de a poco y al final del mes hacen la diferencia.</p>
+    </div>
+    <div class="prob-card">
+      <div class="prob-icon">👥</div>
+      <h4>Los gastos compartidos son un caos</h4>
+      <p>Coordinar con pareja o familia termina en mensajes de WhatsApp y números que nunca cierran.</p>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAND -->
+<div class="stats-band">
+  <div class="sband-item">
+    <div class="sband-num" id="stat-inflacion-band">2,9%</div>
+    <div class="sband-label">Perdés por mes aunque no gastes un peso</div>
+  </div>
+  <div class="sband-item">
+    <div class="sband-num">33%</div>
+    <div class="sband-label">Poder adquisitivo perdido en el último año</div>
+  </div>
+  <div class="sband-item">
+    <div class="sband-num">$0</div>
+    <div class="sband-label">Costo para empezar a usar Smart Pesos hoy</div>
+  </div>
+</div>
+
+<!-- QUÉ ES -->
+<section id="que-es" class="section">
+  <div class="que-es-grid">
+    <div>
+      <div class="section-eyebrow">Qué es Smart Pesos</div>
+      <h2 class="section-title">Tus finanzas personales,<br><em>sin excusas</em></h2>
+      <p class="section-body" style="margin-bottom:2rem;">No es solo un registro de gastos. Es un sistema que te muestra qué hacer con tu plata en el contexto argentino real.</p>
+      <div class="feature-list reveal">
+        <div class="feat-item">
+          <div class="feat-ico">🏠</div>
+          <div>
+            <h4>Dashboard inteligente</h4>
+            <p>Todo lo que necesitás saber de un vistazo: saldo proyectado, gastos del mes, oportunidades de ahorro y tu inflación personal vs. INDEC.</p>
+          </div>
+        </div>
+        <div class="feat-item">
+          <div class="feat-ico">📂</div>
+          <div>
+            <h4>Clasificación de gastos</h4>
+            <p>Necesarios, prescindibles e invertibles. Entendés la estructura de tus gastos y dónde podés optimizar.</p>
+          </div>
+        </div>
+        <div class="feat-item">
+          <div class="feat-ico">📉</div>
+          <div>
+            <h4>Calculadora de inflación personal</h4>
+            <p>Ingresás tus ahorros y ves exactamente cuánto poder adquisitivo perdés. En tiempo real, basado en datos INDEC.</p>
+          </div>
+        </div>
+        <div class="feat-item">
+          <div class="feat-ico">🎯</div>
+          <div>
+            <h4>Metas y acciones rápidas</h4>
+            <p>Creás metas de ahorro y la app te sugiere acciones concretas: limitar una categoría, invertir lo que sobra, crear un presupuesto.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="dash-preview reveal">
+      <div class="dash-title">Top categorías · Abril</div>
+      <div class="dash-total-spent">Gastaste <strong>$283.623</strong> este mes</div>
+      <div class="dash-sub">Tu mayor fuga: Entretenimiento (36%)</div>
+      <div class="dash-cat-row">
+        <div class="dash-cat-top">
+          <span class="dash-cat-name">🎮 Entretenimiento</span>
+          <div style="text-align:right"><span class="dash-cat-val">$101.903</span><span class="dash-cat-pct"> · 36%</span></div>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:36%;background:var(--purple)"></div></div>
+      </div>
+      <div class="dash-cat-row">
+        <div class="dash-cat-top">
+          <span class="dash-cat-name">🏋️ Deporte y gym</span>
+          <div style="text-align:right"><span class="dash-cat-val">$84.998</span><span class="dash-cat-pct"> · 30%</span></div>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:30%;background:var(--green-light)"></div></div>
+      </div>
+      <div class="dash-cat-row">
+        <div class="dash-cat-top">
+          <span class="dash-cat-name">🍕 Comida y restaurants</span>
+          <div style="text-align:right"><span class="dash-cat-val">$76.722</span><span class="dash-cat-pct"> · 27%</span></div>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:27%;background:var(--orange)"></div></div>
+      </div>
+      <div class="dash-cat-row">
+        <div class="dash-cat-top">
+          <span class="dash-cat-name">✂️ Peluquería y estética</span>
+          <div style="text-align:right"><span class="dash-cat-val">$20.000</span><span class="dash-cat-pct"> · 7%</span></div>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:7%;background:#E53E3E"></div></div>
+      </div>
+      <div class="dash-proj">
+        <div class="dash-proj-label">Saldo proyectado fin de mes</div>
+        <div class="dash-proj-val">$ 313.629</div>
+        <div class="dash-proj-sub">Si mantenés este ritmo ↗</div>
+        <div class="dash-proj-explain">Lo que te queda hasta fin de mes — calculado como tu ingreso ($650.000) menos los gastos proyectados al ritmo actual ($336.371).</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GRUPOS -->
+<section id="grupos" class="section" style="background:var(--white);">
+  <div class="grupos-grid">
+    <div>
+      <div class="section-eyebrow">Grupos</div>
+      <h2 class="section-title">Coordiná sin perder<br><em>tu privacidad</em></h2>
+      <p class="section-body" style="margin-bottom:2rem;">Compartí gastos con tu pareja, familia o compañeros de depto. Vos decidís qué información ve cada miembro.</p>
+      <div class="priv-items reveal">
+        <div class="priv-item">
+          <div class="priv-ico">🛡️</div>
+          <div>
+            <h5>Elegí qué compartís</h5>
+            <p>Montos, categorías, comercios o nada. Cada miembro ve solo lo que vos autorizás.</p>
+          </div>
+        </div>
+        <div class="priv-item">
+          <div class="priv-ico">👤</div>
+          <div>
+            <h5>Roles y permisos</h5>
+            <p>Admin, miembro o invitado. El rol define exactamente qué puede hacer cada persona en el grupo.</p>
+          </div>
+        </div>
+        <div class="priv-item">
+          <div class="priv-ico">🔗</div>
+          <div>
+            <h5>Código de invitación</h5>
+            <p>Creás el grupo y compartís un código. El otro se une en segundos, sin necesitar la misma cuenta bancaria.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="grupos-mockup reveal">
+      <div class="gru-header">
+        <div class="gru-title">Grupos</div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="gru-tabs" id="gruTabs">
+        <div class="gru-tab active" onclick="switchGruTab(0)">🏠 Familia</div>
+        <div class="gru-tab" onclick="switchGruTab(1)">🤝 Amigos</div>
+      </div>
+
+      <!-- Panel Familia -->
+      <div class="gru-panel active" id="gruPanel0">
+        <!-- Mini group header -->
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+          <div style="width:38px;height:38px;background:#E8F5E9;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">🏠</div>
+          <div style="flex:1;">
+            <div style="font-weight:800;font-size:0.92rem;">Flia Garcia</div>
+            <div style="font-size:0.68rem;color:var(--text-soft);">3 miembros · Grupo familiar</div>
+          </div>
+          <div style="font-size:1rem;">⚙️</div>
+        </div>
+        <!-- Inner tabs (funcionales) -->
+        <div style="display:flex;border-bottom:1px solid var(--border);margin-bottom:14px;">
+          <div id="ftab0" onclick="switchFamiliaTab(0)" style="padding:6px 10px;font-size:0.7rem;font-weight:700;color:var(--green);border-bottom:2px solid var(--green);margin-bottom:-1px;cursor:pointer;">Resumen</div>
+          <div id="ftab1" onclick="switchFamiliaTab(1)" style="padding:6px 10px;font-size:0.7rem;font-weight:600;color:var(--text-soft);cursor:pointer;">Gastos</div>
+          <div id="ftab2" onclick="switchFamiliaTab(2)" style="padding:6px 10px;font-size:0.7rem;font-weight:600;color:var(--text-soft);cursor:pointer;">Miembros</div>
+          <div id="ftab3" onclick="switchFamiliaTab(3)" style="padding:6px 10px;font-size:0.7rem;font-weight:600;color:var(--text-soft);cursor:pointer;">Permisos</div>
+        </div>
+
+        <!-- Sub-panel Resumen -->
+        <div id="fpanel0">
+          <div style="background:var(--green-bg);border:1px solid var(--green-pale);border-radius:10px;padding:12px 14px;margin-bottom:12px;display:flex;gap:10px;align-items:flex-start;">
+            <div style="font-size:1.1rem;margin-top:1px;">🛡️</div>
+            <div>
+              <div style="font-weight:800;font-size:0.8rem;color:var(--green);margin-bottom:3px;">Sos el admin</div>
+              <div style="font-size:0.72rem;color:var(--text-soft);line-height:1.45;">Podés ver los gastos de los miembros. Tus gastos no se comparten automáticamente.</div>
+            </div>
+          </div>
+          <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px;">
+            <div style="font-weight:800;font-size:0.85rem;margin-bottom:12px;">Resumen del mes</div>
+            <div style="display:flex;justify-content:space-between;">
+              <div>
+                <div style="font-size:0.68rem;color:var(--text-soft);margin-bottom:3px;">Total del grupo</div>
+                <div style="font-weight:800;font-size:1.1rem;">$ 320.281</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:0.68rem;color:var(--text-soft);margin-bottom:3px;">Miembros</div>
+                <div style="font-weight:800;font-size:1.1rem;">2</div>
+              </div>
+            </div>
+          </div>
+          <div style="font-weight:800;font-size:0.82rem;margin-bottom:10px;">Gastos por miembro</div>
+          <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden;">
+            <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--border);">
+              <div style="width:36px;height:36px;background:#EDE7F6;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;color:#7C3AED;flex-shrink:0;">B</div>
+              <div style="flex:1;">
+                <div style="font-weight:700;font-size:0.82rem;margin-bottom:2px;">Bruno Garcia</div>
+                <div style="font-size:0.68rem;color:var(--text-soft);">$ 285.605 · 15 gastos</div>
+                <div style="font-size:0.68rem;color:var(--green);margin-top:1px;">Principal: Entretenimiento</div>
+              </div>
+              <div style="color:var(--text-light);font-size:0.9rem;">›</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;">
+              <div style="width:36px;height:36px;background:#EEEEEE;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;color:#757575;flex-shrink:0;">F</div>
+              <div style="flex:1;">
+                <div style="font-weight:700;font-size:0.82rem;margin-bottom:2px;">Franco Garcia</div>
+                <div style="font-size:0.68rem;color:var(--text-soft);">$ 34.676 · 3 gastos</div>
+                <div style="font-size:0.68rem;color:var(--green);margin-top:1px;">Principal: Otros</div>
+              </div>
+              <div style="color:var(--text-light);font-size:0.9rem;">›</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sub-panel Gastos (placeholder) -->
+        <div id="fpanel1" style="display:none;">
+          <div style="text-align:center;padding:32px 16px;color:var(--text-soft);font-size:0.8rem;border:1px dashed var(--border);border-radius:10px;">
+            <div style="font-size:1.8rem;margin-bottom:8px;">📋</div>
+            Gastos del grupo disponibles próximamente.
+          </div>
+        </div>
+
+        <!-- Sub-panel Miembros -->
+        <div id="fpanel2" style="display:none;">
+          <div style="font-weight:800;font-size:0.85rem;margin-bottom:12px;">Miembros del grupo</div>
+          <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:12px;">
+            <!-- Agustín (admin) -->
+            <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--border);">
+              <div style="width:36px;height:36px;background:#E8F5E9;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;color:var(--green);flex-shrink:0;">A</div>
+              <div style="flex:1;">
+                <div style="font-weight:700;font-size:0.82rem;">Vos (Agustín Garcia)</div>
+              </div>
+              <div style="background:#E8F5E9;color:var(--green);font-size:0.65rem;font-weight:700;padding:3px 8px;border-radius:20px;">Admin</div>
+            </div>
+            <!-- Bruno -->
+            <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--border);">
+              <div style="width:36px;height:36px;background:#EDE7F6;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;color:#7C3AED;flex-shrink:0;">B</div>
+              <div style="flex:1;">
+                <div style="font-weight:700;font-size:0.82rem;">Bruno Garcia</div>
+              </div>
+              <div style="background:#EDE7F6;color:#7C3AED;font-size:0.65rem;font-weight:700;padding:3px 8px;border-radius:20px;">Miembro</div>
+              <div style="color:var(--text-soft);font-size:0.85rem;margin-left:4px;">···</div>
+            </div>
+            <!-- Franco -->
+            <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;">
+              <div style="width:36px;height:36px;background:#EEEEEE;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;color:#757575;flex-shrink:0;">F</div>
+              <div style="flex:1;">
+                <div style="font-weight:700;font-size:0.82rem;">Franco Garcia</div>
+              </div>
+              <div style="background:#EDE7F6;color:#7C3AED;font-size:0.65rem;font-weight:700;padding:3px 8px;border-radius:20px;">Miembro</div>
+              <div style="color:var(--text-soft);font-size:0.85rem;margin-left:4px;">···</div>
+            </div>
+          </div>
+          <div style="background:var(--green-bg);border:1px solid var(--green-pale);border-radius:10px;padding:11px 13px;margin-bottom:12px;display:flex;gap:9px;align-items:flex-start;">
+            <div style="font-size:0.85rem;margin-top:1px;">ℹ️</div>
+            <div style="font-size:0.7rem;color:var(--text-soft);line-height:1.5;">Los admins pueden ver los gastos de los miembros. Los miembros ven solo su información.</div>
+          </div>
+          <div style="border:1.5px solid var(--green-pale);background:var(--green-bg);border-radius:12px;padding:12px;text-align:center;color:var(--green);font-weight:700;font-size:0.8rem;cursor:pointer;">→ Invitar con código</div>
+        </div>
+
+        <!-- Sub-panel Permisos -->
+        <div id="fpanel3" style="display:none;">
+          <div style="background:var(--green-bg);border:1px solid var(--green-pale);border-radius:10px;padding:12px 14px;margin-bottom:14px;display:flex;gap:10px;align-items:flex-start;">
+            <div style="font-size:1.1rem;margin-top:1px;">🛡️</div>
+            <div>
+              <div style="font-weight:800;font-size:0.8rem;color:var(--green);margin-bottom:3px;">Tu rol: Admin</div>
+              <div style="font-size:0.72rem;color:var(--text-soft);line-height:1.45;">Podés ver los gastos de todos los miembros, cambiar roles y editar permisos.</div>
+            </div>
+          </div>
+          <div style="font-weight:800;font-size:0.82rem;margin-bottom:10px;">Reglas del grupo</div>
+          <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden;">
+            <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--border);">
+              <div style="width:32px;height:32px;background:#E3F2FD;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;">👁️</div>
+              <div>
+                <div style="font-weight:700;font-size:0.8rem;margin-bottom:2px;">Admin ve todo</div>
+                <div style="font-size:0.68rem;color:var(--text-soft);">Los admins pueden ver los gastos de todos los miembros.</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--border);">
+              <div style="width:32px;height:32px;background:#F5F5F5;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;">🚫</div>
+              <div>
+                <div style="font-weight:700;font-size:0.8rem;margin-bottom:2px;">Miembros ven lo suyo</div>
+                <div style="font-size:0.68rem;color:var(--text-soft);">Los miembros solo ven sus propios gastos por defecto.</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--border);">
+              <div style="width:32px;height:32px;background:#EDE7F6;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;">✏️</div>
+              <div>
+                <div style="font-weight:700;font-size:0.8rem;margin-bottom:2px;">Permisos editables</div>
+                <div style="font-size:0.68rem;color:var(--text-soft);">El admin puede personalizar los permisos de cada miembro.</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;">
+              <div style="width:32px;height:32px;background:#FFF8E1;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;">🔒</div>
+              <div>
+                <div style="font-weight:700;font-size:0.8rem;margin-bottom:2px;">Roles protegidos</div>
+                <div style="font-size:0.68rem;color:var(--text-soft);">Solo Admin puede cambiar roles.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel Amigos -->
+      <div class="gru-panel" id="gruPanel1">
+        <!-- Mini group header -->
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+          <div style="width:38px;height:38px;background:#EDE7F6;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">👥</div>
+          <div style="flex:1;">
+            <div style="font-weight:800;font-size:0.92rem;">Viaje a Brasil</div>
+            <div style="font-size:0.68rem;color:var(--text-soft);">3 miembros · Grupo de amigos</div>
+          </div>
+          <div style="font-size:1rem;">⚙️</div>
+        </div>
+        <!-- Inner tabs (funcionales, púrpura) -->
+        <div style="display:flex;border-bottom:1px solid var(--border);margin-bottom:14px;">
+          <div id="atab0" onclick="switchAmigosTab(0)" style="padding:6px 10px;font-size:0.7rem;font-weight:700;color:#7C3AED;border-bottom:2px solid #7C3AED;margin-bottom:-1px;cursor:pointer;">Resumen</div>
+          <div id="atab1" onclick="switchAmigosTab(1)" style="padding:6px 10px;font-size:0.7rem;font-weight:600;color:var(--text-soft);cursor:pointer;">Deudas</div>
+          <div id="atab2" onclick="switchAmigosTab(2)" style="padding:6px 10px;font-size:0.7rem;font-weight:600;color:var(--text-soft);cursor:pointer;">Gastos</div>
+          <div id="atab3" onclick="switchAmigosTab(3)" style="padding:6px 10px;font-size:0.7rem;font-weight:600;color:var(--text-soft);cursor:pointer;">Miembros</div>
+        </div>
+
+        <!-- Sub-panel Resumen -->
+        <div id="apanel0">
+          <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px;">
+            <div style="font-weight:800;font-size:0.85rem;margin-bottom:12px;">Resumen del grupo</div>
+            <div style="display:flex;justify-content:space-between;padding-bottom:10px;border-bottom:1px solid var(--border);margin-bottom:10px;">
+              <div>
+                <div style="font-size:0.68rem;color:var(--text-soft);margin-bottom:3px;">Total compartido</div>
+                <div style="font-weight:800;font-size:1rem;">$ 119.550</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:0.68rem;color:var(--text-soft);margin-bottom:3px;">Balance neto</div>
+                <div style="font-weight:800;font-size:1rem;color:#DC2626;">-$ 5.650</div>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding-bottom:10px;border-bottom:1px solid var(--border);margin-bottom:10px;">
+              <div>
+                <div style="font-size:0.68rem;color:var(--text-soft);margin-bottom:3px;">Pagado por mí</div>
+                <div style="font-weight:800;font-size:1rem;">$ 34.200</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:0.68rem;color:var(--text-soft);margin-bottom:3px;">Me deben</div>
+                <div style="font-weight:800;font-size:1rem;color:var(--green);">$ 0</div>
+              </div>
+            </div>
+            <div>
+              <div style="font-size:0.68rem;color:var(--text-soft);margin-bottom:3px;">Yo debo</div>
+              <div style="font-weight:800;font-size:1rem;color:#DC2626;">$ 5.650</div>
+            </div>
+          </div>
+          <div style="background:#7C3AED;border-radius:12px;padding:13px;text-align:center;color:#fff;font-weight:700;font-size:0.82rem;">＋ Agregar gasto compartido</div>
+        </div>
+
+        <!-- Sub-panel Deudas -->
+        <div id="apanel1" style="display:none;">
+          <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px;">
+            <div style="font-weight:800;font-size:0.82rem;margin-bottom:6px;">Tu balance neto</div>
+            <div style="font-weight:800;font-size:1.4rem;color:#DC2626;margin-bottom:12px;">-$ 5.650</div>
+            <div style="display:flex;justify-content:space-between;border-top:1px solid var(--border);padding-top:10px;">
+              <div>
+                <div style="font-size:0.67rem;color:var(--text-soft);margin-bottom:3px;">Te deben</div>
+                <div style="font-weight:800;font-size:1rem;color:var(--green);">$ 0</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:0.67rem;color:var(--text-soft);margin-bottom:3px;">Debés</div>
+                <div style="font-weight:800;font-size:1rem;color:#DC2626;">$ 5.650</div>
+              </div>
+            </div>
+          </div>
+          <div style="font-weight:800;font-size:0.82rem;margin-bottom:10px;">Debés</div>
+          <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:14px;">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div style="width:36px;height:36px;background:#EDE7F6;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;color:#7C3AED;flex-shrink:0;">J</div>
+              <div style="flex:1;">
+                <div style="font-weight:700;font-size:0.8rem;">a Juan Martinez</div>
+                <div style="font-size:0.67rem;color:#7C3AED;margin-top:2px;">tenés que pagar</div>
+              </div>
+              <div style="font-weight:800;font-size:0.9rem;color:#DC2626;white-space:nowrap;">$ 5.650</div>
+            </div>
+          </div>
+          <div style="font-weight:800;font-size:0.82rem;margin-bottom:10px;">Entre el grupo</div>
+          <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:12px;">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div style="width:36px;height:36px;background:#E8F5E9;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;color:var(--green);flex-shrink:0;">M</div>
+              <div style="flex:1;font-size:0.78rem;font-weight:500;">Manuel Lopez le debe a Juan</div>
+              <div style="font-weight:800;font-size:0.9rem;white-space:nowrap;">$ 39.850</div>
+            </div>
+          </div>
+          <div style="background:#F3F0FF;border-radius:10px;padding:11px 13px;display:flex;gap:9px;align-items:flex-start;">
+            <div style="font-size:0.85rem;margin-top:1px;color:#7C3AED;">ℹ️</div>
+            <div style="font-size:0.7rem;color:var(--text-soft);line-height:1.5;">Las deudas se calculan según los gastos compartidos cargados en el grupo.</div>
+          </div>
+        </div>
+
+        <!-- Sub-panel Gastos -->
+        <div id="apanel2" style="display:none;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+            <div style="font-weight:800;font-size:0.9rem;">Mayo 2026</div>
+            <div style="border:1.5px solid #7C3AED;color:#7C3AED;font-size:0.7rem;font-weight:700;padding:5px 11px;border-radius:20px;cursor:pointer;">+ Agregar</div>
+          </div>
+          <!-- HOY -->
+          <div style="font-size:0.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-soft);margin-bottom:8px;">Hoy</div>
+          <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:13px 14px;margin-bottom:14px;">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div style="width:36px;height:36px;background:#F0F0F0;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;">💸</div>
+              <div style="flex:1;">
+                <div style="font-weight:700;font-size:0.85rem;margin-bottom:2px;">Asado</div>
+                <div style="font-size:0.67rem;color:var(--text-soft);">Hoy · Pagó: Juan Martinez</div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:4px;">
+                  <span style="font-size:0.67rem;color:var(--text-soft);">Partes iguales</span>
+                  <span style="background:#EDE7F6;color:#7C3AED;font-size:0.63rem;font-weight:700;padding:2px 7px;border-radius:20px;display:flex;align-items:center;gap:3px;">👥 3</span>
+                </div>
+              </div>
+              <div style="font-weight:800;font-size:0.9rem;white-space:nowrap;">$ 85.350</div>
+            </div>
+          </div>
+          <!-- 9 MAY. -->
+          <div style="font-size:0.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-soft);margin-bottom:8px;">9 May.</div>
+          <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:13px 14px;">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div style="width:36px;height:36px;background:#F0F0F0;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;">💸</div>
+              <div style="flex:1;">
+                <div style="font-weight:700;font-size:0.85rem;margin-bottom:2px;">Caipirinhas</div>
+                <div style="font-size:0.67rem;color:var(--text-soft);">9 may. · Pagó: Vos</div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:4px;">
+                  <span style="font-size:0.67rem;color:var(--text-soft);">Partes iguales</span>
+                  <span style="background:#EDE7F6;color:#7C3AED;font-size:0.63rem;font-weight:700;padding:2px 7px;border-radius:20px;display:flex;align-items:center;gap:3px;">👥 3</span>
+                </div>
+              </div>
+              <div style="font-weight:800;font-size:0.9rem;white-space:nowrap;">$ 34.200</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sub-panel Miembros -->
+        <div id="apanel3" style="display:none;">
+          <div style="font-weight:800;font-size:0.85rem;margin-bottom:12px;">Miembros del grupo</div>
+          <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:12px;">
+            <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--border);">
+              <div style="width:36px;height:36px;background:#E8F5E9;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;color:var(--green);flex-shrink:0;">J</div>
+              <div>
+                <div style="font-weight:700;font-size:0.82rem;">Juan Martinez</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--border);">
+              <div style="width:36px;height:36px;background:#EDE7F6;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;color:#7C3AED;flex-shrink:0;">A</div>
+              <div>
+                <div style="font-weight:700;font-size:0.82rem;">Vos (Agustin Garcia)</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;">
+              <div style="width:36px;height:36px;background:#E8F5E9;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;color:var(--green);flex-shrink:0;">M</div>
+              <div>
+                <div style="font-weight:700;font-size:0.82rem;">Manuel Lopez</div>
+              </div>
+            </div>
+          </div>
+          <div style="border:1.5px solid var(--green-pale);background:var(--green-bg);border-radius:12px;padding:12px;text-align:center;color:var(--green);font-weight:700;font-size:0.8rem;cursor:pointer;">→ Invitar con código</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CÓMO FUNCIONA -->
+<section id="como" class="section" style="background:var(--bg);">
+  <div class="section-eyebrow">Cómo funciona</div>
+  <h2 class="section-title">Tres pasos y ya <em>estás en control</em></h2>
+  <p class="section-body" style="margin-bottom:0;">Sin complejidad, sin hojas de cálculo. Claridad financiera desde el primer día.</p>
+  <div class="steps-grid reveal">
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <h4>Se cargan tus gastos</h4>
+      <p>Vinculás tu cuenta de Mercado Pago y la app sincroniza tus transacciones automáticamente cada vez que actualizás.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <h4>Analizás tu situación</h4>
+      <p>Ves tu inflación personal vs. INDEC, tus fugas de dinero, tu mayor categoría de gasto y el proyectado de fin de mes.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">3</div>
+      <h4>Tomás acción</h4>
+      <p>Las acciones rápidas te dicen exactamente qué hacer: limitar una categoría, crear una meta o invertir este mes.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CALCULADORA -->
+<section id="calculadora" class="section">
+  <div class="section-eyebrow">Calculadora viral</div>
+  <h2 class="section-title">¿Cuánto perdés <em>hoy?</em></h2>
+  <div class="calc-wrap">
+    <div>
+      <p class="section-body">Ingresá tus ahorros en pesos y mirá exactamente cuánto poder adquisitivo perdés cada mes por la inflación.</p>
+      <p id="calc-inflacion-label" style="margin-top:1rem;font-size:0.72rem;color:var(--text-light);letter-spacing:.08em;text-transform:uppercase;">DATO INDEC OFICIAL — INFLACIÓN ENE 2026: 2,9% MENSUAL</p>
+      <p id="inflacion-actualizada" style="margin-top:6px;font-size:0.72rem;color:var(--green-mid);font-weight:600;display:none;"></p>
+    </div>
+    <div class="calc-box">
+      <div class="calc-label">Tus ahorros en pesos</div>
+      <div class="calc-input-row">
+        <span class="calc-sym">$</span>
+        <input type="text" inputmode="numeric" id="savings" value="1.000.000" oninput="formatInput(this); calcular()">
+      </div>
+      <div class="calc-row">
+        <span class="calc-rlabel">Perdés por mes</span>
+        <span class="calc-rval" id="r-mes">$29.000</span>
+      </div>
+      <div class="calc-row">
+        <span class="calc-rlabel">Perdés por año</span>
+        <span class="calc-rval" id="r-anio">$409.238</span>
+      </div>
+      <div class="calc-row">
+        <span class="calc-rlabel">En 2 años perdés</span>
+        <span class="calc-rval" id="r-2anio">$985.953</span>
+      </div>
+      <div class="calc-row">
+        <span class="calc-rlabel">Equivale en dólares (MEP)</span>
+        <span class="calc-rval green" id="r-usd">USD 323</span>
+      </div>
+      <div class="share-card" id="share-card"></div>
+      <button class="calc-share" onclick="compartir()">COMPARTIR RESULTADO →</button>
+      <div class="calc-note">Basado en datos oficiales INDEC · Dólar MEP $1.269</div>
+    </div>
+  </div>
+</section>
+
+<!-- GASTOS SCREEN -->
+<section id="gastos-screen" class="section" style="background:var(--white);">
+  <div class="gastos-grid">
+    <div>
+      <div class="section-eyebrow">Pantalla de Gastos</div>
+      <h2 class="section-title">Todo lo que gastás,<br><em>clasificado</em></h2>
+      <p class="section-body" style="margin-bottom:1.5rem;">Registrá cada gasto y la app lo clasifica automáticamente. Ves el historial por mes, por categoría y entendés exactamente en qué se va tu plata.</p>
+      <div style="display:flex;flex-direction:column;gap:0.9rem;">
+        <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--white);border:1px solid var(--border);border-radius:var(--radius-sm);">
+          <div style="width:36px;height:36px;background:var(--green-pale);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1rem;">🗂️</div>
+          <div>
+            <div style="font-weight:700;font-size:0.88rem;">Necesarios · Prescindibles · Invertibles</div>
+            <div style="font-size:0.78rem;color:var(--text-soft);">Cada gasto tiene su categoría y tipo</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--white);border:1px solid var(--border);border-radius:var(--radius-sm);">
+          <div style="width:36px;height:36px;background:var(--green-pale);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1rem;">📅</div>
+          <div>
+            <div style="font-weight:700;font-size:0.88rem;">Historial por mes</div>
+            <div style="font-size:0.78rem;color:var(--text-soft);">Comparativa desde diciembre hasta hoy</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--white);border:1px solid var(--border);border-radius:var(--radius-sm);">
+          <div style="width:36px;height:36px;background:var(--green-pale);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1rem;">🎯</div>
+          <div>
+            <div style="font-weight:700;font-size:0.88rem;">Presupuestos del mes</div>
+            <div style="font-size:0.78rem;color:var(--text-soft);">Definís un límite por categoría y lo seguís</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="gastos-mockup reveal">
+      <div class="gm-title">Gastos</div>
+      <div class="month-tabs">
+        <div class="mtab">DIC '25</div>
+        <div class="mtab">ENE '26</div>
+        <div class="mtab">FEB '26</div>
+        <div class="mtab">MAR '26</div>
+        <div class="mtab active">ABR '26</div>
+      </div>
+      <div class="donut-card">
+        <!-- Simple SVG donut -->
+        <svg class="donut-svg" width="80" height="80" viewBox="0 0 80 80">
+          <circle cx="40" cy="40" r="30" fill="none" stroke="#E5E7EB" stroke-width="12"/>
+          <circle cx="40" cy="40" r="30" fill="none" stroke="#3B82F6" stroke-width="12"
+            stroke-dasharray="56.5 132.2" stroke-dashoffset="0" transform="rotate(-90 40 40)"/>
+          <circle cx="40" cy="40" r="30" fill="none" stroke="#EF4444" stroke-width="12"
+            stroke-dasharray="27.7 132.2" stroke-dashoffset="-56.5" transform="rotate(-90 40 40)"/>
+          <circle cx="40" cy="40" r="30" fill="none" stroke="var(--green)" stroke-width="12"
+            stroke-dasharray="48.0 132.2" stroke-dashoffset="-84.2" transform="rotate(-90 40 40)"/>
+        </svg>
+        <div>
+          <div class="donut-total-label">Total este mes</div>
+          <div class="donut-total-val">$ 306.160</div>
+          <div class="donut-legend">
+            <div class="dleg"><div class="dleg-dot" style="background:#3B82F6"></div> Necesario $136.488</div>
+            <div class="dleg"><div class="dleg-dot" style="background:#EF4444"></div> Prescindible $70.140</div>
+            <div class="dleg"><div class="dleg-dot" style="background:var(--green)"></div> Invertible $99.532</div>
+          </div>
+        </div>
+      </div>
+      <div class="budget-row">
+        <div class="brow-top">
+          <span class="brow-name">☕ Café y bebidas</span>
+          <span class="brow-pct-badge">0%</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:0%;background:var(--green)"></div></div>
+        <div class="brow-vals"><span>Vas bien</span><span style="color:var(--green);font-weight:700;">$0 / $50.000</span></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
+        <span style="font-size:0.75rem;color:var(--text-soft);font-weight:600;">Total gastado en Abril</span>
+        <span style="font-family:'Sora',sans-serif;font-weight:800;font-size:1rem;color:var(--text);">$ 306.160</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="section" style="background:var(--green-bg);">
+  <div class="section-eyebrow">Preguntas frecuentes</div>
+  <h2 class="section-title">Todo lo que necesitás <em>saber</em></h2>
+  <div class="faq-grid reveal">
+    <div class="faq-card">
+      <div class="faq-q">¿Smart Pesos es gratis? <span>+</span></div>
+      <div class="faq-a">Sí, podés empezar gratis. El registro de gastos, el dashboard y el análisis de inflación personal están disponibles sin costo. No pedimos tarjeta de crédito.</div>
+    </div>
+    <div class="faq-card">
+      <div class="faq-q">¿Tengo que conectar mi banco? <span>+</span></div>
+      <div class="faq-a">No. Smart Pesos no requiere conectar tu cuenta bancaria. Cargás tus gastos manualmente o con foto de ticket. Vos controlás qué información entra.</div>
+    </div>
+    <div class="faq-card">
+      <div class="faq-q">¿Cómo calcula mi inflación personal? <span>+</span></div>
+      <div class="faq-a">Analiza la evolución de tus categorías de gasto y las compara con el índice INDEC correspondiente. No es el promedio general, es tu canasta específica.</div>
+    </div>
+    <div class="faq-card">
+      <div class="faq-q">¿Qué es la calculadora viral? <span>+</span></div>
+      <div class="faq-a">Una herramienta que muestra cuánto poder adquisitivo perdés por tener ahorros en pesos. Ingresás el monto y ves la pérdida mensual, anual y en dólares MEP. La podés compartir.</div>
+    </div>
+    <div class="faq-card">
+      <div class="faq-q">¿Cómo funcionan los grupos? <span>+</span></div>
+      <div class="faq-a">Creás un grupo con código, invitás a quien quieras y coordinan gastos compartidos. Cada miembro controla qué información comparte. No necesitan la misma cuenta bancaria.</div>
+    </div>
+    <div class="faq-card">
+      <div class="faq-q">¿Está en iOS y Android? <span>+</span></div>
+      <div class="faq-a">Sí, Smart Pesos está disponible en ambas plataformas. La descarga es gratuita desde App Store y Google Play.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="cta-final">
+  <h2>Tu plata trabaja mejor<br>cuando la entendés</h2>
+  <p>Únete a miles de argentinos que ya controlan sus finanzas, miden su inflación personal y ahorran más cada mes.</p>
+  <a class="cta-dl-btn" href="#">Descargar Smart Pesos — gratis</a>
+  <div class="cta-note">Disponible en iOS y Android · Sin tarjeta de crédito · Sin conectar tu banco</div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft">
+    <div>
+      <div class="ft-logo">Smart <span>Pesos</span></div>
+      <div class="ft-tag">Tu plata, bajo control. Diseñado para Argentina.</div>
+    </div>
+    <div class="ft-cols">
+      <div class="ft-col">
+        <h6>Plataforma</h6>
+        <a href="#que-es">Qué es</a>
+        <a href="#calculadora">Calculadora</a>
+        <a href="#gastos-screen">Gastos</a>
+        <a href="#grupos">Grupos</a>
+      </div>
+      <div class="ft-col">
+        <h6>Info</h6>
+        <a href="#como">Cómo funciona</a>
+        <a href="#faq">FAQ</a>
+        <a href="#">Blog</a>
+        <a href="#">Contacto</a>
+      </div>
+      <div class="ft-col">
+        <h6>Legal</h6>
+        <a href="#">Términos y condiciones</a>
+        <a href="#">Política de privacidad</a>
+        <a href="#">Seguridad</a>
+      </div>
+    </div>
+  </div>
+  <div class="ft-bottom">
+    <div>© 2026 Smart Pesos. Todos los derechos reservados. Argentina.</div>
+    <div>Basado en datos oficiales INDEC.</div>
+  </div>
+</footer>
+
+<script>
+  // CALCULADORA
+  let INF = 0.029;
+  const MEP = 1269;
+  const MESES_CORTO = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
+
+  async function initInflacion() {
+    try {
+      const res = await fetch('https://api.argentinadatos.com/v1/finanzas/indices/inflacion');
+      if (!res.ok) throw new Error('API error');
+      const data = await res.json();
+      const ultimo = data[data.length - 1];
+      INF = ultimo.valor / 100;
+      const fecha = new Date(ultimo.fecha + 'T12:00:00');
+      const mes = MESES_CORTO[fecha.getMonth()];
+      const anio = fecha.getFullYear();
+      const pctStr = (INF * 100).toFixed(1).replace('.', ',') + '%';
+
+      document.getElementById('stat-inflacion-hero').textContent = pctStr;
+      document.getElementById('stat-inflacion-band').textContent = pctStr;
+      document.getElementById('calc-inflacion-label').textContent =
+        `DATO INDEC OFICIAL — INFLACIÓN ${mes} ${anio}: ${pctStr} MENSUAL`;
+      const ind = document.getElementById('inflacion-actualizada');
+      ind.textContent = `✓ Dato actualizado a ${mes} ${anio}`;
+      ind.style.display = 'block';
+    } catch (e) {
+      console.warn('API de inflación no disponible, usando valor de fallback (2,9%).');
+    }
+    calcular();
+  }
+
+  // Familia inner tabs
+  function switchFamiliaTab(idx) {
+    const activeStyle = 'padding:6px 10px;font-size:0.7rem;font-weight:700;color:var(--green);border-bottom:2px solid var(--green);margin-bottom:-1px;cursor:pointer;';
+    const inactiveStyle = 'padding:6px 10px;font-size:0.7rem;font-weight:600;color:var(--text-soft);cursor:pointer;';
+    for (let i = 0; i < 4; i++) {
+      const tab = document.getElementById('ftab' + i);
+      const panel = document.getElementById('fpanel' + i);
+      if (tab) tab.style.cssText = i === idx ? activeStyle : inactiveStyle;
+      if (panel) panel.style.display = i === idx ? 'block' : 'none';
+    }
+  }
+
+  // Amigos inner tabs
+  function switchAmigosTab(idx) {
+    const activeStyle = 'padding:6px 10px;font-size:0.7rem;font-weight:700;color:#7C3AED;border-bottom:2px solid #7C3AED;margin-bottom:-1px;cursor:pointer;';
+    const inactiveStyle = 'padding:6px 10px;font-size:0.7rem;font-weight:600;color:var(--text-soft);cursor:pointer;';
+    for (let i = 0; i < 4; i++) {
+      const tab = document.getElementById('atab' + i);
+      const panel = document.getElementById('apanel' + i);
+      if (tab) tab.style.cssText = i === idx ? activeStyle : inactiveStyle;
+      if (panel) panel.style.display = i === idx ? 'block' : 'none';
+    }
+  }
+
+  // Grupos tabs
+  function switchGruTab(idx) {
+    document.querySelectorAll('.gru-tab').forEach((t, i) => t.classList.toggle('active', i === idx));
+    document.querySelectorAll('.gru-panel').forEach((p, i) => p.classList.toggle('active', i === idx));
+  }
+  (function() {
+    const panels = document.getElementById('gruTabs');
+    if (!panels) return;
+    let startX = 0;
+    panels.closest('.grupos-mockup').addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+    panels.closest('.grupos-mockup').addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - startX;
+      const cur = [...document.querySelectorAll('.gru-tab')].findIndex(t => t.classList.contains('active'));
+      if (dx < -50 && cur === 0) switchGruTab(1);
+      if (dx > 50 && cur === 1) switchGruTab(0);
+    }, { passive: true });
+  })();
+
+  function fmt(n) { return '$' + Math.round(n).toLocaleString('es-AR'); }
+  function formatInput(input) {
+    const pos = input.selectionStart;
+    const prevLen = input.value.length;
+    const raw = input.value.replace(/\./g, '').replace(/\D/g, '');
+    if (!raw) { input.value = ''; return; }
+    const formatted = raw.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    input.value = formatted;
+    const newPos = pos + (formatted.length - prevLen);
+    input.setSelectionRange(newPos, newPos);
+  }
+  function calcular() {
+    const raw = document.getElementById('savings').value.replace(/\./g, '');
+    const s = parseFloat(raw) || 0;
+    const mes = s * INF;
+    const anio = s * (Math.pow(1+INF,12)-1);
+    const dos  = s * (Math.pow(1+INF,24)-1);
+    document.getElementById('r-mes').textContent   = fmt(mes);
+    document.getElementById('r-anio').textContent  = fmt(anio);
+    document.getElementById('r-2anio').textContent = fmt(dos);
+    document.getElementById('r-usd').textContent   = 'USD '+Math.round(anio/MEP).toLocaleString('es-AR');
+  }
+  function compartir() {
+    const s = parseFloat(document.getElementById('savings').value.replace(/\./g, ''))||0;
+    const mes  = Math.round(s*INF).toLocaleString('es-AR');
+    const anio = Math.round(s*(Math.pow(1+INF,12)-1)).toLocaleString('es-AR');
+    const usd  = Math.round(s*(Math.pow(1+INF,12)-1)/MEP).toLocaleString('es-AR');
+    const txt  = `Tengo ${fmt(s)} en pesos. Por inflación pierdo $${mes} por mes y $${anio} por año — equivalente a USD ${usd} anuales en poder adquisitivo. Lo calculé con Smart Pesos.`;
+    const card = document.getElementById('share-card');
+    card.textContent = txt; card.style.display = 'block';
+    if (navigator.share) { navigator.share({text:txt}); }
+    else { navigator.clipboard.writeText(txt).then(()=>alert('¡Copiado al portapapeles!')); }
+  }
+
+  // FAQ
+  document.querySelectorAll('.faq-card').forEach(c=>{
+    c.addEventListener('click',()=>{
+      const open = c.classList.contains('open');
+      document.querySelectorAll('.faq-card').forEach(x=>x.classList.remove('open'));
+      if(!open) c.classList.add('open');
+    });
+  });
+
+  // REVEAL
+  const obs = new IntersectionObserver(es=>{
+    es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+  },{threshold:.1});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+  // Inicializar con dato real de inflación
+  initInflacion();
+</script>
+</body>
+</html>
