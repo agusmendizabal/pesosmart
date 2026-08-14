@@ -481,7 +481,7 @@
 
   /* ──────────────── FAQ ──────────────── */
   #faq { background: var(--white); }
-  .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2.5rem; }
+  .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2.5rem; align-items: start; }
   .faq-card {
     background: var(--bg); border: 1px solid var(--border);
     border-radius: var(--radius-sm); padding: 20px 22px; cursor: pointer;
@@ -1670,9 +1670,9 @@
 <!-- CTA -->
 <section class="cta-section" id="cta-final">
   <h2>Tu plata trabaja mejor<br>cuando la entendés</h2>
-  <p>Únete a miles de argentinos que ya controlan sus finanzas, miden su inflación personal y ahorran más cada mes.</p>
+  <p>Unite a los argentinos que ya controlan sus finanzas, miden su inflación personal y ahorran más cada mes.</p>
   <a class="cta-dl-btn" href="#">Descargar Smart Pesos — gratis</a>
-  <div class="cta-note">Disponible en iOS y Android · Sin tarjeta de crédito · Sin conectar tu banco</div>
+  <div class="cta-note">Disponible en iOS y Android</div>
 </section>
 
 <!-- FOOTER -->
@@ -1989,9 +1989,7 @@
   // FAQ
   document.querySelectorAll('.faq-card').forEach(c=>{
     c.addEventListener('click',()=>{
-      const open = c.classList.contains('open');
-      document.querySelectorAll('.faq-card').forEach(x=>x.classList.remove('open'));
-      if(!open) c.classList.add('open');
+      c.classList.toggle('open');
     });
   });
 
