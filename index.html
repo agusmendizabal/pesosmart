@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Smart Pesos — Tu plata, bajo control</title>
+<title>Nomi — Tu plata, bajo control</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -157,60 +157,78 @@
     margin: 0 auto 18px;
   }
   .ph-greeting { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.05rem; margin-bottom: 2px; }
-  .ph-sub { font-size: 0.72rem; color: var(--green-mid); font-weight: 600; margin-bottom: 18px; }
+  .ph-sub { font-size: 0.72rem; color: var(--text-soft); font-weight: 600; margin-bottom: 16px; }
 
-  /* orange alert card (like the app) */
-  .ph-alert {
-    background: var(--orange-pale);
-    border: 1.5px solid #F4A07A;
+  /* dark opportunity card (like the app) */
+  .ph-dark-card {
+    background: #101A2E;
     border-radius: var(--radius-sm);
-    padding: 14px;
-    margin-bottom: 12px;
-    display: flex; gap: 10px; align-items: flex-start;
-  }
-  .ph-alert-icon { font-size: 1.1rem; flex-shrink: 0; }
-  .ph-alert-title { font-weight: 700; font-size: 0.82rem; color: var(--text); }
-  .ph-alert-sub { font-size: 0.72rem; color: var(--text-soft); margin-top: 2px; }
-  .ph-alert-action { font-size: 0.72rem; font-weight: 700; color: var(--orange); margin-top: 6px; }
-
-  /* green opportunity card */
-  .ph-opp {
-    background: var(--green);
-    border-radius: var(--radius-sm);
-    padding: 16px;
-    margin-bottom: 12px;
+    padding: 18px 16px;
+    margin-bottom: 10px;
     color: #fff;
+    position: relative;
+    overflow: hidden;
   }
-  .ph-opp-label { font-size: 0.65rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; opacity: .8; }
-  .ph-opp-amount { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.7rem; margin: 4px 0 2px; }
-  .ph-opp-sub { font-size: 0.72rem; opacity: .8; margin-bottom: 10px; }
-  .ph-opp-btn {
-    background: rgba(255,255,255,.18); border: none; color: #fff;
-    border-radius: 8px; padding: 7px 14px; font-size: 0.72rem; font-weight: 700;
-    cursor: pointer; display: inline-flex; align-items: center; gap: 5px;
+  .ph-dark-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: rgba(82,183,136,.22); color: var(--green-light);
+    font-size: 0.62rem; font-weight: 800; letter-spacing: .05em;
+    padding: 5px 10px; border-radius: 20px; margin-bottom: 12px;
+  }
+  .ph-dark-pill svg { width: 11px; height: 11px; }
+  .ph-dark-title { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.3rem; line-height: 1.25; margin-bottom: 8px; }
+  .ph-dark-sub { font-size: 0.72rem; color: rgba(255,255,255,.55); line-height: 1.5; margin-bottom: 14px; max-width: 175px; }
+  .ph-dark-btn {
+    background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.16); color: #fff;
+    border-radius: 20px; padding: 8px 16px; font-size: 0.72rem; font-weight: 700; cursor: pointer;
   }
 
-  /* month spend card */
-  .ph-spend {
+  /* dot pagination */
+  .ph-dots { display: flex; justify-content: center; gap: 5px; margin: 0 0 14px; }
+  .ph-dots .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); }
+  .ph-dots .dot.active { width: 16px; border-radius: 4px; background: var(--green-light); }
+
+  /* 2x2 stats grid */
+  .ph-stats-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
     background: var(--white); border: 1px solid var(--border);
-    border-radius: var(--radius-sm); padding: 12px 14px; margin-bottom: 10px;
-    display: flex; justify-content: space-between; align-items: center;
+    border-radius: var(--radius-sm); padding: 14px; margin-bottom: 10px;
   }
-  .ph-spend-main { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1rem; }
-  .ph-spend-of { font-size: 0.7rem; color: var(--text-soft); }
-  .ph-progress { height: 5px; background: var(--border); border-radius: 4px; margin-top: 6px; }
-  .ph-progress-bar { height: 100%; border-radius: 4px; background: var(--green); }
-  .ph-pct { font-size: 0.72rem; font-weight: 700; color: var(--green); }
+  .ph-stat-icon { width: 26px; height: 26px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 6px; }
+  .ph-stat-icon svg { width: 14px; height: 14px; }
+  .ph-stat-icon-green { background: var(--green-pale); color: var(--green); }
+  .ph-stat-icon-gray { background: #F1F1F1; color: var(--text-mid); }
+  .ph-stat-icon-red { background: #FDE2E2; color: #E53E3E; }
+  .ph-stat-icon-purple { background: var(--purple-pale); color: var(--purple); }
+  .ph-stat-label { font-size: 0.68rem; color: var(--text-soft); font-weight: 600; margin-bottom: 3px; }
+  .ph-stat-val { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 0.92rem; color: var(--text); margin-bottom: 3px; }
+  .ph-stat-val-green { color: var(--green); }
+  .ph-stat-val-red { color: #E53E3E; }
+  .ph-stat-val-purple { color: var(--purple); }
+  .ph-stat-link { font-size: 0.62rem; font-weight: 700; color: var(--text-soft); }
+  .ph-stat-link-green { color: var(--green); }
+  .ph-stat-link-red { color: #E53E3E; }
+  .ph-stat-link-purple { color: var(--purple); }
 
-  /* inflation row */
-  .ph-infl {
-    background: var(--green-bg); border-radius: var(--radius-sm); padding: 11px 13px;
-    display: flex; justify-content: space-between; align-items: center;
+  /* purple "where you spent most" card */
+  .ph-purple-card {
+    background: var(--purple-pale); border-radius: var(--radius-sm);
+    padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; gap: 10px;
   }
-  .ph-infl-col { text-align: center; }
-  .ph-infl-label { font-size: 0.65rem; color: var(--text-soft); font-weight: 600; }
-  .ph-infl-val { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1rem; color: var(--text); }
-  .ph-infl-win { color: var(--green-light); }
+  .ph-purple-label { font-size: 0.66rem; font-weight: 700; color: var(--purple); margin-bottom: 4px; }
+  .ph-purple-title { font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.05rem; color: var(--text); margin-bottom: 3px; }
+  .ph-purple-sub { font-size: 0.66rem; color: var(--text-soft); margin-bottom: 6px; }
+  .ph-purple-link { font-size: 0.66rem; font-weight: 700; color: var(--purple); }
+  .ph-ring {
+    width: 62px; height: 62px; border-radius: 50%; flex-shrink: 0;
+    background: conic-gradient(var(--purple) calc(var(--pct) * 3.6deg), var(--purple-pale) 0);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .ph-ring-inner {
+    width: 45px; height: 45px; border-radius: 50%; background: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Sora', sans-serif; font-weight: 800; font-size: 0.76rem; color: var(--purple);
+  }
 
   /* floating badge */
   .float-badge {
@@ -557,7 +575,7 @@
 
 <!-- NAV -->
 <nav>
-  <a class="logo" href="#">Smart <span>Pesos</span></a>
+  <a class="logo" href="#">N<span>omi</span></a>
   <ul class="nav-links">
     <li><a href="#que-es">¿Qué es?</a></li>
     <li><a href="#grupos">Grupos</a></li>
@@ -573,7 +591,7 @@
   <div>
     <div class="eyebrow"><span class="dot"></span>AR · Diseñado para Argentina</div>
     <h1>Entendé a dónde<br>va <em>tu plata</em><br>cada mes</h1>
-    <p class="hero-desc">Smart Pesos analiza tus gastos, mide tu inflación personal y te muestra exactamente qué podés mejorar. En tiempo real, sin vueltas.</p>
+    <p class="hero-desc">Nomi analiza tus gastos, mide tu inflación personal y te muestra exactamente qué podés mejorar. En tiempo real, sin vueltas.</p>
     <div class="hero-ctas">
       <a class="btn-primary" href="#cta-final">Empezar gratis</a>
       <a class="btn-ghost" href="#como">Ver cómo funciona</a>
@@ -606,57 +624,61 @@
       <span class="fb-icon">🎯</span>
       <div>
         <div class="fb-tiny">Podés recuperar</div>
-        <div class="fb-val-green">$35.070</div>
+        <div class="fb-val-green">$127.712</div>
       </div>
     </div>
     <div class="phone-shell">
       <div class="phone-notch"></div>
       <div class="ph-greeting">👋 Buen día, Agustin</div>
-      <div class="ph-sub">Este es tu resumen hasta hoy</div>
+      <div class="ph-sub">Este es tu resumen del mes</div>
 
-      <div class="ph-spend" style="margin-bottom:12px;">
+      <div class="ph-dark-card">
+        <div class="ph-dark-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 15h3a2 2 0 0 0 0-4h-1a2 2 0 0 1 0-4h3M12 6v1m0 10v1"/></svg> OPORTUNIDAD</div>
+        <div class="ph-dark-title">Podrías recuperar<br>$ 127.712</div>
+        <div class="ph-dark-sub">Ajustando la mitad de tus gastos prescindibles de este mes.</div>
+        <button class="ph-dark-btn">Ver análisis →</button>
+      </div>
+
+      <div class="ph-dots">
+        <span class="dot active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+      </div>
+
+      <div class="ph-stats-grid">
         <div>
-          <div style="font-size:.7rem;color:var(--text-soft);">Total gastado este mes</div>
-          <div class="ph-spend-main">$ 306.160</div>
+          <div class="ph-stat-icon ph-stat-icon-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg></div>
+          <div class="ph-stat-label">Ahorro posible</div>
+          <div class="ph-stat-val ph-stat-val-green">$ 127.712</div>
+          <div class="ph-stat-link ph-stat-link-green">Ver cómo lograrlo →</div>
         </div>
-        <div style="text-align:right">
-          <div style="font-size:.68rem;color:var(--text-soft)">en 47 gastos</div>
-          <div class="ph-pct">ABR · 2026</div>
-        </div>
-      </div>
-
-      <div class="ph-opp">
-        <div class="ph-opp-label">Tu oportunidad este mes</div>
-        <div>Podés recuperar</div>
-        <div class="ph-opp-amount">$ 35.070</div>
-        <div class="ph-opp-sub">Si ajustás estos gastos</div>
-        <button class="ph-opp-btn">Ver cómo →</button>
-      </div>
-
-      <div class="ph-spend">
         <div>
-          <div style="font-size:.7rem;color:var(--text-soft);">Gastaste en el mes</div>
-          <div class="ph-spend-main">$ 306.160</div>
-          <div class="ph-progress" style="width:140px;margin-top:5px;"><div class="ph-progress-bar" style="width:20%"></div></div>
+          <div class="ph-stat-icon ph-stat-icon-gray"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></div>
+          <div class="ph-stat-label">Gastado</div>
+          <div class="ph-stat-val">$ 825.324</div>
+          <div class="ph-stat-link">Ver análisis →</div>
         </div>
-        <div style="text-align:right">
-          <div style="font-size:.68rem;color:var(--text-soft)">de $1.500.000</div>
-          <div class="ph-pct">20% del ingreso</div>
+        <div>
+          <div class="ph-stat-icon ph-stat-icon-red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div>
+          <div class="ph-stat-label">Prescindible</div>
+          <div class="ph-stat-val ph-stat-val-red">$ 255.423</div>
+          <div class="ph-stat-link ph-stat-link-red">Ver para reducir →</div>
+        </div>
+        <div>
+          <div class="ph-stat-icon ph-stat-icon-purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></div>
+          <div class="ph-stat-label">Meta principal</div>
+          <div class="ph-stat-val ph-stat-val-purple">24%</div>
+          <div class="ph-stat-link ph-stat-link-purple">Vacaciones →</div>
         </div>
       </div>
 
-      <div class="ph-infl">
-        <div class="ph-infl-col">
-          <div class="ph-infl-label">Tu inflación</div>
-          <div class="ph-infl-val">3,1%</div>
+      <div class="ph-purple-card">
+        <div>
+          <div class="ph-purple-label">Dónde más gastaste</div>
+          <div class="ph-purple-title">Viajes</div>
+          <div class="ph-purple-sub">Concentra el 67% de tus gastos</div>
+          <div class="ph-purple-link">Ver gastos por categoría →</div>
         </div>
-        <div class="ph-infl-col">
-          <div class="ph-infl-label">Le ganaste por</div>
-          <div class="ph-infl-val ph-infl-win">0,3% 🎉</div>
-        </div>
-        <div class="ph-infl-col">
-          <div class="ph-infl-label">INDEC</div>
-          <div class="ph-infl-val">3,4%</div>
+        <div class="ph-ring" style="--pct:67">
+          <div class="ph-ring-inner">67%</div>
         </div>
       </div>
     </div>
@@ -667,7 +689,7 @@
 <section id="problema" class="section">
   <div class="section-eyebrow">El problema que nadie te explica</div>
   <h2 class="section-title">En Argentina, el dinero se evapora<br><em>y nadie te avisa</em></h2>
-  <p class="section-body" style="margin-bottom:2.5rem;">La inflación, los gastos invisibles y la falta de herramientas hacen que ahorrar en pesos sea una carrera perdida. Smart Pesos vino a cambiar eso.</p>
+  <p class="section-body" style="margin-bottom:2.5rem;">La inflación, los gastos invisibles y la falta de herramientas hacen que ahorrar en pesos sea una carrera perdida. Nomi vino a cambiar eso.</p>
   <div class="prob-grid reveal">
     <div class="prob-card">
       <div class="prob-icon">📈</div>
@@ -714,7 +736,7 @@
   </div>
   <div class="sband-item">
     <div class="sband-num">$0</div>
-    <div class="sband-label">Costo para empezar a usar Smart Pesos hoy</div>
+    <div class="sband-label">Costo para empezar a usar Nomi hoy</div>
   </div>
 </div>
 
@@ -722,7 +744,7 @@
 <section id="que-es" class="section">
   <div class="que-es-grid">
     <div>
-      <div class="section-eyebrow">Qué es Smart Pesos</div>
+      <div class="section-eyebrow">Qué es Nomi</div>
       <h2 class="section-title">Tus finanzas personales,<br><em>sin excusas</em></h2>
       <p class="section-body" style="margin-bottom:2rem;">No es solo un registro de gastos. Es un sistema que te muestra qué hacer con tu plata en el contexto argentino real.</p>
       <div class="feature-list reveal">
@@ -758,41 +780,41 @@
     </div>
     <div class="dash-preview reveal">
       <div class="dash-title" id="dash-mes-titulo">Top categorías · Abril</div>
-      <div class="dash-total-spent">Gastaste <strong>$283.623</strong> este mes</div>
-      <div class="dash-sub">Tu mayor fuga: Entretenimiento (36%)</div>
+      <div class="dash-total-spent">Gastaste <strong>$825.324</strong> este mes</div>
+      <div class="dash-sub">Tu mayor fuga: Viajes (67%)</div>
+      <div class="dash-cat-row">
+        <div class="dash-cat-top">
+          <span class="dash-cat-name">✈️ Viajes</span>
+          <div style="text-align:right"><span class="dash-cat-val">$552.967</span><span class="dash-cat-pct"> · 67%</span></div>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:67%;background:var(--purple)"></div></div>
+      </div>
+      <div class="dash-cat-row">
+        <div class="dash-cat-top">
+          <span class="dash-cat-name">🍕 Comida y restaurantes</span>
+          <div style="text-align:right"><span class="dash-cat-val">$123.799</span><span class="dash-cat-pct"> · 15%</span></div>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:15%;background:var(--green-light)"></div></div>
+      </div>
       <div class="dash-cat-row">
         <div class="dash-cat-top">
           <span class="dash-cat-name">🎮 Entretenimiento</span>
-          <div style="text-align:right"><span class="dash-cat-val">$101.903</span><span class="dash-cat-pct"> · 36%</span></div>
+          <div style="text-align:right"><span class="dash-cat-val">$82.532</span><span class="dash-cat-pct"> · 10%</span></div>
         </div>
-        <div class="bar-track"><div class="bar-fill" style="width:36%;background:var(--purple)"></div></div>
+        <div class="bar-track"><div class="bar-fill" style="width:10%;background:var(--orange)"></div></div>
       </div>
       <div class="dash-cat-row">
         <div class="dash-cat-top">
-          <span class="dash-cat-name">🏋️ Deporte y gym</span>
-          <div style="text-align:right"><span class="dash-cat-val">$84.998</span><span class="dash-cat-pct"> · 30%</span></div>
+          <span class="dash-cat-name">🚗 Transporte</span>
+          <div style="text-align:right"><span class="dash-cat-val">$66.026</span><span class="dash-cat-pct"> · 8%</span></div>
         </div>
-        <div class="bar-track"><div class="bar-fill" style="width:30%;background:var(--green-light)"></div></div>
-      </div>
-      <div class="dash-cat-row">
-        <div class="dash-cat-top">
-          <span class="dash-cat-name">🍕 Comida y restaurants</span>
-          <div style="text-align:right"><span class="dash-cat-val">$76.722</span><span class="dash-cat-pct"> · 27%</span></div>
-        </div>
-        <div class="bar-track"><div class="bar-fill" style="width:27%;background:var(--orange)"></div></div>
-      </div>
-      <div class="dash-cat-row">
-        <div class="dash-cat-top">
-          <span class="dash-cat-name">✂️ Peluquería y estética</span>
-          <div style="text-align:right"><span class="dash-cat-val">$20.000</span><span class="dash-cat-pct"> · 7%</span></div>
-        </div>
-        <div class="bar-track"><div class="bar-fill" style="width:7%;background:#E53E3E"></div></div>
+        <div class="bar-track"><div class="bar-fill" style="width:8%;background:#E53E3E"></div></div>
       </div>
       <div class="dash-proj">
         <div class="dash-proj-label">Saldo proyectado fin de mes</div>
-        <div class="dash-proj-val">$ 313.629</div>
+        <div class="dash-proj-val">$ 501.200</div>
         <div class="dash-proj-sub">Si mantenés este ritmo ↗</div>
-        <div class="dash-proj-explain">Lo que te queda hasta fin de mes — calculado como tu ingreso ($650.000) menos los gastos proyectados al ritmo actual ($336.371).</div>
+        <div class="dash-proj-explain">Lo que te queda hasta fin de mes — calculado como tu ingreso ($1.480.000) menos los gastos proyectados al ritmo actual ($978.800).</div>
       </div>
     </div>
   </div>
@@ -873,22 +895,31 @@
             <div style="display:flex;justify-content:space-between;">
               <div>
                 <div style="font-size:0.68rem;color:var(--text-soft);margin-bottom:3px;">Total del grupo</div>
-                <div style="font-weight:800;font-size:1.1rem;">$ 320.281</div>
+                <div style="font-weight:800;font-size:1.1rem;">$ 1.438.640</div>
               </div>
               <div style="text-align:right;">
                 <div style="font-size:0.68rem;color:var(--text-soft);margin-bottom:3px;">Miembros</div>
-                <div style="font-weight:800;font-size:1.1rem;">2</div>
+                <div style="font-weight:800;font-size:1.1rem;">3</div>
               </div>
             </div>
           </div>
           <div style="font-weight:800;font-size:0.82rem;margin-bottom:10px;">Gastos por miembro</div>
           <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden;">
             <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--border);">
+              <div style="width:36px;height:36px;background:#E8F5E9;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;color:var(--green);flex-shrink:0;">A</div>
+              <div style="flex:1;">
+                <div style="font-weight:700;font-size:0.82rem;margin-bottom:2px;">Vos (Agustín Garcia)</div>
+                <div style="font-size:0.68rem;color:var(--text-soft);">$ 825.324 · 15 gastos</div>
+                <div style="font-size:0.68rem;color:var(--green);margin-top:1px;">Principal: Viajes</div>
+              </div>
+              <div style="color:var(--text-light);font-size:0.9rem;">›</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--border);">
               <div style="width:36px;height:36px;background:#EDE7F6;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;color:#7C3AED;flex-shrink:0;">B</div>
               <div style="flex:1;">
                 <div style="font-weight:700;font-size:0.82rem;margin-bottom:2px;">Bruno Garcia</div>
-                <div style="font-size:0.68rem;color:var(--text-soft);">$ 285.605 · 15 gastos</div>
-                <div style="font-size:0.68rem;color:var(--green);margin-top:1px;">Principal: Entretenimiento</div>
+                <div style="font-size:0.68rem;color:var(--text-soft);">$ 198.640 · 9 gastos</div>
+                <div style="font-size:0.68rem;color:var(--green);margin-top:1px;">Principal: Viajes</div>
               </div>
               <div style="color:var(--text-light);font-size:0.9rem;">›</div>
             </div>
@@ -896,7 +927,7 @@
               <div style="width:36px;height:36px;background:#EEEEEE;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;color:#757575;flex-shrink:0;">F</div>
               <div style="flex:1;">
                 <div style="font-weight:700;font-size:0.82rem;margin-bottom:2px;">Franco Garcia</div>
-                <div style="font-size:0.68rem;color:var(--text-soft);">$ 34.676 · 3 gastos</div>
+                <div style="font-size:0.68rem;color:var(--text-soft);">$ 414.676 · 3 gastos</div>
                 <div style="font-size:0.68rem;color:var(--green);margin-top:1px;">Principal: Otros</div>
               </div>
               <div style="color:var(--text-light);font-size:0.9rem;">›</div>
@@ -1286,17 +1317,17 @@
             </svg>
             <div>
               <div class="donut-total-label">Total este mes</div>
-              <div class="donut-total-val">$ 283.623</div>
+              <div class="donut-total-val">$ 825.324</div>
               <div class="donut-legend">
-                <div class="dleg"><div class="dleg-dot" style="background:#3B82F6"></div> Necesarios $126.496 <span style="color:var(--text-soft);font-size:0.68rem;">(44,6%)</span></div>
-                <div class="dleg"><div class="dleg-dot" style="background:#EF4444"></div> Prescindibles $64.950 <span style="color:var(--text-soft);font-size:0.68rem;">(22,9%)</span></div>
-                <div class="dleg"><div class="dleg-dot" style="background:var(--green)"></div> Invertibles $92.177 <span style="color:var(--text-soft);font-size:0.68rem;">(32,5%)</span></div>
+                <div class="dleg"><div class="dleg-dot" style="background:#3B82F6"></div> Necesarios $368.111 <span style="color:var(--text-soft);font-size:0.68rem;">(44,6%)</span></div>
+                <div class="dleg"><div class="dleg-dot" style="background:#EF4444"></div> Prescindibles $189.013 <span style="color:var(--text-soft);font-size:0.68rem;">(22,9%)</span></div>
+                <div class="dleg"><div class="dleg-dot" style="background:var(--green)"></div> Invertibles $268.200 <span style="color:var(--text-soft);font-size:0.68rem;">(32,5%)</span></div>
               </div>
             </div>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding:16px;background:var(--bg);border-radius:10px;">
             <span style="font-size:0.78rem;color:var(--text-soft);font-weight:600;" id="gastos-total-mes">Total gastado en Abril</span>
-            <span style="font-family:'Sora',sans-serif;font-weight:800;font-size:1.15rem;color:var(--text);">$ 283.623</span>
+            <span style="font-family:'Sora',sans-serif;font-weight:800;font-size:1.15rem;color:var(--text);">$ 825.324</span>
           </div>
         </div>
 
@@ -1304,20 +1335,20 @@
         <div id="gres-necesarios" style="display:none;background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px;margin-top:4px;">
           <div style="flex:1;">
             <div style="font-size:0.72rem;color:var(--text-soft);font-weight:600;margin-bottom:6px;">Resumen de necesarios</div>
-            <div style="font-family:'Sora',sans-serif;font-weight:800;font-size:1.4rem;margin-bottom:4px;">$ 126.496</div>
+            <div style="font-family:'Sora',sans-serif;font-weight:800;font-size:1.4rem;margin-bottom:4px;">$ 368.111</div>
             <div style="font-size:0.72rem;color:#16A34A;font-weight:700;margin-bottom:12px;">▼ 5% vs mes anterior</div>
             <div style="display:flex;flex-direction:column;gap:6px;">
               <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.74rem;">
                 <div style="display:flex;align-items:center;gap:6px;"><div style="width:7px;height:7px;border-radius:50%;background:#3B82F6;"></div><span style="color:var(--text-mid);">Transporte</span></div>
-                <div style="display:flex;gap:10px;align-items:center;"><span style="font-weight:700;">$ 57.430</span><span style="color:#3B82F6;font-weight:700;min-width:30px;text-align:right;">45%</span></div>
+                <div style="display:flex;gap:10px;align-items:center;"><span style="font-weight:700;">$ 167.116</span><span style="color:#3B82F6;font-weight:700;min-width:30px;text-align:right;">45%</span></div>
               </div>
               <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.74rem;">
                 <div style="display:flex;align-items:center;gap:6px;"><div style="width:7px;height:7px;border-radius:50%;background:#3B82F6;"></div><span style="color:var(--text-mid);">Educación</span></div>
-                <div style="display:flex;gap:10px;align-items:center;"><span style="font-weight:700;">$ 38.540</span><span style="color:#3B82F6;font-weight:700;min-width:30px;text-align:right;">30%</span></div>
+                <div style="display:flex;gap:10px;align-items:center;"><span style="font-weight:700;">$ 112.148</span><span style="color:#3B82F6;font-weight:700;min-width:30px;text-align:right;">30%</span></div>
               </div>
               <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.74rem;">
                 <div style="display:flex;align-items:center;gap:6px;"><div style="width:7px;height:7px;border-radius:50%;background:#3B82F6;"></div><span style="color:var(--text-mid);">Comida y restaurantes</span></div>
-                <div style="display:flex;gap:10px;align-items:center;"><span style="font-weight:700;">$ 30.526</span><span style="color:#3B82F6;font-weight:700;min-width:30px;text-align:right;">24%</span></div>
+                <div style="display:flex;gap:10px;align-items:center;"><span style="font-weight:700;">$ 88.828</span><span style="color:#3B82F6;font-weight:700;min-width:30px;text-align:right;">24%</span></div>
               </div>
             </div>
           </div>
@@ -1331,20 +1362,20 @@
         <div id="gres-prescindibles" style="display:none;background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px;margin-top:4px;">
           <div style="flex:1;">
             <div style="font-size:0.72rem;color:var(--text-soft);font-weight:600;margin-bottom:6px;">Resumen de prescindibles</div>
-            <div style="font-family:'Sora',sans-serif;font-weight:800;font-size:1.4rem;margin-bottom:4px;">$ 64.950</div>
+            <div style="font-family:'Sora',sans-serif;font-weight:800;font-size:1.4rem;margin-bottom:4px;">$ 189.013</div>
             <div style="font-size:0.72rem;color:#16A34A;font-weight:700;margin-bottom:12px;">▼ 8% vs mes anterior</div>
             <div style="display:flex;flex-direction:column;gap:6px;">
               <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.74rem;">
                 <div style="display:flex;align-items:center;gap:6px;"><div style="width:7px;height:7px;border-radius:50%;background:#EF4444;"></div><span style="color:var(--text-mid);">Ocio y salidas</span></div>
-                <div style="display:flex;gap:10px;align-items:center;"><span style="font-weight:700;">$ 34.250</span><span style="color:#EF4444;font-weight:700;min-width:30px;text-align:right;">53%</span></div>
+                <div style="display:flex;gap:10px;align-items:center;"><span style="font-weight:700;">$ 99.664</span><span style="color:#EF4444;font-weight:700;min-width:30px;text-align:right;">53%</span></div>
               </div>
               <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.74rem;">
                 <div style="display:flex;align-items:center;gap:6px;"><div style="width:7px;height:7px;border-radius:50%;background:#EF4444;"></div><span style="color:var(--text-mid);">Café y bebidas</span></div>
-                <div style="display:flex;gap:10px;align-items:center;"><span style="font-weight:700;">$ 24.253</span><span style="color:#EF4444;font-weight:700;min-width:30px;text-align:right;">37%</span></div>
+                <div style="display:flex;gap:10px;align-items:center;"><span style="font-weight:700;">$ 70.574</span><span style="color:#EF4444;font-weight:700;min-width:30px;text-align:right;">37%</span></div>
               </div>
               <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.74rem;">
                 <div style="display:flex;align-items:center;gap:6px;"><div style="width:7px;height:7px;border-radius:50%;background:#EF4444;"></div><span style="color:var(--text-mid);">Entretenimiento</span></div>
-                <div style="display:flex;gap:10px;align-items:center;"><span style="font-weight:700;">$ 6.447</span><span style="color:#EF4444;font-weight:700;min-width:30px;text-align:right;">10%</span></div>
+                <div style="display:flex;gap:10px;align-items:center;"><span style="font-weight:700;">$ 18.760</span><span style="color:#EF4444;font-weight:700;min-width:30px;text-align:right;">10%</span></div>
               </div>
             </div>
           </div>
@@ -1358,20 +1389,20 @@
         <div id="gres-invertibles" style="display:none;background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px;margin-top:4px;">
           <div style="flex:1;">
             <div style="font-size:0.72rem;color:var(--text-soft);font-weight:600;margin-bottom:6px;">Resumen de invertibles</div>
-            <div style="font-family:'Sora',sans-serif;font-weight:800;font-size:1.4rem;margin-bottom:4px;">$ 92.177</div>
+            <div style="font-family:'Sora',sans-serif;font-weight:800;font-size:1.4rem;margin-bottom:4px;">$ 268.200</div>
             <div style="font-size:0.72rem;color:#16A34A;font-weight:700;margin-bottom:12px;">▲ 12% vs mes anterior</div>
             <div style="display:flex;flex-direction:column;gap:6px;">
               <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.74rem;">
                 <div style="display:flex;align-items:center;gap:6px;"><div style="width:7px;height:7px;border-radius:50%;background:var(--green);"></div><span style="color:var(--text-mid);">Fondos / FCI</span></div>
-                <div style="display:flex;gap:10px;align-items:center;"><span style="font-weight:700;">$ 45.000</span><span style="color:var(--green);font-weight:700;min-width:30px;text-align:right;">49%</span></div>
+                <div style="display:flex;gap:10px;align-items:center;"><span style="font-weight:700;">$ 130.946</span><span style="color:var(--green);font-weight:700;min-width:30px;text-align:right;">49%</span></div>
               </div>
               <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.74rem;">
                 <div style="display:flex;align-items:center;gap:6px;"><div style="width:7px;height:7px;border-radius:50%;background:var(--green);"></div><span style="color:var(--text-mid);">Dólar MEP</span></div>
-                <div style="display:flex;gap:10px;align-items:center;"><span style="font-weight:700;">$ 32.177</span><span style="color:var(--green);font-weight:700;min-width:30px;text-align:right;">35%</span></div>
+                <div style="display:flex;gap:10px;align-items:center;"><span style="font-weight:700;">$ 93.632</span><span style="color:var(--green);font-weight:700;min-width:30px;text-align:right;">35%</span></div>
               </div>
               <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.74rem;">
                 <div style="display:flex;align-items:center;gap:6px;"><div style="width:7px;height:7px;border-radius:50%;background:var(--green);"></div><span style="color:var(--text-mid);">Ahorro en caja</span></div>
-                <div style="display:flex;gap:10px;align-items:center;"><span style="font-weight:700;">$ 15.000</span><span style="color:var(--green);font-weight:700;min-width:30px;text-align:right;">16%</span></div>
+                <div style="display:flex;gap:10px;align-items:center;"><span style="font-weight:700;">$ 43.649</span><span style="color:var(--green);font-weight:700;min-width:30px;text-align:right;">16%</span></div>
               </div>
             </div>
           </div>
@@ -1397,16 +1428,16 @@
           <!-- Potencial de inversión -->
           <div style="background:var(--green-bg);border:1px solid var(--green-pale);border-radius:10px;padding:14px;margin-bottom:12px;">
             <div style="font-size:0.65rem;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;">Tu potencial de inversión</div>
-            <div style="font-weight:800;font-size:1.35rem;color:var(--green);margin-bottom:4px;">$ 51.449</div>
+            <div style="font-weight:800;font-size:1.35rem;color:var(--green);margin-bottom:4px;">$ 149.711</div>
             <div style="font-size:0.72rem;color:var(--text-mid);margin-bottom:12px;">Ajustando estos gastos podés invertir esta plata</div>
             <div style="display:flex;flex-direction:column;gap:8px;">
               <div style="display:flex;justify-content:space-between;align-items:center;background:var(--white);border-radius:8px;padding:9px 11px;">
                 <span style="font-size:0.72rem;color:var(--text-mid);">Ajustando la mitad de tus prescindibles</span>
-                <span style="font-weight:700;font-size:0.78rem;color:var(--green);white-space:nowrap;">$32.475</span>
+                <span style="font-weight:700;font-size:0.78rem;color:var(--green);white-space:nowrap;">$94.499</span>
               </div>
               <div style="display:flex;justify-content:space-between;align-items:center;background:var(--white);border-radius:8px;padding:9px 11px;">
                 <span style="font-size:0.72rem;color:var(--text-mid);">Optimizando tus necesarios un 15%</span>
-                <span style="font-weight:700;font-size:0.78rem;color:var(--green);white-space:nowrap;">$18.974</span>
+                <span style="font-weight:700;font-size:0.78rem;color:var(--green);white-space:nowrap;">$55.212</span>
               </div>
             </div>
           </div>
@@ -1446,20 +1477,20 @@
           <!-- Resumen del mes -->
           <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px;">
             <div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-soft);margin-bottom:8px;">Resumen del mes</div>
-            <div style="font-family:'Sora',sans-serif;font-weight:800;font-size:1.5rem;margin-bottom:3px;">$ 283.623</div>
-            <div style="font-size:0.7rem;color:var(--text-soft);margin-bottom:14px;">44% del ingreso estimado ($ 650.000)</div>
+            <div style="font-family:'Sora',sans-serif;font-weight:800;font-size:1.5rem;margin-bottom:3px;">$ 825.324</div>
+            <div style="font-size:0.7rem;color:var(--text-soft);margin-bottom:14px;">56% del ingreso estimado ($ 1.480.000)</div>
             <div style="display:flex;gap:0;border-top:1px solid var(--border);padding-top:12px;">
               <div style="flex:1;border-right:1px solid var(--border);padding-right:10px;">
                 <div style="font-size:0.58rem;font-weight:700;color:var(--text-soft);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px;">Necesarios</div>
-                <div style="font-family:'Sora',sans-serif;font-weight:800;font-size:0.9rem;color:#3B82F6;">$ 126.496</div>
+                <div style="font-family:'Sora',sans-serif;font-weight:800;font-size:0.9rem;color:#3B82F6;">$ 368.111</div>
               </div>
               <div style="flex:1;border-right:1px solid var(--border);padding:0 10px;">
                 <div style="font-size:0.58rem;font-weight:700;color:var(--text-soft);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px;">Prescindibles</div>
-                <div style="font-family:'Sora',sans-serif;font-weight:800;font-size:0.9rem;color:#EF4444;">$ 64.950</div>
+                <div style="font-family:'Sora',sans-serif;font-weight:800;font-size:0.9rem;color:#EF4444;">$ 189.013</div>
               </div>
               <div style="flex:1;padding-left:10px;">
                 <div style="font-size:0.58rem;font-weight:700;color:var(--text-soft);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px;">Invertibles</div>
-                <div style="font-family:'Sora',sans-serif;font-weight:800;font-size:0.9rem;color:var(--green);">$ 92.177</div>
+                <div style="font-family:'Sora',sans-serif;font-weight:800;font-size:0.9rem;color:var(--green);">$ 268.200</div>
               </div>
             </div>
           </div>
@@ -1467,7 +1498,7 @@
           <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
               <div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-soft);">Distribución por categoría</div>
-              <div style="font-size:0.72rem;font-weight:700;color:var(--text-soft);">$ 283.623</div>
+              <div style="font-size:0.72rem;font-weight:700;color:var(--text-soft);">$ 825.324</div>
             </div>
             <!-- Barra apilada 6 segmentos -->
             <div style="display:flex;border-radius:6px;overflow:hidden;height:9px;margin-bottom:14px;gap:1.5px;">
@@ -1487,7 +1518,7 @@
                 </div>
                 <div style="display:flex;align-items:center;gap:14px;">
                   <span style="font-size:0.75rem;font-weight:700;color:var(--text-soft);">29,6%</span>
-                  <span style="font-size:0.78rem;font-weight:700;min-width:62px;text-align:right;">$ 83.900</span>
+                  <span style="font-size:0.78rem;font-weight:700;min-width:62px;text-align:right;">$ 244.141</span>
                 </div>
               </div>
               <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);">
@@ -1497,7 +1528,7 @@
                 </div>
                 <div style="display:flex;align-items:center;gap:14px;">
                   <span style="font-size:0.75rem;font-weight:700;color:var(--text-soft);">20,2%</span>
-                  <span style="font-size:0.78rem;font-weight:700;min-width:62px;text-align:right;">$ 57.430</span>
+                  <span style="font-size:0.78rem;font-weight:700;min-width:62px;text-align:right;">$ 167.116</span>
                 </div>
               </div>
               <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);">
@@ -1507,7 +1538,7 @@
                 </div>
                 <div style="display:flex;align-items:center;gap:14px;">
                   <span style="font-size:0.75rem;font-weight:700;color:var(--text-soft);">16,0%</span>
-                  <span style="font-size:0.78rem;font-weight:700;min-width:62px;text-align:right;">$ 45.250</span>
+                  <span style="font-size:0.78rem;font-weight:700;min-width:62px;text-align:right;">$ 131.673</span>
                 </div>
               </div>
               <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);">
@@ -1517,7 +1548,7 @@
                 </div>
                 <div style="display:flex;align-items:center;gap:14px;">
                   <span style="font-size:0.75rem;font-weight:700;color:var(--text-soft);">13,6%</span>
-                  <span style="font-size:0.78rem;font-weight:700;min-width:62px;text-align:right;">$ 38.540</span>
+                  <span style="font-size:0.78rem;font-weight:700;min-width:62px;text-align:right;">$ 112.148</span>
                 </div>
               </div>
               <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);">
@@ -1527,7 +1558,7 @@
                 </div>
                 <div style="display:flex;align-items:center;gap:14px;">
                   <span style="font-size:0.75rem;font-weight:700;color:var(--text-soft);">12,1%</span>
-                  <span style="font-size:0.78rem;font-weight:700;min-width:62px;text-align:right;">$ 34.250</span>
+                  <span style="font-size:0.78rem;font-weight:700;min-width:62px;text-align:right;">$ 99.664</span>
                 </div>
               </div>
               <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;">
@@ -1537,7 +1568,7 @@
                 </div>
                 <div style="display:flex;align-items:center;gap:14px;">
                   <span style="font-size:0.75rem;font-weight:700;color:var(--text-soft);">8,5%</span>
-                  <span style="font-size:0.78rem;font-weight:700;min-width:62px;text-align:right;">$ 24.253</span>
+                  <span style="font-size:0.78rem;font-weight:700;min-width:62px;text-align:right;">$ 70.574</span>
                 </div>
               </div>
             </div>
@@ -1574,12 +1605,12 @@
               <span style="font-size:0.85rem;">💡</span>
               <span style="font-size:0.65rem;font-weight:700;color:#92400E;text-transform:uppercase;letter-spacing:.07em;">Consejo</span>
             </div>
-            <div id="infl-consejo-text" style="font-size:0.75rem;color:#78350F;line-height:1.5;">Tu inflación personal superó al índice oficial este mes. El 22,9% en prescindibles ($64.950) es tu principal palanca: reducirlo frena la suba de tu canasta y libera capital para invertir.</div>
+            <div id="infl-consejo-text" style="font-size:0.75rem;color:#78350F;line-height:1.5;">Tu inflación personal superó al índice oficial este mes. El 22,9% en prescindibles ($189.013) es tu principal palanca: reducirlo frena la suba de tu canasta y libera capital para invertir.</div>
           </div>
           <!-- Hablá con tu asesor -->
           <div style="background:var(--green);border-radius:10px;padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer;">
             <div style="width:36px;height:36px;background:rgba(255,255,255,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-              <span style="font-size:0.75rem;font-weight:800;color:#fff;">SP</span>
+              <span style="font-size:0.75rem;font-weight:800;color:#fff;">N</span>
             </div>
             <div style="flex:1;">
               <div style="font-weight:700;font-size:0.82rem;color:#fff;margin-bottom:2px;">Hablá con tu asesor</div>
@@ -1593,23 +1624,23 @@
         <div id="aspan3" style="display:none;">
           <div style="background:var(--green-bg);border:1px solid var(--green-pale);border-radius:10px;padding:14px;margin-bottom:12px;">
             <div style="font-size:0.65rem;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;">Tu potencial de inversión</div>
-            <div style="font-weight:800;font-size:1.35rem;color:var(--green);margin-bottom:4px;">$ 51.449</div>
+            <div style="font-weight:800;font-size:1.35rem;color:var(--green);margin-bottom:4px;">$ 149.711</div>
             <div style="font-size:0.72rem;color:var(--text-mid);">Ajustando estos gastos podés invertir esta plata</div>
           </div>
           <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:12px;">
             <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:13px;">
               <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
                 <div style="font-size:0.75rem;font-weight:700;">Reducí prescindibles a la mitad</div>
-                <div style="font-weight:800;color:var(--green);font-size:0.88rem;">$32.475</div>
+                <div style="font-weight:800;color:var(--green);font-size:0.88rem;">$94.499</div>
               </div>
-              <div style="font-size:0.68rem;color:var(--text-soft);">Tus prescindibles representan el 22,9% del total ($64.950). Reducirlos a la mitad libera $32.475 mensuales para invertir.</div>
+              <div style="font-size:0.68rem;color:var(--text-soft);">Tus prescindibles representan el 22,9% del total ($189.013). Reducirlos a la mitad libera $94.499 mensuales para invertir.</div>
             </div>
             <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:13px;">
               <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
                 <div style="font-size:0.75rem;font-weight:700;">Optimizá tus necesarios un 15%</div>
-                <div style="font-weight:800;color:var(--green);font-size:0.88rem;">$18.974</div>
+                <div style="font-weight:800;color:var(--green);font-size:0.88rem;">$55.212</div>
               </div>
-              <div style="font-size:0.68rem;color:var(--text-soft);">Con $126.496 en necesarios, un 15% de optimización (mejores precios, alternativas más baratas) suma $18.974 por mes.</div>
+              <div style="font-size:0.68rem;color:var(--text-soft);">Con $368.111 en necesarios, un 15% de optimización (mejores precios, alternativas más baratas) suma $55.212 por mes.</div>
             </div>
           </div>
           <div style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:13px;">
@@ -1641,12 +1672,12 @@
   <h2 class="section-title">Todo lo que necesitás <em>saber</em></h2>
   <div class="faq-grid reveal">
     <div class="faq-card">
-      <div class="faq-q">¿Smart Pesos es gratis? <span>+</span></div>
+      <div class="faq-q">¿Nomi es gratis? <span>+</span></div>
       <div class="faq-a">Sí, podés empezar gratis. El registro de gastos, el dashboard y el análisis de inflación personal están disponibles sin costo. No pedimos tarjeta de crédito.</div>
     </div>
     <div class="faq-card">
       <div class="faq-q">¿Tengo que conectar mi banco? <span>+</span></div>
-      <div class="faq-a">No. Smart Pesos no requiere conectar tu cuenta bancaria. Cargás tus gastos manualmente o con foto de ticket. Vos controlás qué información entra.</div>
+      <div class="faq-a">No. Nomi no requiere conectar tu cuenta bancaria. Cargás tus gastos manualmente o con foto de ticket. Vos controlás qué información entra.</div>
     </div>
     <div class="faq-card">
       <div class="faq-q">¿Cómo calcula mi inflación personal? <span>+</span></div>
@@ -1662,7 +1693,7 @@
     </div>
     <div class="faq-card">
       <div class="faq-q">¿Está en iOS y Android? <span>+</span></div>
-      <div class="faq-a">Sí, Smart Pesos está disponible en ambas plataformas. La descarga es gratuita desde App Store y Google Play.</div>
+      <div class="faq-a">Sí, Nomi está disponible en ambas plataformas. La descarga es gratuita desde App Store y Google Play.</div>
     </div>
   </div>
 </section>
@@ -1671,7 +1702,7 @@
 <section class="cta-section" id="cta-final">
   <h2>Tu plata trabaja mejor<br>cuando la entendés</h2>
   <p>Unite a los argentinos que ya controlan sus finanzas, miden su inflación personal y ahorran más cada mes.</p>
-  <a class="cta-dl-btn" href="#">Descargar Smart Pesos — gratis</a>
+  <a class="cta-dl-btn" href="#">Descargar Nomi — gratis</a>
   <div class="cta-note">Disponible en iOS y Android</div>
 </section>
 
@@ -1706,7 +1737,7 @@
     </div>
   </div>
   <div class="ft-bottom">
-    <div>© 2026 Smart Pesos. Todos los derechos reservados. Argentina.</div>
+    <div>© 2026 Nomi. Todos los derechos reservados. Argentina.</div>
     <div>Basado en datos oficiales INDEC.</div>
   </div>
 </footer>
@@ -1828,7 +1859,7 @@
       var consejoEl = document.getElementById('infl-consejo-text');
       if (consejoEl) {
         if (diff < -0.05) {
-          consejoEl.textContent = 'Tu inflación personal superó al índice oficial este mes. El 22,9% en prescindibles ($64.950) es tu principal palanca: reducirlo frena la suba de tu canasta y libera capital para invertir.';
+          consejoEl.textContent = 'Tu inflación personal superó al índice oficial este mes. El 22,9% en prescindibles ($189.013) es tu principal palanca: reducirlo frena la suba de tu canasta y libera capital para invertir.';
         } else {
           consejoEl.textContent = 'Tu estructura de gastos estuvo bien distribuida este mes: creciste menos que la inflación oficial. Seguí así y usá el margen ganado para reforzar tus invertibles.';
         }
@@ -1979,7 +2010,7 @@
     const mes  = Math.round(s*INF).toLocaleString('es-AR');
     const anio = Math.round(s*(Math.pow(1+INF,12)-1)).toLocaleString('es-AR');
     const usd  = Math.round(s*(Math.pow(1+INF,12)-1)/MEP).toLocaleString('es-AR');
-    const txt  = `Tengo ${fmt(s)} en pesos. Por inflación pierdo $${mes} por mes y $${anio} por año — equivalente a USD ${usd} anuales en poder adquisitivo. Lo calculé con Smart Pesos.`;
+    const txt  = `Tengo ${fmt(s)} en pesos. Por inflación pierdo $${mes} por mes y $${anio} por año — equivalente a USD ${usd} anuales en poder adquisitivo. Lo calculé con Nomi.`;
     const card = document.getElementById('share-card');
     card.textContent = txt; card.style.display = 'block';
     if (navigator.share) { navigator.share({text:txt}); }
